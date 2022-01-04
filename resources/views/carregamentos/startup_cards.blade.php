@@ -18,15 +18,15 @@
     }
 
     .content_startup_card_img {
-        padding-left: 3.7%;
-        padding-right: 3.7%;
-        padding-top: 3.7%;
+        padding-left: 3.2%;
+        padding-right: 3.2%;
+        padding-top: 2%; 
     }
 
     .startup_card_img {
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+       /* border-radius: 50%;*/
         border: 2px solid #e6ecf1;
     }
 

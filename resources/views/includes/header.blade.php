@@ -45,5 +45,13 @@
           $(".submenu").toggle(100);
            
       });
+
+      $(document).click(function(element){
+      
+      if($(element.target).attr('id') != 'myself_img'){
+        $(".submenu").hide(100);
+      }
+    });
+    
   });
 </script>

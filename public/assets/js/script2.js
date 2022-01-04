@@ -34,12 +34,7 @@ $(function () {
         alterCheckboxStatus2(this, "tiponegocioFiltro", 2, 3);
     });
 
-    $(document).click(function(element){
-      
-      if($(element.target).attr('id') != 'myself_img'){
-        $(".submenu").hide(100);
-      }
-    });
+   
 
     function alterCheckboxStatus1(nomeFiltro, contador, limite) {
         $("#" + nomeFiltro + "all").prop('checked', true);

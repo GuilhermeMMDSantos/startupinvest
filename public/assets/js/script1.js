@@ -83,7 +83,7 @@ $(function () {
 
         $("#divs_concorrentes").empty();
 
-        if ($(this).val() == "sigular") {
+        if ($(this).val() == 2) {
             var content = "<div class='sobrenome_investidor_singular'>\
       <label for='nome2_inv' class='label_inv'>Sobrenome</label>\
       <input type='text' name='segundo_nome'  placeholder='Tunga' class='form-control yesForStyle' id='nome2_inv' required>\

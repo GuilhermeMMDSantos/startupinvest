@@ -177,9 +177,9 @@
 
                         <form method="POST" action="{{route('cadastro.investidor')}}" enctype="multipart/form-data" class="formInvestidor" id="formInvestidor">
                             @csrf
-                            <div class="tipo_investidor">
-                                <label for="singular">Pessoa física</label> <input type="radio" value="2" name="tipo_investidor" id="singular" @if(old('tipo_investidor')=='' || old('tipo_investidor')=='sigular' ) checked @endif>
-                                <label for="juridico">Pessoa Jurídica</label> <input type="radio" value="1" name="tipo_investidor" id="juridico" @if(old('tipo_investidor')=='juridico' ) checked @endif>
+                            <div class="tipo_investidor"> 
+                                <label for="singular">Pessoa física</label> <input type="radio" value="2" name="tipo_investidor" id="singular" @if(old('tipo_investidor')=='' || old('tipo_investidor')== 2 ) checked @endif>
+                                <label for="juridico">Pessoa Jurídica</label> <input type="radio" value="1" name="tipo_investidor" id="juridico" @if(old('tipo_investidor')== 1 ) checked @endif>
                             </div>
                             <div>
                                 <label for="nome1_inv" class="label_inv">Nome</label>

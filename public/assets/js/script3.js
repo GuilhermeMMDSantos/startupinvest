@@ -160,6 +160,7 @@ $(function () {
                      $('#'+id_cartao_user).css({
                          'display':'none'
                      });
+                     $('#video_'+id_cartao_user).get(0).pause();
  
                     $.ajax({
                         method: 'post',
