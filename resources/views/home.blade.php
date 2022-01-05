@@ -14,8 +14,8 @@
         <div class=" col-sm headerCol2">
             <form method="POST" action="{{route('user.login')}}" style="float:right;">
                 @csrf
-                <input type="email" name="email_login" placeholder="Email" required>
-                <input type="password" name="password_login" placeholder="Senha" required>
+                <input type="email" name="email_login" placeholder="Email" autocomplete="off" required>
+                <input type="password" name="password_login" placeholder="Senha" autocomplete="off" required>
                 <button type="submit" class="btnEntrar feitoClick">
                     Entrar
                 </button>
@@ -47,19 +47,11 @@
 
         <div class="col-sm contentCol1">
             <p class="dizeres">
-                Interaja com stakeholders <br>
-                no ecossistema de startups<br>
-                e conectaneta-se com oportunidades<br>como:<br>
+                Encontre<br>
+                Potenciais investidores<br>
+                & Oportunidades de<br>
+                investimento em startups angolanas
             </p>
-            <ul>
-                <li><i class="fa fa-funnel-dollar"></i>Investimento</li>
-                <li><i class="fa fa-compass"></i>Orientação</li>
-                <li><i class="fa fa-seedling"></i>Crescimento</li>
-            </ul>
-
-            <!-- <div class="ecoStartupBox"><a href="#">ecoStartupBox</a></div>-->
-
-
         </div>
 
         <div class=" col-sm-5 contentCol2">
@@ -90,12 +82,12 @@
                             <div class="row row-cols-1 row-cols-dm-1 row-cols-lg-2 ">
                                 <div class="col">
                                     <label for="nome_emp" class="label_emp">Nome startup</label>
-                                    <input class="form-control" type="text" name="nome" placeholder="ecostartup" class="typeNormal" id="nome_emp" value="{{old('nome')}}" required>
+                                    <input class="form-control" type="text" name="nome" placeholder="ecostartup" class="typeNormal" id="nome_emp" value="{{old('nome')}}" autocomplete="off" required>
 
                                 </div>
                                 <div class="col">
                                     <label for="email_emp" class="label_emp">Email</label>
-                                    <input class="form-control" type="email" name="email" placeholder="nome@provedor.tipo" class="typeNormal" id="email_emp" value="{{old('email')}}" required>
+                                    <input class="form-control" type="email" name="email" placeholder="nome@provedor.tipo" class="typeNormal" id="email_emp" value="{{old('email')}}" autocomplete="off" required>
 
                                 </div>
                             </div>
@@ -137,23 +129,20 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="container-fluid">
 
-                                <label for="typefile" class="label_emp"> Vídeo do MVP <span id="label_max_MB_video_emp">(Max 30MB)</span></label>
-
-                                <div class="row row-cols-2 meuInputFile">
-
-                                    <div class="col-3" style="padding:0px !important;">
-                                        <label for="typefile" class="selectTypeFile">Selecionar</label>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label for="my-input-file-emp" class="label_emp">Comprovativo de registro da empresa</label>
+                                    <div class="content-my-input-file-emp">
+                                        <label for="my-input-file-emp" class="btn-select-file-emp">Selecionar</label>
+                                        <div>
+                                            <input class="form-control" type="text" placeholder="Nenhum arquivo selecionado" id="my-input-file-disabled-emp" disabled>
+                                            <input type="file" id="my-input-file-emp" accept=".jpg,.png" name="file_video">
+                                        </div>
                                     </div>
-
-                                    <div class="col-9" style="padding:0px !important;">
-                                        <input class="form-control" type="text" placeholder="Nenhum vídeo selecionado" id="typefileAux" disabled>
-                                        <input type="file" id="typefile" accept=".mp4,.mkv" name="file_video" value="{{old('file_video')}}">
-                                    </div>
-
                                 </div>
                             </div>
+
                             <div id="pitch">
                                 <label for="pitch_line1" class="label_emp">Pitch Elevator</label>
                                 <p>A startup, está desenvolvendo </p>
@@ -177,13 +166,13 @@
 
                         <form method="POST" action="{{route('cadastro.investidor')}}" enctype="multipart/form-data" class="formInvestidor" id="formInvestidor">
                             @csrf
-                            <div class="tipo_investidor"> 
-                                <label for="singular">Pessoa física</label> <input type="radio" value="2" name="tipo_investidor" id="singular" @if(old('tipo_investidor')=='' || old('tipo_investidor')== 2 ) checked @endif>
-                                <label for="juridico">Pessoa Jurídica</label> <input type="radio" value="1" name="tipo_investidor" id="juridico" @if(old('tipo_investidor')== 1 ) checked @endif>
+                            <div class="tipo_investidor">
+                                <label for="singular">Pessoa física</label> <input type="radio" value="2" name="tipo_investidor" id="singular" @if(old('tipo_investidor')=='' || old('tipo_investidor')==2 ) checked @endif>
+                                <label for="juridico">Pessoa Jurídica</label> <input type="radio" value="1" name="tipo_investidor" id="juridico" @if(old('tipo_investidor')==1 ) checked @endif>
                             </div>
                             <div>
                                 <label for="nome1_inv" class="label_inv">Nome</label>
-                                <input type="text" name="primeiro_nome" value="{{old('primeiro_nome')}}" placeholder="Emanuel" class=" form-control yesForStyle" id="nome1_inv" required />
+                                <input type="text" name="primeiro_nome" value="{{old('primeiro_nome')}}" placeholder="Emanuel" class=" form-control yesForStyle" id="nome1_inv" autocomplete="off" required />
                             </div>
                             <div id="divs_concorrentes">
 
@@ -192,29 +181,16 @@
                             <div>
                                 <label for="nacionalidade_inv" class="label_inv">Nacionalidade</label>
                                 <select class="form-control" id="nacionalidade_inv" name="nacionalidade_inv">
-                                  @foreach($nacionalidades as $nacionalidade)
-                                  <option value="{{$nacionalidade->id}}">{{$nacionalidade->nome}}</option>
-                                  @endforeach
+                                    @foreach($nacionalidades as $nacionalidade)
+                                    <option value="{{$nacionalidade->id}}">{{$nacionalidade->nome}}</option>
+                                    @endforeach
                                 </select>
                             </div>
 
                             <div>
                                 <label for="email_inv" class="label_inv">Email</label>
-                                <input type="email" placeholder="nome@provedor.tipo" name="email_investidor" value="{{old('email_investidor')}}" class="form-control yesForStyle" id="email_inv" required>
+                                <input type="email" placeholder="nome@provedor.tipo" name="email_investidor" value="{{old('email_investidor')}}" class="form-control yesForStyle" id="email_inv" autocomplete="off" required>
 
-                            </div>
-                            <div class="container-fluid">
-                                <label for="videoFile" class="label_inv">Video explicando o Porquê investir em startup<span id="label_max_MB_video_invest">(Max 30MB)</span></label>
-                                <div class="row row-cols-2">
-                                    <div class="col-3" style="padding:0px !important;">
-                                        <label for="videoFile" class="myBtnFileVideo">Selecionar</label>
-                                    </div>
-                                    <div class="col-9" style="padding:0px !important;">
-
-                                        <input type="text" id="videoFileAux" class="form-control videoFileAux" placeholder="Nenhum ficheiro selecionado" disabled>
-                                        <input type="file" id="videoFile" accept=".mp4,.mkv" name="file_video_investidor">
-                                    </div>
-                                </div>
                             </div>
 
 
@@ -233,11 +209,13 @@
 
     </section>
 
-    <footer>
-        <p>by guitoCode</p>
-    </footer>
-
 </div>
+
+<footer>
+    <p>2021©by guitoCode - Todos os direitos reservados.</p>
+    <p><a href="#">Politica de Privacidade </a>. <a href="#">Termos de Uso </a>. <a href="#">Política de Cookies</a></p>
+</footer>
+
 @endsection
 @section('scripts')
 <script src="assets/js/script1.js"></script>

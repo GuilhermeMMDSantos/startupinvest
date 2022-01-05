@@ -11,7 +11,7 @@ body {
 
 #header { 
     min-height: 63px;   
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: var(--secundary);
     padding-bottom:5px;
 }
 
@@ -22,7 +22,7 @@ body {
  
 
 .headerCol1 h1 {
-    color: #ffcb2f;
+    color: var(--primary);
     font-size: 2em;
     cursor: default;
 }
@@ -62,20 +62,17 @@ body {
     outline:none !important;
 }
 
-
-
-
- 
 #content{
     padding-top:20px;
 }
  
  
 
-.ecoStartupBox a {
-    font-size:25px;
-    color:#ffcb2f;
-    font-weight: bold;
+.contentCol1{
+    background-image: url("../img/3081627.jpg");
+    background-repeat: no-repeat;
+    background-size:100%;
+    background-position:0px 95px;
 }
 
 
@@ -94,6 +91,7 @@ body {
 .formEmpreendedor{ 
     display:none;
     transition:1s all;
+    padding-bottom:40px;
 }
 
 
@@ -115,6 +113,7 @@ body {
 .formInvestidor{
     display: none;
     transition:1s all;
+    padding-bottom:40px;
 }
 
 .formShow{
@@ -145,7 +144,7 @@ body {
   display: none;
 }
 
-.selectTypeFile{
+.btn-select-file-emp{
     cursor:pointer;
     padding-top:10px;
     padding-bottom:2%;
@@ -155,10 +154,16 @@ body {
     display: inline-block;
     text-align: center;
     border-radius:2px;
-
 }
 
-#typefileAux,#typefileAux2{
+.content-my-input-file-emp{
+    display:flex;
+}
+.content-my-input-file-emp div{
+    width:70%;
+}
+
+#my-input-file-disabled-emp{
     height:39px; 
     text-indent:4px;
 }
@@ -209,7 +214,7 @@ body {
     font-size:15px;
 }
 
-.myBtnFile,.myBtnFileVideo{
+.myBtnFile{
     cursor:pointer;
     padding-top:10px;
     padding-bottom:2%;
@@ -220,7 +225,7 @@ body {
     text-align: center;
     border-radius:2px;
 }
-.extratoFileAux,.videoFileAux{
+.extratoFileAux{
     height:39px;
    
     text-indent:5px;
@@ -228,19 +233,11 @@ body {
 
 .dizeres{
     font-size:25px;
-    font-weight: bold;
+    font-weight: lighter;
     color:black;
 }
 
-.contentCol1 ul{
-   margin-top:14px;
-}
 
-.contentCol1 li{
-    list-style: none;
-    font-size: 18px;
-    font-weight: bold;
-}
  
 #pitch p{
     margin-bottom:-1px;
@@ -265,28 +262,39 @@ body {
     color:rgba(255, 0, 0, 0.5);
 }
 
+footer{
+    min-height: 100px;
+    text-align:center;
+    background-color:#e5eaedad;
+    padding-top:15px;
+    padding-bottom:15px;
+}
+
+footer a{
+    color:rgb(80, 109, 153);
+}
 
 @media only screen and  (min-width:310px) and (max-width:360px){
-    .selectTypeFile,.myBtnFileVideo{
+    .btn-select-file-emp{
         font-size:12px;
-        width:95%;
+        width:30%;
     }
 }
     @media only screen and (max-width:309px){
-        .selectTypeFile,.myBtnFileVideo{
+        .btn-select-file-emp{
             font-size:10px;
-            width:95%;
+            width:30%;
         }
 
-        #typefileAux,.videoFileAux{
+        #my-input-file-disabled-emp{
             font-size:12px;
         }
 }
 
 @media only screen  and  (min-width:361px) and (max-width:575px){
-    .selectTypeFile,.myBtnFileVideo{
+    .btn-select-file-emp{
         font-size:14px;
-        width:95%;
+        width:30%;
     }
  
 }
@@ -306,17 +314,17 @@ body {
 }
 
 @media only screen  and  (min-width:768px) and (max-width:865px){
-    .selectTypeFile,.myBtnFileVideo{
+    .btn-select-file-emp{
         font-size:13px; 
-        width:98%;
+        width:32%;
     }
  
 }
 
 @media only screen  and  (min-width:911px){
-    .selectTypeFile,.myBtnFileVideo{
+    .btn-select-file-emp{
         font-size:15px;
-        width:95%;
+        width:30%;
     }
 }
 

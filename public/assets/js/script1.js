@@ -31,18 +31,18 @@ $(function () {
         identifyUserType();
     });
 
-    $("#typefile").change(function () {
+    $("#my-input-file-emp").change(function () {
 
 
         if (parseFloat($(this)[0].files[0].size / 1048576) > 30) {
             $(this).val('');
-            $("#typefileAux").attr("placeholder","Nenhum video selecionado");
+            $("#my-input-file-disabled-emp").attr("placeholder","Nenhum video selecionado");
             $("#label_max_MB_video_emp").css({
                 'color': 'red',
                 'transition': '0.5s'
             });
         } else {
-            $("#typefileAux").attr("placeholder", $(this)[0].files[0].name);
+            $("#my-input-file-disabled-emp").attr("placeholder", $(this)[0].files[0].name);
             $("#label_max_MB_video_emp").css({
                 'color': 'grey',
                 'transition': '0.5s'
@@ -51,24 +51,7 @@ $(function () {
 
     });
 
-    $("#videoFile").change(function () {
-
-        if (parseFloat($(this)[0].files[0].size / 1048576) > 30) {
-            $(this).val('');
-            $("#videoFileAux").attr("placeholder","Nenhum video selecionado");
-            $("#label_max_MB_video_invest").css({
-                'color': 'red',
-                'transition': '0.5s'
-            });
-        } else {
-            $("#videoFileAux").attr("placeholder", $(this)[0].files[0].name);
-            $("#label_max_MB_video_invest").css({
-                'color': 'grey',
-                'transition': '0.5s'
-            });
-        }
-
-    });
+    
 
     $("input[name='tipo_investidor']").click(function () {
 
@@ -78,8 +61,7 @@ $(function () {
         $("#nome1_inv").val('');
         $("#nome2_inv").val('');
         $("#nif_inv").val('');
-        $("#email_inv").val('');
-        $("#videoFile").val('');
+        $("#email_inv").val(''); 
 
         $("#divs_concorrentes").empty();
 
@@ -121,8 +103,7 @@ $(function () {
             $("#nome1_inv").val('');
             $("#nome2_inv").val('');
             $("#nif_inv").val('');
-            $("#email_inv").val('');
-            $("#videoFile").val('');
+            $("#email_inv").val(''); 
 
             $('.formShow').removeClass("formShow");
             $('.formEmpreendedor').addClass("formShow");
@@ -132,7 +113,7 @@ $(function () {
 
             $("#nome_emp").val('');
             $("#email_emp").val('');
-            $("#typefile").val('');
+            $("#my-input-file-emp").val('');
             $("input[name='pitch_line1']").val('');
             $("input[name='pitch_line2']").val('');
             $("input[name='pitch_line3']").val('');

@@ -18,7 +18,7 @@
 
         <!-- Styles -->
         <link href="{{asset('assets/fontawesome/css/all.css')}}" type="text/css" rel="stylesheet">
-        <link href="{{asset('assets/css/bootstrap.min.css')}}" type="text/css" rel="stylesheet">
+        <link href="{{asset('assets/css/main.css')}}" type="text/css" rel="stylesheet">
         @yield('stylesheets')
         
     </head>
