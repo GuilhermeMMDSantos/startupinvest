@@ -24,7 +24,7 @@ class AuthController extends Controller
             'email' => 'required|unique:users',
             'sector' => 'required',
             'fase' => 'required',
-            'file_video' => 'required',
+            'comprovativo_registo' => 'required',
             'pitch_line1' => 'required',
             'pitch_line2' => 'required',
             'pitch_line3' => 'required',
@@ -37,7 +37,7 @@ class AuthController extends Controller
             'email.unique' => 'Email da Startup já existe',
             'sector.required' => 'Sector econômico em falta',
             'fase.required' => 'Fase de desenvolvimento em falta',
-            'file_video.required' => 'Vídeo do MVP em falta',
+            'comprovativo_registo.required' => 'Comprovativo de registro em falta',
             'pitch_line1' => 'Descrição do tipo produto em falta',
             'pitch_line2' => 'Descrição do publico alvo em falta',
             'pitch_line3' => 'Descrição da solução em falta',
@@ -64,10 +64,10 @@ class AuthController extends Controller
         $pitch = "A {$dados['nome']} está construindo {$dados['pitch_line1']} para ajudar {$dados['pitch_line2']}
         a {$dados['pitch_line3']} com {$dados['pitch_line4']}";
 
-        $extensaoVideo = $request->file('file_video')->extension();
-        $nomeVideo = "video{$user->id}.{$extensaoVideo}";
+        $extensaoArquivo = $request->file('comprovativo_registo')->extension();
+        $nomeArquivo = "comprovativo{$user->id}.{$extensaoArquivo}";
 
-        $uploadFicheiro = $request->file('file_video')->storeAs('armazenamento/startups/videos', $nomeVideo);
+        $uploadFicheiro = $request->file('comprovativo_registo')->storeAs('armazenamento/startups/comprovativos', $nomeArquivo);
 
 
 
@@ -76,7 +76,7 @@ class AuthController extends Controller
             'nome' => $dados['nome'],
             'setor_atividade' => $dados['sector'],
             'fase_desenvolvimento' => $dados['fase'],
-            'video_produto' => $uploadFicheiro,
+            'comprovativo_registo' => $uploadFicheiro,
             'pitch_elevator' => $pitch,
             'img' => "armazenamento/startups/img/img2.jpg"
         ]);
@@ -92,14 +92,12 @@ class AuthController extends Controller
             [
                 'primeiro_nome' => 'required', //sobrenome e o nif sao opcionais
                 'email_investidor' => 'required|unique:users,email',
-                'file_video_investidor' => 'required',
                 'nacionalidade_inv' => 'required',
             ],
             [
                 'primeiro_nome.required' => 'Nome do investidor em falta',
                 'email_investidor.required' => 'Email do Invetidor em falta',
                 'email_investidor.unique' => 'Email do Investidor já existe',
-                'file_video_investidor.required' => 'Video do Investidor em falta',
                 'nacionalidade_inv.required' => 'Nacionalidade do inv. em falta '
             ]
         );
@@ -120,11 +118,6 @@ class AuthController extends Controller
 
 
 
-        $extensaoVideo = $request->file('file_video_investidor')->extension();
-        $nomeVideo = "video{$user->id}.{$extensaoVideo}";
-
-        $uploadFicheiro = $request->file('file_video_investidor')->storeAs('armazenamento/investidor/videos', $nomeVideo);
-
         $nif = null;
         $sobrenome = null;
 
@@ -139,7 +132,6 @@ class AuthController extends Controller
             'nome' => $dados['primeiro_nome'],
             'sobrenome' => $sobrenome,
             'nif' => $nif,
-            'video_porque_investir' => $uploadFicheiro,
             'id_nacionalidade' => $dados['nacionalidade_inv'],
             'id_tipo_entidade' => $dados['tipo_investidor']
         ]);

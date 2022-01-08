@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Startups extends Model
 {
     protected $fillable = [
-        'id_user','nome','setor_atividade','fase_desenvolvimento','video_produto','pitch_elevator','img'
+        'id_user','nome','setor_atividade','fase_desenvolvimento','comprovativo_registo','pitch_elevator','img'
     ];
 
 

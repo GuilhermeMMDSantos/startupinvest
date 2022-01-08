@@ -9,7 +9,7 @@ class PotenciaisInvestidores extends Model
     protected $table = 'potenciais_investidores';
     
     protected $fillable = [
-        'id_user','nome','sobrenome','nif','video_porque_investir','id_nacionalidade','id_tipo_entidade'
+        'id_user','nome','sobrenome','nif','id_nacionalidade','id_tipo_entidade'
     ];
 
     public function user(){

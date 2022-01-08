@@ -16,7 +16,7 @@
                 @csrf
                 <input type="email" name="email_login" placeholder="Email" autocomplete="off" required>
                 <input type="password" name="password_login" placeholder="Senha" autocomplete="off" required>
-                <button type="submit" class="btnEntrar feitoClick">
+                <button type="submit" class="btnEntrar btn-click-efect">
                     Entrar
                 </button>
                 <a href="#">
@@ -116,15 +116,15 @@
                                 <div class="col-12">
                                     <label class="label_emp">Tipo de Negócio</label>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" id="busnessType1" name="busnessType">
+                                        <input class="form-check-input" type="radio" id="busnessType1" name="busnessType" value="1" @if(old('busnessType')!=2 && old('busnessType')!=3) checked @endif>
                                         <label class="form-check-label" for="busnessType1">B2B</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" id="busnessType2" name="busnessType">
+                                        <input class="form-check-input" type="radio" id="busnessType2" name="busnessType" value="2" @if(old('busnessType')==2) checked @endif>
                                         <label class="form-check-label" for="busnessType2">B2C</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" id="busnessType3" name="busnessType">
+                                        <input class="form-check-input" type="radio" id="busnessType3" name="busnessType" value="3" @if(old('busnessType')==3) checked @endif>
                                         <label class="form-check-label" for="busnessType3">B2B2C</label>
                                     </div>
                                 </div>
@@ -137,7 +137,7 @@
                                         <label for="my-input-file-emp" class="btn-select-file-emp">Selecionar</label>
                                         <div>
                                             <input class="form-control" type="text" placeholder="Nenhum arquivo selecionado" id="my-input-file-disabled-emp" disabled>
-                                            <input type="file" id="my-input-file-emp" accept=".jpg,.png" name="file_video">
+                                            <input type="file" id="my-input-file-emp" accept=".jpg,.png" name="comprovativo_registo">
                                         </div>
                                     </div>
                                 </div>
@@ -156,9 +156,9 @@
 
                             </div>
 
-                            <div class="divContentBtnFazerParte">
+                            <div class="content-btn-fazer-parte">
                                 <input type="hidden" value="empreendedor" name="user">
-                                <button type="submit" class="btnFazerParte feitoClick">Fazer Parte</button>
+                                <button type="submit" class="btnFazerParte btn-click-efect">Fazer Parte</button>
                             </div>
                         </form>
 
@@ -167,7 +167,7 @@
                         <form method="POST" action="{{route('cadastro.investidor')}}" enctype="multipart/form-data" class="formInvestidor" id="formInvestidor">
                             @csrf
                             <div class="tipo_investidor">
-                                <label for="singular">Pessoa física</label> <input type="radio" value="2" name="tipo_investidor" id="singular" @if(old('tipo_investidor')=='' || old('tipo_investidor')==2 ) checked @endif>
+                                <label for="singular">Pessoa física</label> <input type="radio" value="2" name="tipo_investidor" id="singular" @if(old('tipo_investidor')!=1 ) checked @endif>
                                 <label for="juridico">Pessoa Jurídica</label> <input type="radio" value="1" name="tipo_investidor" id="juridico" @if(old('tipo_investidor')==1 ) checked @endif>
                             </div>
                             <div>
@@ -194,7 +194,7 @@
                             </div>
 
 
-                            <div class="divContentBtnFazerParte">
+                            <div class="content-btn-fazer-parte">
                                 <input type="hidden" id="input_hidden" value="investidor" name="user" old_value_sobrenome="{{old('segundo_nome')}}" old_value_nif="{{old('nif')}}">
                                 <button type="submit" class="btnFazerParte">Fazer Parte</button>
                             </div>

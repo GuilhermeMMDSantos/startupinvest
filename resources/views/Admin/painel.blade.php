@@ -6,24 +6,24 @@
 @section('contentBody')
 <div class="container-fluid">
 
-    <header class="row" >
-        
-            <div class="col-sm-10">
-                <h1>ecoStartup-Admin</h1>
-            </div>
-            <div class="col-sm-2">
-                <a id="btn_sair" href="{{url('userout')}}">Sair</a>
-            </div>
-       
+    <header class="row">
+
+        <div class="col-sm-10">
+            <h1>ecoStartup-Admin</h1>
+        </div>
+        <div class="col-sm-2">
+            <a id="btn_sair" href="{{url('userout')}}">Sair</a>
+        </div>
+
     </header>
 
 
 
     <div class="container-fluid corpo">
 
-        <div class="row"  >
+        <div class="row">
 
-            <aside class="menuAside col-sm-2" >
+            <aside class="menuAside col-sm-2">
                 <ul>
                     <li><a href="#">Usuarios</a></li>
                     <li><a href="#">Denuncias</a></li>
@@ -46,9 +46,9 @@
                                 <p><strong>Nome:</strong> <span>{{$startup->nome}}</span><br><strong>Setor de atividade:</strong> <span>{{$startup->setor->nome}}</span><br><strong>Fase de desenvolvimento:</strong> <span>{{$startup->fase->nome}}</span></p>
                             </div>
                             <div class="card-body">
-                                <video width="100%" height="260" id="video_cartao_user{{$startup->id_user}}" controls>
-                                    <source src="{{asset('storage/'.$startup->video_produto)}}">
-                                </video>
+                                <div style="width:100%; height:260; border:1px solid #ccc;margin-bottom:10px;" id="video_cartao_user{{$startup->id_user}}">
+                                    <img src="{{asset('storage/'.$startup->comprovativo_registo)}}" style="width:100%;height:100%;">
+                                </div>
                                 <p><strong>Pitch Elevator:</strong> <span class="pitch">{{$startup->pitch_elevator}}</span></p>
                                 <p><strong>Registado as:</strong> <span><?= \Carbon\Carbon::parse($startup->user->created_at)->format('d-m-Y  H:m:s') ?></span></p>
                                 <div class="btn">
@@ -80,10 +80,12 @@
                                 </p>
                             </div>
                             <div class="card-body">
-                                <video width="100%" height="260" id="video_cartao_user{{$potencialInvestidor->id_user}}" controls>
-                                    <source src="{{asset('storage/'.$potencialInvestidor->video_porque_investir)}}">
-                                </video>
-                                <p><strong>Registado as:</strong> <span><?= \Carbon\Carbon::parse($potencialInvestidor->user->created_at)->format('d-m-Y H:m:s') ?></span></p>
+                                <p>
+                                    <strong>Registado as:</strong>
+                                    <span>
+                                        <?= \Carbon\Carbon::parse($potencialInvestidor->user->created_at)->format('d-m-Y H:m:s') ?>
+                                    </span>
+                                </p>
                                 <div class="btn">
                                     <button class="btn_aceitar" id="btn_aceitar_{{$potencialInvestidor->id_user}}">Aceitar</button>
                                     <button class="btn_regeitar" id="btn_regeitar_{{$potencialInvestidor->id_user}}">Regeitar</button>
