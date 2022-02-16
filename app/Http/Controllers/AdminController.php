@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use App\PotenciaisInvestidores;
+use App\Investidores;
 use App\Mail\EmailSenha;
 use App\Startups;
 use App\User;
@@ -27,13 +27,13 @@ class AdminController extends Controller
                 ->get();
 
 
-            $potenciaisInvestidores = PotenciaisInvestidores::whereHas('user', function (Builder $query) {
+            $investidores = Investidores::whereHas('user', function (Builder $query) {
                 $query->where('estado', 'aguardando'); // 0 - ainda não avaliado, 1- aceite, 2-regeitado
             })
                 ->orderBy('id_user', 'desc')
                 ->get();
 
-            return view('Admin/painel', compact('startups', 'potenciaisInvestidores'));
+            return view('Admin/painel', compact('startups', 'investidores'));
         }
 
         return Redirect::to("home")->with('error', 'Faça Login');

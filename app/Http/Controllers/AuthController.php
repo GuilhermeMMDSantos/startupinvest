@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Session;
 
 use App\User;
 use App\Startups;
-use App\PotenciaisInvestidores;
+use App\Investidores;
 
 class AuthController extends Controller
 {
@@ -127,7 +127,7 @@ class AuthController extends Controller
         if (isset($dados['segundo_nome']))
             $sobrenome = $dados['segundo_nome'];
 
-            PotenciaisInvestidores::create([
+            Investidores::create([
             'id_user' => $user->id,
             'nome' => $dados['primeiro_nome'],
             'sobrenome' => $sobrenome,

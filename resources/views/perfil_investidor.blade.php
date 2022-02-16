@@ -33,7 +33,7 @@
 
                                 <div class="row">
                                     <div class="col-sm-8">
-                                        <span style="font-size: 15px;color: #4d4747;">Tipo entidade: </span><span class="badge badge-secondary" style="font-size: 13px;">{{$potencialInvestidor->tipoentidade->descricao}}</span>
+                                        <span style="font-size: 15px;color: #4d4747;">Tipo entidade: </span><span class="badge badge-secondary" style="font-size: 13px;"></span>
                                     </div>
                                     <div class="col-sm-4">
                                         <span style="font-size: 15px;color: #4d4747;">Nacionalidade: </<span><span class="badge badge-secondary" style="font-size: 13px;">{{$potencialInvestidor->nacionalidade->nome}}</span>

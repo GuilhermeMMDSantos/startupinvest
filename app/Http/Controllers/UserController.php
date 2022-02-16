@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 use App\Startups;
-use App\PotenciaisInvestidores;
+use App\Investidores;
 use App\User;
 
 class UserController extends Controller
@@ -29,7 +29,7 @@ class UserController extends Controller
 
             return view('perfil_startup', compact('startup', 'isMine', 'tipoUser'));
         } else if ($tipoUser == 'investidor') {
-            $potencialInvestidor = PotenciaisInvestidores::where('id_user', Auth::user()->id)->first();
+            $investidor = Investidores::where('id_user', Auth::user()->id)->first();
             return view('perfil_investidor', compact('potencialInvestidor', 'isMine', 'tipoUser'));
         }
     }
@@ -50,8 +50,8 @@ class UserController extends Controller
 
             return view('perfil_startup', compact('startup', 'isMine', 'tipoUser'));
         } else if ($tipoUser == 'investidor') {
-            $potencialInvestidor = PotenciaisInvestidores::where('id_user', $item)->first();
-            return view('perfil_investidor', compact('potencialInvestidor', 'isMine', 'tipoUser'));
+            $investidor = Investidores::where('id_user', $item)->first();
+            return view('perfil_investidor', compact('investidor', 'isMine', 'tipoUser'));
         }
     }
 }

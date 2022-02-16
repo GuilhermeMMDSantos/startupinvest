@@ -69,13 +69,13 @@
                 </div>
 
                 <div class="row" style="padding-top:10px;padding-left:10px;padding-left:20px;">
-                    @foreach($potenciaisInvestidores as $potencialInvestidor)
+                    @foreach($investidores as $investidor)
                     <div class="float-left">
-                        <div class="card cartao card_inv" id="cartao_user{{$potencialInvestidor->id_user}}">
+                        <div class="card cartao card_inv" id="cartao_user{{$investidor->id_user}}">
                             <div class="card-header">
-                                <p><strong>Nome: </strong><span>{{$potencialInvestidor->nome}} @if(isset($potencialInvestidor->sobrenome)){{$potencialInvestidor->sobrenome}}@endif</span><br>
-                                    @if(isset($potencialInvestidor->nif))
-                                    <span><strong>NIF: </strong>{{$potencialInvestidor->nif}}</span>
+                                <p><strong>Nome: </strong><span>{{$investidor->nome}} @if(isset($investidor->sobrenome)){{$investidor->sobrenome}}@endif</span><br>
+                                    @if(isset($investidor->nif))
+                                    <span><strong>NIF: </strong>{{$investidor->nif}}</span>
                                     @endif
                                 </p>
                             </div>
@@ -83,12 +83,12 @@
                                 <p>
                                     <strong>Registado as:</strong>
                                     <span>
-                                        <?= \Carbon\Carbon::parse($potencialInvestidor->user->created_at)->format('d-m-Y H:m:s') ?>
+                                        <?= \Carbon\Carbon::parse($investidor->user->created_at)->format('d-m-Y H:m:s') ?>
                                     </span>
                                 </p>
                                 <div class="btn">
-                                    <button class="btn_aceitar" id="btn_aceitar_{{$potencialInvestidor->id_user}}">Aceitar</button>
-                                    <button class="btn_regeitar" id="btn_regeitar_{{$potencialInvestidor->id_user}}">Regeitar</button>
+                                    <button class="btn_aceitar" id="btn_aceitar_{{$investidor->id_user}}">Aceitar</button>
+                                    <button class="btn_regeitar" id="btn_regeitar_{{$investidor->id_user}}">Regeitar</button>
                                 </div>
                             </div>
                         </div>

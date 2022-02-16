@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
-use App\Nacionalidades;
+
 use App\Setores;
 use App\Fases;
 use App\Startups;

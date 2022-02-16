@@ -42,7 +42,7 @@ class User extends Authenticatable
     }
 
     
-    public function potenciaisinvestidores(){
-        return $this->hasOne('App\PotenciaisInvestidores','id_user');
+    public function investidores(){
+        return $this->hasOne('App\Investidores','id_user');
     }
 }
