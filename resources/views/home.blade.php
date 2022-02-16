@@ -178,14 +178,6 @@
 
                             </div>
 
-                            <div>
-                                <label for="nacionalidade_inv" class="label_inv">Nacionalidade</label>
-                                <select class="form-control" id="nacionalidade_inv" name="nacionalidade_inv">
-                                    @foreach($nacionalidades as $nacionalidade)
-                                    <option value="{{$nacionalidade->id}}">{{$nacionalidade->nome}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
 
                             <div>
                                 <label for="email_inv" class="label_inv">Email</label>

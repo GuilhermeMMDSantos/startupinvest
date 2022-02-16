@@ -15,13 +15,12 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $nacionalidades = Nacionalidades::orderBy('nome','ASC')
-        ->get();
+        
         $setores = Setores::orderBy('nome','ASC')
         ->get();
         $fases = Fases::get();
 
-        return view('home',compact('nacionalidades','setores','fases'));
+        return view('home',compact('setores','fases'));
     }
 
     public function loadHomePag()
