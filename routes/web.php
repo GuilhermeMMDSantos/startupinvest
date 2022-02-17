@@ -29,7 +29,7 @@ Route::get('home', 'HomeController@index')->name('home');
 Route::post('empreendedor/cadastrar', 'AuthController@cadastrarStartup')->name("cadastro.startup");
 Route::post('investidor/cadastrar', 'AuthController@cadastrarInvestidor')->name("cadastro.investidor");
 
-Route::get('processamentocadastro', 'HomeController@loadWaitValidationPag')->name("processamento.cadastro");
+Route::get('processamento_cadastro', 'HomeController@loadWaitValidationPag')->name("processamento.cadastro");
 
 Route::post('loginuser', 'AuthController@loginuser')->name('user.login');
 

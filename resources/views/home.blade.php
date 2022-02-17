@@ -182,9 +182,20 @@
                             <div>
                                 <label for="email_inv" class="label_inv">Email</label>
                                 <input type="email" placeholder="nome@provedor.tipo" name="email_investidor" value="{{old('email_investidor')}}" class="form-control yesForStyle" id="email_inv" autocomplete="off" required>
-
                             </div>
 
+                            <div class="row">
+                                <div class="col-12">
+                                    <label for="my-input-file-inv" class="label_inv">Sobre Investimento Em Startup(<span class="label_max_size">max 30MB</span>)</label>
+                                    <div class="content-my-input-file-inv">
+                                        <label for="my-input-file-inv" class="btn-select-file-inv">Selecionar</label>
+                                        <div>
+                                            <input class="form-control" type="text" placeholder="Nenhum arquivo selecionado" id="my-input-file-disabled-inv" disabled>
+                                            <input type="file" id="my-input-file-inv"  name="video_validar_investidor">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="content-btn-fazer-parte">
                                 <input type="hidden" id="input_hidden" value="investidor" name="user" old_value_sobrenome="{{old('segundo_nome')}}" old_value_nif="{{old('nif')}}">

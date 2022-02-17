@@ -23,24 +23,28 @@ $(function () {
 
     $("#my-input-file-emp").change(function () {
 
+        $("#my-input-file-disabled-emp").attr("placeholder", $(this)[0].files[0].name);
+
+    });
+
+    $("#my-input-file-inv").change(function () {
 
         if (parseFloat($(this)[0].files[0].size / 1048576) > 30) {
             $(this).val('');
-            $("#my-input-file-disabled-emp").attr("placeholder", "Nenhum video selecionado");
-            $("#label_max_MB_video_emp").css({
+            $("#my-input-file-disabled-inv").attr("placeholder", "Nenhuma imagem selecionado");
+            $(".label_max_size").css({
                 'color': 'red',
                 'transition': '0.5s'
             });
         } else {
-            $("#my-input-file-disabled-emp").attr("placeholder", $(this)[0].files[0].name);
-            $("#label_max_MB_video_emp").css({
+            $("#my-input-file-disabled-inv").attr("placeholder", $(this)[0].files[0].name);
+            $(".label_max_size").css({
                 'color': 'grey',
                 'transition': '0.5s'
             });
         }
 
     });
-
 
     $("input[name='tipo_investidor']").click(function () {
 

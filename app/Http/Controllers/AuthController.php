@@ -18,7 +18,7 @@ class AuthController extends Controller
     public function cadastrarStartup(Request $request)
     {
 
-
+        dd($request);
         $validador = Validator::make($request->all(), [
             'nome' => 'required|unique:startups',
             'email' => 'required|unique:users',
@@ -57,7 +57,7 @@ class AuthController extends Controller
         $dados = $request->all();
 
 
-        $user = $this->create($dados,'startup');
+        $user = $this->create($dados, 'startup');
 
 
 
@@ -72,33 +72,33 @@ class AuthController extends Controller
 
 
         Startups::create([
-            'id_user' => $user->id,
+            'fk_user' => $user->id,
             'nome' => $dados['nome'],
-            'setor_atividade' => $dados['sector'],
-            'fase_desenvolvimento' => $dados['fase'],
-            'comprovativo_registo' => $uploadFicheiro,
+            'fk_setor_economico' => $dados['sector'],
+            'fk_fase_desenvolvimento' => $dados['fase'],
+            'comprovativo_registo_empresa' => $uploadFicheiro,
             'pitch_elevator' => $pitch,
-            'img' => "armazenamento/startups/img/img2.jpg"
+            'logotipo' => "armazenamento/startups/img/img2.jpg"
         ]);
 
-        return redirect()->intended("processamentocadastro");
+        return redirect()->intended("processamento_cadastro");
     }
 
     public function cadastrarInvestidor(Request $request)
     {
+        dd("Problema ao tentar fazer upload de video");
+
 
         $validador = Validator::make(
             $request->all(),
             [
                 'primeiro_nome' => 'required', //sobrenome e o nif sao opcionais
-                'email_investidor' => 'required|unique:users,email',
-                'nacionalidade_inv' => 'required',
+                'email_investidor' => 'required|unique:users,email'
             ],
             [
                 'primeiro_nome.required' => 'Nome do investidor em falta',
                 'email_investidor.required' => 'Email do Invetidor em falta',
-                'email_investidor.unique' => 'Email do Investidor já existe',
-                'nacionalidade_inv.required' => 'Nacionalidade do inv. em falta '
+                'email_investidor.unique' => 'Email do Investidor já existe'
             ]
         );
 
@@ -110,12 +110,18 @@ class AuthController extends Controller
                 ->withInput($request->all());
         }
 
+
+
         $dados = $request->all();
-        
- 
 
-        $user = $this->create($dados,'investidor');
 
+
+        $user = $this->create($dados, 'investidor');
+
+        $extensaoArquivo = $request->file('video_validar_investidor')->extension();
+        $nomeArquivo = "video{$user->id}.{$extensaoArquivo}";
+
+        $uploadFicheiro = $request->file('video_validar_investidor')->storeAs('armazenamento/investidor/videos', $nomeArquivo);
 
 
         $nif = null;
@@ -127,16 +133,16 @@ class AuthController extends Controller
         if (isset($dados['segundo_nome']))
             $sobrenome = $dados['segundo_nome'];
 
-            Investidores::create([
-            'id_user' => $user->id,
+        Investidores::create([
+            'fk_user' => $user->id,
             'nome' => $dados['primeiro_nome'],
             'sobrenome' => $sobrenome,
             'nif' => $nif,
-            'id_nacionalidade' => $dados['nacionalidade_inv'],
-            'id_tipo_entidade' => $dados['tipo_investidor']
+            'tipo_entidade' => $dados['tipo_investidor'],
+            'video_validar' => $uploadFicheiro
         ]);
 
-        return redirect()->intended("processamentocadastro");
+        return redirect()->intended("processamento_cadastro");
     }
 
     public function create(array $dados, $tipo)
@@ -150,14 +156,13 @@ class AuthController extends Controller
         return User::create([
             'email' => $email,
             'password' => Hash::make('12345'),
-            'estado' => 'aguardando', // em processamento,aceite, negato 
+            'estado' => 'espera',
             'tipo' => $tipo
         ]);
     }
 
     public function loginuser(Request $request)
     {
-
 
         request()->validate([
             'email_login' => 'required',
@@ -170,7 +175,7 @@ class AuthController extends Controller
 
 
         if ($status) {
-            if(Auth::user()->tipo == 'admin'){
+            if (Auth::user()->tipo == 'admin') {
                 return redirect()->intended("paineladmin");
             }
             return redirect()->intended("ecostartup");
@@ -179,7 +184,7 @@ class AuthController extends Controller
         return Redirect::to("home")->with('error', 'Credenciais erradas');
     }
 
-  
+
 
     public function logoutUser()
     {
@@ -187,6 +192,4 @@ class AuthController extends Controller
         Auth::logout();
         return Redirect("home");
     }
-
-     
 }

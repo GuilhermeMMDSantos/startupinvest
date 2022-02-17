@@ -7,25 +7,34 @@ use Illuminate\Database\Eloquent\Model;
 class Startups extends Model
 {
     protected $fillable = [
-        'id_user','nome','setor_atividade','fase_desenvolvimento','comprovativo_registo','pitch_elevator','img'
+        'fk_user',
+        'nome',
+        'fk_setor_economico',
+        'fk_fase_desenvolvimento',
+        'comprovativo_registo_empresa',
+        'pitch_elevator',
+        'pitch_deck',
+        'logotipo',
+        'estado_busca_invest',
+        'fk_tipo_negocio'
     ];
 
 
 
     public function user(){
-        return $this->belongsTo('App\User','id_user');
+        return $this->belongsTo('App\User','fk_user');
     }
 
     public function setor(){
-        return $this->belongsTo('App\Setores','setor_atividade','id');
+        return $this->belongsTo('App\Setores','fk_setor_economico');
     }
 
     public function fase(){
-        return $this->belongsTo('App\Fases','fase_desenvolvimento','id');
+        return $this->belongsTo('App\Fases','fk_fase_desenvolvimento');
     }
 
     public function tipobusnessfunc(){
-        return $this->belongsTo('App\TipoBusness','tipobusness','id');
+        return $this->belongsTo('App\TipoBusness','fk_tipo_negocio');
     }
 
 }

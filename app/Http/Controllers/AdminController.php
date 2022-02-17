@@ -21,16 +21,16 @@ class AdminController extends Controller
         if (Auth::check()) {
 
             $startups = Startups::whereHas('user', function (Builder $query) {
-                $query->where('estado', 'aguardando'); // 0 - ainda não avaliado, 1- aceite, 2-regeitado
+                $query->where('estado', 'espera'); // 0 - ainda não avaliado, 1- aceite, 2-regeitado
             })
-                ->orderBy('id_user', 'desc')
+                ->orderBy('fk_user', 'desc')
                 ->get();
 
 
             $investidores = Investidores::whereHas('user', function (Builder $query) {
-                $query->where('estado', 'aguardando'); // 0 - ainda não avaliado, 1- aceite, 2-regeitado
+                $query->where('estado', 'espera'); // 0 - ainda não avaliado, 1- aceite, 2-regeitado
             })
-                ->orderBy('id_user', 'desc')
+                ->orderBy('fk_user', 'desc')
                 ->get();
 
             return view('Admin/painel', compact('startups', 'investidores'));
