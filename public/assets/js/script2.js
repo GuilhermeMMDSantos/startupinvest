@@ -35,7 +35,9 @@ $(function () {
     });
 
    
-
+$("#input-busca-startup").click(function(){
+    $("#input-busca-startup input").focus();
+});
     function alterCheckboxStatus1(nomeFiltro, contador, limite) {
         $("#" + nomeFiltro + "all").prop('checked', true);
         $("." + nomeFiltro).prop('checked', true);
@@ -68,6 +70,7 @@ $(function () {
                 '_token': '{{csrf_token()}}'
             },
             success: function (response) {
+               
                 $("#startup_cards_container").empty();
                 $("#startup_cards_container").html(response);
 
@@ -146,5 +149,8 @@ $(function () {
 
         });
     }
+
+
+
 
 })

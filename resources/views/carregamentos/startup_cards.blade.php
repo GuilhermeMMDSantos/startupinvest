@@ -1,81 +1,64 @@
 <style type="text/css">
-    .startup_card {
-        margin-bottom: 10px;
-        display: none;
-        transition: transform 0.5s;
-
+    .link-card:hover {
+        transform: scale(1.02);
+        transition: all 0.7s;
     }
-
-    .linkCard,
-    .linkCard:hover {
-        text-decoration: none;
-        color: black;
-    }
-
-    .startup_card:hover {
-        transform: scale(1.03);
-        transition: all 0.5s;
-    }
-
-    .content_startup_card_img {
-        padding-left: 3.2%;
-        padding-right: 3.2%;
-        padding-top: 2%; 
-    }
-
-    .startup_card_img {
-        width: 80px;
-        height: 80px;
-       /* border-radius: 50%;*/
-        border: 2px solid #e6ecf1;
-    }
-
-    .startup_card_img img {
-        width: 100%;
-        height: 100%;
-
-    }
-
-    .startup_card_info {
-        padding-top: 2%;
-        padding-bottom: 2%;
-        padding-right: 3%;
-        padding-left: 0px;
-        font-size: 13px;
-
-    }
-
-    .startup_card_info span {
-        margin-right: 10px;
-        background-color: #e6ecf1;
-        border-radius: 2px;
-        padding: 4px 8px;
+    .link-card{
+        transition: all 0.7s;
     }
 </style>
 
 @forelse($startupsCards as $startupCard)
-<div class="card startup_card container-fluid">
-    <a class="linkCard" href="{{route('user_perfil',$startupCard->id_user)}}" style="display:block; width:100%;height:100%;">
-        <div class="row">
-            <div class="col-sm col-md-2 content_startup_card_img">
-                <div class="startup_card_img">
-                    <img src="{{asset('assets/img/img1.png')}}" />
+<div class="col-sm-4" style="padding-left:10px !important;padding-right:10px !important;padding-top:15px;">
+    <a href="#" style="display:block;width:100%;height:100%;text-decoration:none;color:#333;" class="link-card">
+        <div class="h-100 card">
+
+            <img src="{{asset('assets/img/3081627.jpg')}}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">{{$startupCard->nome}}</h5>
+
+                <p style="font-size:11px;">
+                    <span style="background:#ccc;display:inline-block;padding:2px;border-radius:5px;">{{$startupCard->fase->nome}}</span>
+                    <span style="background:#ccc;display:inline-block;padding:2px;border-radius:5px;">{{$startupCard->setor->nome}}</span>
+                    <span style="background:#ccc;display:inline-block;padding:2px;border-radius:5px;">{{$startupCard->tipobusnessfunc->nome}}</span>
+                </p>
+                <p class="card-text">
+                    {{$startupCard->pitch_elevator}}
+                </p>
+
+            </div>
+            <div class="card-footer" style="border-top:none;background-color:white;">
+                <hr style="margin-bottom:0.5rem;">
+                <span style="font-size:12px;color:#adb5bdd6;">Conseguido</span>
+                <p style="font-size:14px;">80% - 4 Restantes</p>
+
+                <div class="progress" style="margin-top:-13px;">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="row" style="margin-top:5px;">
+                    <div class="col-4">
+                        <span style="font-size:13px;color:#adb5bdd6;">Objectivo</span>
+                        <p>20.000Kz</p>
+                    </div>
+                    <div class="col-4" style="border-left:1px solid #ccc;border-right:1px solid #ccc;">
+                        <span style="font-size:13px;color:#adb5bdd6;">
+                            Atingido
+                        </span>
+                        <p>17.000Kz</p>
+                    </div>
+                    <div class="col-4">
+                        <span style="font-size:13px;color:#adb5bdd6;">Investidores</span>
+                        <p>4</p>
+                    </div>
                 </div>
             </div>
-            <div class="col-sm col-md-10 startup_card_info">
-                <h4 style="font-size:16px;font-weight:bold;">{{$startupCard->nome}}</h4>
-                <p>
-                    <span>{{$startupCard->fase->nome}}</span>
-                    <span>{{$startupCard->setor->nome}}</span>
-                    <span>{{$startupCard->tipobusnessfunc->nome}}</span>
-                </p>
-                <p>{{strtoupper($startupCard->pitch_elevator)}}</p>
-            </div>
+
         </div>
     </a>
 </div>
+
 @empty
-<div style="padding-left:20px;">
+<div style="padding-left:20px;" class="col-12">
     <h4 style="font-size: 15px;
     color: #545b62;">Sem startups registradas</h4>
 </div>

@@ -18,7 +18,7 @@ class AuthController extends Controller
     public function cadastrarStartup(Request $request)
     {
 
-        dd($request);
+         
         $validador = Validator::make($request->all(), [
             'nome' => 'required|unique:startups',
             'email' => 'required|unique:users',
@@ -78,7 +78,8 @@ class AuthController extends Controller
             'fk_fase_desenvolvimento' => $dados['fase'],
             'comprovativo_registo_empresa' => $uploadFicheiro,
             'pitch_elevator' => $pitch,
-            'logotipo' => "armazenamento/startups/img/img2.jpg"
+            'logotipo' => "armazenamento/startups/img/img2.jpg",
+            'fk_tipo_negocio' => $dados['busnessType']
         ]);
 
         return redirect()->intended("processamento_cadastro");

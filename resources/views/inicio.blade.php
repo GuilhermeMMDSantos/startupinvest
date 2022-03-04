@@ -5,88 +5,62 @@
 
  @section('contentBody_base_inicio')
 
- <section class="container-fluid" style="padding-left:6.5%;padding-right:6.5%;  ">
+ <section style="padding-left:6.5%;padding-right:6.5%;" class="container-fluid">
+     <div class="row">
+         <div class="col-sm-12">
 
-
-     <div class="row ">
-
-         <div class="col-sm-4" class="menuAsideFiltro">
-             <div class="card" style="width: 20rem;">
-                 <div class="card-body">
-                     <h4 class="headFiltros">Fase de Desenvolvimento</h4>
-                     <form>
-                         <div class="form-check">
-                             <input class="form-check-input filtroall" type="checkbox" id="faseFiltroall" value="0">
-                             <label class="form-check-label" for="faseFiltroall">
-                                 Todos
-                             </label>
-                         </div>
-                         @foreach($fases as $fase)
-                         <div class="form-check">
-                             <input class="form-check-input faseFiltro _checkbox" type="checkbox" id="fasefiltro_{{$fase->id}}" value="{{$fase->id}}">
-                             <label class="form-check-label" for="fasefiltro_{{$fase->id}}">
-                                 {{$fase->nome}}
-                             </label>
-                         </div>
-                         @endforeach
-                     </form>
-
-                     <hr>
-                     <h4 class="headFiltros">Sector de atividade</h4>
-                     <form>
-                         <div class="form-check">
-                             <input class="form-check-input filtroall" type="checkbox" id="setorFiltroall" value="0">
-                             <label class="form-check-label" for="setorFiltroall">
-                                 Todos
-                             </label>
-                         </div>
-                         @foreach($setores as $setor)
-                         <div class="form-check">
-                             <input class="form-check-input setorFiltro _checkbox" type="checkbox" id="setorfiltro_{{$setor->id}}" value="{{$setor->id}}">
-                             <label class="form-check-label" for="setorfiltro_{{$setor->id}}">
-                                 {{$setor->nome}}
-                             </label>
-                         </div>
-                         @endforeach
-                     </form>
-
-                     <hr>
-
-                     <h4 class="headFiltros">Tipo de Negócio</h4>
-                     <form>
-                         <div class="form-check">
-                             <input class="form-check-input filtroall" type="checkbox" id="tiponegocioFiltroall" value="0">
-                             <label class="form-check-label" for="tiponegocioFiltroall">
-                                 Todos
-                             </label>
-                         </div>
-                         @foreach($tiposBusness as $tipoBusness)
-                         <div class="form-check">
-                             <input class="form-check-input tiponegocioFiltro _checkbox" type="checkbox" id="tiponegocio_{{$tipoBusness->id}}" value="{{$tipoBusness->id}}">
-                             <label class="form-check-label" for="tiponegocio_{{$tipoBusness->id}}">
-                                 {{$tipoBusness->nome}}
-                             </label>
-                         </div>
-                         @endforeach
-                     </form>
-
-                 </div>
-             </div>
-         </div>
-
-         <div class="col-sm-8"  >
              <div class="card">
                  <div class="card-body">
-                     <form>
-                         <div>
-                             <input type="text" id="search_filtro" class="form-control" placeholder="Buscar Startup" style="border-radius:3px;">
+                     <div class="row">
+                         <div class="col-sm-8">
+                             <div class="form-row" style="font-size:13px;">
+                                 <div class="form-group col-md-4">
+                                     <label for="inputState">Fase Desenvolvimento</label>
+                                     <select id="inputState" class="form-control">
+                                         @foreach($fases as $fase)
+                                         <option value="{{$fase->id}}">{{$fase->nome}}</option>
+                                         @endforeach
+                                     </select>
+                                 </div>
+                                 <div class="form-group col-md-4">
+                                     <label for="inputState">Sector Economico</label>
+                                     <select id="inputState" class="form-control">
+                                         @foreach($setores as $setor)
+                                         <option value="{{$setor->id}}">{{$setor->nome}}</option>
+                                         @endforeach
+                                     </select>
+                                 </div>
+                                 <div class="form-group col-md-4">
+                                     <label for="inputState">Tipo de Negocio</label>
+                                     <select id="inputState" class="form-control">
+                                         @foreach($tiposBusness as $tb)
+                                         <option value="{{$tb->id}}">{{$tb->nome}}</option>
+                                         @endforeach
+                                     </select>
+                                 </div>
+
+                             </div>
                          </div>
-                     </form>
+                         <div class="col-sm-4" style="padding-top:25px;">
+                             <form>
+
+                                 <div id="input-busca-startup" style="border:1px solid #ccc; border-radius:3px;padding:5px 9px;display:flex;background: #f8f9fa;">
+                                 <i class="fa fa-search" style="display:inline-block;margin-top:5px;"></i>
+                                 <input style="border:none;width:93%;margin-left:6px; outline:none;background:transparent;" type="search" placeholder="Buscar Startup"/>
+                                 </div>
+                             </form>
+                         </div>
+                     </div>
                  </div>
              </div>
-             <div id="startup_cards_container" style="margin-top:20px;min-height:20px;">
 
+             <div  class="container-fluid" style="padding-bottom:10px;">
+                 <div class="row" id="startup_cards_container">
+
+
+                 </div>
              </div>
+
          </div>
      </div>
  </section>

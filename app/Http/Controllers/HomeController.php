@@ -32,15 +32,15 @@ class HomeController extends Controller
 
 
 
-            $fases =  DB::table('fases')
+            $fases =  DB::table('fases_desenvolvimento')
                 ->select('id', 'nome')
                 ->get();
 
-            $setores = DB::table('setores')
+            $setores = DB::table('setores_economico')
                 ->select('id', 'nome')
                 ->get();
 
-            $tiposBusness = DB::table('tipo_busnesses')
+            $tiposBusness = DB::table('tipos_negocio')
                 ->select('id', 'nome')
                 ->get();
 

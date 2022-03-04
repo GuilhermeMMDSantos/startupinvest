@@ -2,16 +2,18 @@
 <header class=" container-fluid" id="header" style="position:fixed;top:0;z-index:10;">
     <div class="row" id="headMenu">
 
-        <div class="col-sm-6 col-lg-6 logo" style="padding-top:12px;">
+        <div class="col-sm-5 col-lg-5 logo" style="padding-top:12px;">
             <h1><a href="{{url('ecostartup')}}">ecoStartup</h1>
         </div>
 
-        <nav class="col-lg-5 menu" style="padding-top:7px;padding-bottom:7px;">
+        <nav class="col-lg-6 menu" style="padding-top:7px;padding-bottom:7px;">
 
             <ul>
                 <li class="liMenu"><a href="#" class="anchorMenu"><i class="fa fa-bell"></i><span>Notificões</span></a></li>
                 <li class="liMenu"><a href="#" class="anchorMenu"><i class="fa fa-envelope"></i><span>Mensagens</span></a></li>
-                <li class="liMenu"><a href="#" class="anchorMenu"><i class="fa fa-users"></i><span>Stackholder</span></a></li>
+                <li class="liMenu"><a href="#" class="anchorMenu"><i class="fa fa-envelope"></i><span>Investidores</span></a></li>
+                <li class="liMenu"><a href="#" class="anchorMenu"><i class="fa fa-users"></i><span>Startups</span></a></li>
+
             </ul>
 
         </nav>
@@ -38,20 +40,20 @@
 <br>
 
 <script type="text/javascript">
-  $(function(){
-    
+    $(function() {
 
-      $("#myself").click(function(){
-          $(".submenu").toggle(100);
-           
-      });
 
-      $(document).click(function(element){
-      
-      if($(element.target).attr('id') != 'myself_img'){
-        $(".submenu").hide(100);
-      }
+        $("#myself").click(function() {
+            $(".submenu").toggle(100);
+
+        });
+
+        $(document).click(function(element) {
+
+            if ($(element.target).attr('id') != 'myself_img') {
+                $(".submenu").hide(100);
+            }
+        });
+
     });
-    
-  });
 </script>

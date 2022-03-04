@@ -25,11 +25,11 @@ class UserController extends Controller
         $tipoUser = Auth::user()->tipo;
 
         if ($tipoUser == 'startup') {
-            $startup = Startups::where('id_user', Auth::user()->id)->first();
+            $startup = Startups::where('fk_user', Auth::user()->id)->first();
 
             return view('perfil_startup', compact('startup', 'isMine', 'tipoUser'));
         } else if ($tipoUser == 'investidor') {
-            $investidor = Investidores::where('id_user', Auth::user()->id)->first();
+            $investidor = Investidores::where('fk_user', Auth::user()->id)->first();
             return view('perfil_investidor', compact('potencialInvestidor', 'isMine', 'tipoUser'));
         }
     }

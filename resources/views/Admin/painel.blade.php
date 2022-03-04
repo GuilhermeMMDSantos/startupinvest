@@ -41,7 +41,7 @@
                 <div class="row" id="divContainerStartupsCard" style="padding-top:10px;padding-left:20px;">
                     @foreach($startups as $startup)
                     <div class="float-left">
-                        <div class="card cartao card_emp" id="cartao_user{{$startup->id_user}}">
+                        <div class="card cartao card_emp" id="cartao_user{{$startup->fk_user}}">
                             <div class="card-header">
                                 <p><strong>Nome:</strong> <span>{{$startup->nome}}</span><br><strong>Setor de atividade:</strong> <span>{{$startup->setor->nome}}</span><br><strong>Fase de desenvolvimento:</strong> <span>{{$startup->fase->nome}}</span></p>
                             </div>
@@ -71,7 +71,7 @@
                 <div class="row" style="padding-top:10px;padding-left:10px;padding-left:20px;">
                     @foreach($investidores as $investidor)
                     <div class="float-left">
-                        <div class="card cartao card_inv" id="cartao_user{{$investidor->id_user}}">
+                        <div class="card cartao card_inv" id="cartao_user{{$investidor->fk_user}}">
                             <div class="card-header">
                                 <p><strong>Nome: </strong><span>{{$investidor->nome}} @if(isset($investidor->sobrenome)){{$investidor->sobrenome}}@endif</span><br>
                                     @if(isset($investidor->nif))

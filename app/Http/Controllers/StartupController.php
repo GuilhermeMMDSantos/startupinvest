@@ -22,8 +22,10 @@ class StartupController extends Controller
             ->whereHas('user', function ($query) {
                 $query->where('estado', 'aceite');
             })
-            ->where('id_user', '!=', Auth::user()->id)
+            ->where('fk_user', '!=', Auth::user()->id)
             ->get();
+
+         
 
         $returnHtml = view('carregamentos.startup_cards', compact('startupsCards'))->render();
         return response()->json($returnHtml);
@@ -46,13 +48,13 @@ class StartupController extends Controller
             ->whereHas('user', function ($query) {
                 $query->where('estado', 'aceite');
             })
-            ->whereIn('setor_atividade', $setoresSelecionados)
-            ->whereIn('fase_desenvolvimento', $fasesSelecionadas)
-            ->whereIn('tipobusness', $tiposNegocioSelecionados)
+            ->whereIn('fk_setor_economico', $setoresSelecionados)
+            ->whereIn('fk_fase_desenvolvimento', $fasesSelecionadas)
+            ->whereIn('fk_tipo_negocio', $tiposNegocioSelecionados)
             ->when($value_search_filtro, function ($query, $value_search_filtro) {
                 return $query->where('nome', 'like', '%' . $value_search_filtro . '%');
             })
-            ->where('id_user', '!=', Auth::user()->id)
+            ->where('fk_user', '!=', Auth::user()->id)
             ->get();
 
         $returnHtml = view('carregamentos.startup_cards', compact('startupsCards'))->render();

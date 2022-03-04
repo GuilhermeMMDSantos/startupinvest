@@ -82,7 +82,7 @@
                             <div class="row row-cols-1 row-cols-dm-1 row-cols-lg-2 ">
                                 <div class="col">
                                     <label for="nome_emp" class="label_emp">Nome startup</label>
-                                    <input class="form-control" type="text" name="nome" placeholder="ecostartup" class="typeNormal" id="nome_emp" value="{{old('nome')}}" autocomplete="off" required>
+                                    <input class="form-control" type="text" name="nome" placeholder="ecostartup" class="typeNormal" id="nome_emp" value="{{old('nome')}}" autocomplete="off"  required>
 
                                 </div>
                                 <div class="col">
@@ -146,7 +146,7 @@
                             <div id="pitch">
                                 <label for="pitch_line1" class="label_emp">Pitch Elevator</label>
                                 <p>A startup, está desenvolvendo </p>
-                                <input type="text" id="pitch_line1" class="elevator" placeholder="qual é o produto/serviço? ex: software, serviço de..." name="pitch_line1" value="{{old('pitch_line1')}}" autocomplete='off' maxlength="51" required>
+                                <input type="text" id="pitch_line1" class="elevator" placeholder="qual é o produto/serviço? ex: software, serviço de..." name="pitch_line1" value="{{old('pitch_line1')}}" autocomplete='off' maxlength="55" required>
                                 <p> para ajudar</p>
                                 <input type="text" class="elevator" placeholder="qual é publico alvo?" name="pitch_line2" value="{{old('pitch_line2')}}" autocomplete='off' maxlength="55" required>
                                 <p>a</p>
