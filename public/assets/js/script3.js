@@ -154,7 +154,10 @@ $(function () {
 
                     num_objects_out = num_objects_out + 1;
 
-                     
+                    
+                     $("#colum-card"+id_user_in_idAttr_local).css({
+                        'display':'none'
+                    });
 
                      $('#'+id_cartao_user).hide(1000);
                      $('#'+id_cartao_user).css({
