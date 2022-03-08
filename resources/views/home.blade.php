@@ -82,7 +82,7 @@
                             <div class="row row-cols-1 row-cols-dm-1 row-cols-lg-2 ">
                                 <div class="col">
                                     <label for="nome_emp" class="label_emp">Nome startup</label>
-                                    <input class="form-control" type="text" name="nome" placeholder="ecostartup" class="typeNormal" id="nome_emp" value="{{old('nome')}}" autocomplete="off"  required>
+                                    <input class="form-control" type="text" name="nome" placeholder="ecostartup" class="typeNormal" id="nome_emp" value="{{old('nome')}}" autocomplete="off" required>
 
                                 </div>
                                 <div class="col">
@@ -186,12 +186,16 @@
 
                             <div class="row">
                                 <div class="col-12">
+                                    <div class="jumbotron" style="padding-left: 1rem;padding-right: 1rem;padding-top: 0.5rem;padding-bottom: 0.5rem;font-size: 15px;color: #212529cf;">
+                                        <span>Submeta um vídeo de 30 min explicando "o que é startup?", "Qual o maior risco de investir em startup?", 
+                                            "Quanto tempo pode demorar p´ra obter retorno do investimento em startup?"</span>
+                                    </div>
                                     <label for="my-input-file-inv" class="label_inv">Sobre Investimento Em Startup(<span class="label_max_size">max 30MB</span>)</label>
                                     <div class="content-my-input-file-inv">
                                         <label for="my-input-file-inv" class="btn-select-file-inv">Selecionar</label>
                                         <div>
                                             <input class="form-control" type="text" placeholder="Nenhum arquivo selecionado" id="my-input-file-disabled-inv" disabled>
-                                            <input type="file" id="my-input-file-inv"  name="video_validar_investidor">
+                                            <input type="file" id="my-input-file-inv" accept=".mp4,.mkv" name="video_validar_investidor">
                                         </div>
                                     </div>
                                 </div>

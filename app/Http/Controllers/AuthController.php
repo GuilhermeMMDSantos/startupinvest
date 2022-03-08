@@ -18,7 +18,7 @@ class AuthController extends Controller
     public function cadastrarStartup(Request $request)
     {
 
-         
+
         $validador = Validator::make($request->all(), [
             'nome' => 'required|unique:startups',
             'email' => 'required|unique:users',
@@ -87,8 +87,8 @@ class AuthController extends Controller
 
     public function cadastrarInvestidor(Request $request)
     {
-        dd("Problema ao tentar fazer upload de video");
 
+        
 
         $validador = Validator::make(
             $request->all(),
@@ -144,6 +144,7 @@ class AuthController extends Controller
         ]);
 
         return redirect()->intended("processamento_cadastro");
+        
     }
 
     public function create(array $dados, $tipo)
