@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class AuthAjax
 {
@@ -15,6 +17,12 @@ class AuthAjax
      */
     public function handle($request, Closure $next)
     {
+
+        dd($request);
+        /* if (! $request->expectsJson()) {
+            return route('home');
+        }*/
+
         return $next($request);
     }
 }

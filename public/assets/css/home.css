@@ -144,7 +144,7 @@ body {
   display: none;
 }
 
-.btn-select-file-emp,.btn-select-file-inv{
+.btn-select-file-emp,.btn-select-file-inv,.btn-select-file-inv-bi{
     cursor:pointer;
     padding-top:10px;
     padding-bottom:2%;
@@ -156,10 +156,10 @@ body {
     border-radius:2px;
 }
 
-.content-my-input-file-emp,.content-my-input-file-inv{
+.content-my-input-file-emp,.content-my-input-file-inv,.content-my-input-file-inv-bi{
     display:flex;
 }
-.content-my-input-file-emp div , .content-my-input-file-inv div{
+.content-my-input-file-emp div , .content-my-input-file-inv div, .content-my-input-file-inv-bi div{
     width:70%;
 }
 
@@ -179,7 +179,6 @@ body {
     color:grey;
     font-size:15px;
 }
- 
 
 .formEmpreendedor input{
  text-indent:5px;
@@ -274,14 +273,48 @@ footer a{
     color:rgb(80, 109, 153);
 }
 
+
+
+.my-select-input {
+    position: absolute;
+    list-style: none;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #333;
+    border-right: 1px solid #333;
+    background-color: #fff;
+    width: 100%;
+    box-shadow: 0px 2px 5px 0px #ccc;
+  }
+  
+  .my-select-input li {
+    padding: 3px 5px;
+    transition: all 0.2s;
+    height: 28px;
+    font-size: 14px;
+  }
+  
+  .my-select-input li a {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .my-select-input li:hover {
+    background-color: #007bff;
+    color: white;
+    transition: all 0.2s;
+  }
+  
+
 @media only screen and  (min-width:310px) and (max-width:360px){
-    .btn-select-file-emp,.btn-select-file-inv{
+    .btn-select-file-emp,.btn-select-file-inv,.btn-select-file-inv-bi{
         font-size:12px;
         width:30%;
     }
 }
     @media only screen and (max-width:309px){
-        .btn-select-file-emp,.btn-select-file-inv{
+        .btn-select-file-emp,.btn-select-file-inv,.btn-select-file-inv-bi{
             font-size:10px;
             width:30%;
         }
@@ -292,7 +325,7 @@ footer a{
 }
 
 @media only screen  and  (min-width:361px) and (max-width:575px){
-    .btn-select-file-emp,.btn-select-file-inv{
+    .btn-select-file-emp,.btn-select-file-inv,.btn-select-file-inv-bi{
         font-size:14px;
         width:30%;
     }
@@ -314,7 +347,7 @@ footer a{
 }
 
 @media only screen  and  (min-width:768px) and (max-width:865px){
-    .btn-select-file-emp,.btn-select-file-inv{
+    .btn-select-file-emp,.btn-select-file-inv,.btn-select-file-inv-bi{
         font-size:13px; 
         width:32%;
     }
@@ -322,7 +355,7 @@ footer a{
 }
 
 @media only screen  and  (min-width:911px){
-    .btn-select-file-emp,.btn-select-file-inv{
+    .btn-select-file-emp,.btn-select-file-inv,.btn-select-file-inv-bi{
         font-size:15px;
         width:30%;
     }

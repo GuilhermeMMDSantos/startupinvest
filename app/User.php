@@ -19,7 +19,8 @@ class User extends Authenticatable
         'email',
          'password',
          'estado',
-         'tipo'
+         'tipo',
+         'code_user'
     ];
 
     /**
@@ -37,12 +38,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function startups(){
-        return $this->hasOne('App\Startups','id_user');
+    public function startup(){
+        return $this->hasOne('App\Startups','fk_user');
     }
 
     
-    public function investidores(){
-        return $this->hasOne('App\Investidores','id_user');
+    public function investidor(){
+        return $this->hasOne('App\Investidores','fk_user');
     }
 }

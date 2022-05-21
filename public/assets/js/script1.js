@@ -9,7 +9,7 @@ $(function () {
      */
     var old_value_sobrenome_js = $("#input_hidden").attr('old_value_sobrenome');
     var old_value_nif_js = $("#input_hidden").attr('old_value_nif');
-    
+
     identifyInvestorType(old_value_sobrenome_js, old_value_nif_js, 2);
 
 
@@ -29,22 +29,14 @@ $(function () {
 
     $("#my-input-file-inv").change(function () {
 
-        if (parseFloat($(this)[0].files[0].size / 1048576) > 30) {
-            $(this).val('');
-            $("#my-input-file-disabled-inv").attr("placeholder", "Nenhuma imagem selecionado");
-            $(".label_max_size").css({
-                'color': 'red',
-                'transition': '0.5s'
-            });
-        } else {
-            $("#my-input-file-disabled-inv").attr("placeholder", $(this)[0].files[0].name);
-            $(".label_max_size").css({
-                'color': 'grey',
-                'transition': '0.5s'
-            });
-        }
-
+        $("#my-input-file-disabled-inv").attr("placeholder", $(this)[0].files[0].name);
     });
+
+    $("#my-input-file-inv-bi").change(function () {
+
+        $("#my-input-file-disabled-inv-bi").attr("placeholder", $(this)[0].files[0].name);
+    });
+
 
     $("input[name='tipo_investidor']").click(function () {
 
@@ -62,6 +54,50 @@ $(function () {
             "background": "#e8bd63"
         })
     });
+
+
+    
+
+    $("#nome-incubadora-aceleradora").keyup(function() {
+
+        let valorNome = $(this).val().trim();
+        $("#id_incubadora_aceleradora").val(0);
+
+        if (valorNome == 0) {
+            $("#lista-resultado-busca-incubadora-aceleradora").hide(400);
+            return false;
+        }
+        $.ajax({
+            url: '/buscar_incubadora_aceleradora',
+            type: 'get',
+            data: {
+                '_token': '{{csrf_token()}}',
+                'valorNome': valorNome
+            },
+            success: function(response) {
+                $("#lista-resultado-busca-incubadora-aceleradora").empty();
+                $("#lista-resultado-busca-incubadora-aceleradora").append(response);
+                $("#lista-resultado-busca-incubadora-aceleradora").show(400);
+            },
+            error: function(error) {
+                console.log("ERRO AO BUSCAR INCUBADORAS-ACELERADORAS");
+                console.log(error);
+            }
+        });
+    });
+
+
+   $(document).click(function(){
+    $("#lista-resultado-busca-incubadora-aceleradora").hide(400);
+   });
+
+
+   $("#lista-resultado-busca-incubadora-aceleradora").on('click','a',function(){
+       $("#nome-incubadora-aceleradora").val($(this).html());
+       $("#id_incubadora_aceleradora").val($(this).attr('valor'));
+       
+   });
+
 
     function identifyUserType() {
         let user = $('.contentCol2-escolheUser select').val();
@@ -114,14 +150,26 @@ $(function () {
 
             content = "<div class='sobrenome_investidor_singular'>\
       <label for='nome2_inv' class='label_inv'>Sobrenome</label>\
-      <input type='text' name='segundo_nome' value='" + old_value_sobrenome_js + "' placeholder='Tunga' class='form-control yesForStyle' id='nome2_inv' required>\
-      </div>";
+      <input type='text' name='segundo_nome' value='" + old_value_sobrenome_js + "' placeholder='Tunga' class='form-control yesForStyle' id='nome2_inv'  >\
+      </div>\
+      \
+      <div>\
+      <label for='#' class='label_inv'>Bilhete De Identidade (PDF)</label>\
+      <div class='content-my-input-file-inv-bi'>\
+       <label for='my-input-file-inv-bi' class='btn-select-file-inv-bi'>Selecionar</label>\
+         <div>\
+            <input class='form-control' type='text' placeholder='Nenhum arquivo selecionado' id='my-input-file-disabled-inv-bi' disabled>\
+            <input type='file' id='my-input-file-inv-bi' accept='.pdf' name='bilhete_identidade_investidor'>\
+         </div>\
+        </div>\
+      </div>\
+      ";
 
         } else if ($("#juridico").prop('checked')) {
 
             content = "<div class='nif_pessoa_juridica'>\
           <label class='label_inv'>NIF da pessoa jurídica</label>\
-          <input type='text' name='nif' value='" + old_value_nif_js + "' class='form-control yesForStyle' id='nif_inv' placeholder='95003ASD22234567999' required>\
+          <input type='text' name='nif' value='" + old_value_nif_js + "' class='form-control yesForStyle' id='nif_inv' placeholder='95003ASD22234567999'  >\
           </div>";
 
         }
@@ -130,4 +178,4 @@ $(function () {
 
     }
 
-})
+});

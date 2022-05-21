@@ -25,6 +25,7 @@ Route::post('atualizar_stado', 'AdminController@atualizarEstadoUser');
 Route::get('/', 'HomeController@index');
 
 Route::get('home', 'HomeController@index')->name('home');
+Route::get('buscar_incubadora_aceleradora', 'HomeController@buscarIncubadoraAceleradora');
 
 Route::post('empreendedor/cadastrar', 'AuthController@cadastrarStartup')->name("cadastro.startup");
 Route::post('investidor/cadastrar', 'AuthController@cadastrarInvestidor')->name("cadastro.investidor");
@@ -37,17 +38,42 @@ Route::post('loginuser', 'AuthController@loginuser')->name('user.login');
 
 Route::get('userout', 'AuthController@logoutUser');
 
-Route::get('ecostartup', 'HomeController@loadHomePag');
+Route::get('stackholder_startup', 'HomeController@loadHomePag')->name('startup.menu');
+Route::get('stackholder_investidor', 'HomeController@loadInvestidoresPage')->name('investidor.menu');
 
 Route::group(['prefix' => '/startup', 'middleware' => 'auth'], function () {
-    Route::get('/load', 'StartupController@loadStartups');
-    Route::get('/filter', 'StartupController@filtrarStartups');
+    Route::get('/load', 'UserController@loadStartups');
+    Route::get('/filter', 'UserController@filtrarStartups');
 });
 
-Route::get('/user_perfil', 'UserController@showPerfil')->name('user.perfil');
-Route::get('/user_perfil_/{item}', 'UserController@showPerfilOther')->name('user_perfil');
+Route::get('/profile/{codeUser}', 'UserController@showPerfil')->name('startup.perfil')->middleware('auth');
 
-Route::get('/email', function () {
-    Mail::to('guiframart1@gmail.com')->send(new EmailSenha());
-    echo "Email enviado";
-});
+Route::get('load_form_editar_introducao_startup','UserController@loadFormEditIntroStartup');
+
+Route::post('load_tmp_img','UserController@loadTmpImg');
+
+Route::post('edit_intro_startup','UserController@editarIntroStartup');
+
+Route::get('atualizar_introducao_startup','UserController@atualizarIntroducaoStartup');
+
+Route::get('adicionar_investidor','UserController@adicionarInvestidor');
+
+Route::get('load_form_editar_investidor_startup','UserController@loadFormEditarInvestidorStartup');
+
+Route::get('editar_investidor_startup','UserController@editarInvestidorStartup');
+
+
+Route::get('eliminar_investidor_startup','UserController@eliminarInvestidorStartup');
+
+Route::get('buscar_certificados','UserController@buscarCertificados');
+
+Route::get('buscar_areas_formacao','UserController@buscarAreasFormacao');
+
+Route::get('buscar_cargos_executvo','UserController@buscarCargosExecutvo');
+
+Route::get('/email','AuthController@sendMail');
+
+
+Route::post('load_tmp_img_membro_equipa','UserController@loadTmpImgMembroEquipa');
+
+Route::post('/add_membro_equipa','UserController@adicionarMembroEquipa');

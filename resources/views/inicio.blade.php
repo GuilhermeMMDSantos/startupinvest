@@ -15,24 +15,27 @@
                          <div class="col-sm-8">
                              <div class="form-row" style="font-size:13px;">
                                  <div class="form-group col-md-4">
-                                     <label for="inputState">Fase Desenvolvimento</label>
-                                     <select id="inputState" class="form-control">
+                                     <label for="fase-desenvolvimento-filter">Fase Desenvolvimento</label>
+                                     <select id="fase-desenvolvimento-filter" class="form-control">
+                                         <option value="0">Todos</option>
                                          @foreach($fases as $fase)
                                          <option value="{{$fase->id}}">{{$fase->nome}}</option>
                                          @endforeach
                                      </select>
                                  </div>
                                  <div class="form-group col-md-4">
-                                     <label for="inputState">Sector Economico</label>
-                                     <select id="inputState" class="form-control">
+                                     <label for="sector-economico-filter">Sector Economico</label>
+                                     <select id="sector-economico-filter" class="form-control">
+                                         <option value="0">Todos</option>
                                          @foreach($setores as $setor)
                                          <option value="{{$setor->id}}">{{$setor->nome}}</option>
                                          @endforeach
                                      </select>
                                  </div>
                                  <div class="form-group col-md-4">
-                                     <label for="inputState">Tipo de Negocio</label>
-                                     <select id="inputState" class="form-control">
+                                     <label for="tipo-negocio-filter">Tipo de Negocio</label>
+                                     <select id="tipo-negocio-filter" class="form-control">
+                                         <option value="0">Todos</option>
                                          @foreach($tiposBusness as $tb)
                                          <option value="{{$tb->id}}">{{$tb->nome}}</option>
                                          @endforeach
@@ -45,8 +48,8 @@
                              <form>
 
                                  <div id="input-busca-startup" style="border:1px solid #ccc; border-radius:3px;padding:5px 9px;display:flex;background: #f8f9fa;">
-                                 <i class="fa fa-search" style="display:inline-block;margin-top:5px;"></i>
-                                 <input style="border:none;width:93%;margin-left:6px; outline:none;background:transparent;" type="search" placeholder="Buscar Startup"/>
+                                     <i class="fa fa-search" style="display:inline-block;margin-top:5px;"></i>
+                                     <input style="border:none;width:93%;margin-left:6px; outline:none;background:transparent;" id="nome-startup-filter" type="search" placeholder="Buscar Startup" />
                                  </div>
                              </form>
                          </div>
@@ -54,8 +57,8 @@
                  </div>
              </div>
 
-             <div  class="container-fluid" style="padding-bottom:10px;">
-                 <div class="row" id="startup_cards_container">
+             <div class="container-fluid" style="padding-bottom:10px;">
+                 <div class="row" id="startup_cards_container" style="min-height:500px;">
 
 
                  </div>

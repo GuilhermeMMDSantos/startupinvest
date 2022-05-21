@@ -11,12 +11,13 @@ class Startups extends Model
         'nome',
         'fk_setor_economico',
         'fk_fase_desenvolvimento',
-        'comprovativo_registo_empresa',
+        'contrato_incubadora_aceleradora',
         'pitch_elevator',
         'pitch_deck',
         'logotipo',
         'estado_busca_invest',
-        'fk_tipo_negocio'
+        'fk_tipo_negocio',
+        'fk_incubadora_aceleradora'
     ];
 
 
@@ -36,5 +37,17 @@ class Startups extends Model
     public function tipobusnessfunc(){
         return $this->belongsTo('App\TipoBusness','fk_tipo_negocio');
     }
+
+   public function rodadaAtual(){
+       return $this->hasOne('App\RodadasInvestimento','fk_startup','fk_user')->where('estado','aberta');
+   }
+
+   public function membrosEquipa(){
+       return $this->hasMany('App\MembrosEquipaStartup','fk_startup','fk_user');
+   }
+
+   public function incubadorAceleradora(){
+       return $this->belongsTo('IncubadorasAceleradoras','fk_incubadora_aceleradora','id');
+   }
 
 }

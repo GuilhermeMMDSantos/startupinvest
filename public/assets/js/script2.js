@@ -34,10 +34,16 @@ $(function () {
         alterCheckboxStatus2(this, "tiponegocioFiltro", 2, 3);
     });
 
-   
-$("#input-busca-startup").click(function(){
-    $("#input-busca-startup input").focus();
-});
+
+    $("#input-busca-startup").click(function () {
+        $("#input-busca-startup input").focus();
+    });
+
+    $("#fase-desenvolvimento-filter").change(loadStartupCards);
+    $("#sector-economico-filter").change(loadStartupCards);
+    $("#tipo-negocio-filter").change(loadStartupCards);
+    $("#nome-startup-filter").keyup(loadStartupCards);
+
     function alterCheckboxStatus1(nomeFiltro, contador, limite) {
         $("#" + nomeFiltro + "all").prop('checked', true);
         $("." + nomeFiltro).prop('checked', true);
@@ -63,22 +69,31 @@ $("#input-busca-startup").click(function(){
 
 
     function loadStartupCards() {
+
+        let faseDesenvolvimento = $("#fase-desenvolvimento-filter").val();
+        let setorEconomico = $("#sector-economico-filter").val();
+        let tipoNegocio = $("#tipo-negocio-filter").val();
+        let nomeStartup = $("#nome-startup-filter").val().trim();
+
+
         $.ajax({
             url: "/startup/load",
             type: "get",
             data: {
-                '_token': '{{csrf_token()}}'
+                '_token': '{{csrf_token()}}',
+                'faseDesenvolvimento': faseDesenvolvimento,
+                'setorEconomico': setorEconomico,
+                'tipoNegocio': tipoNegocio,
+                'nomeStartup': nomeStartup
             },
             success: function (response) {
-               
                 $("#startup_cards_container").empty();
                 $("#startup_cards_container").html(response);
 
-                $("#startup_cards_container div").first().show(300,function showNext(){
-                    $(this).next("div").show(200,showNext);
-                }
-                );
-                
+                $("#startup_cards_container div").first().show(300, function showNext() {
+                    $(this).next("div").show(200, showNext);
+                });
+
             },
             error: function (error) {
                 console.log("Erro ao carregar startups cards");
@@ -88,67 +103,8 @@ $("#input-busca-startup").click(function(){
         });
     }
 
-    $("._checkbox").change(function () {
-        filtrar();
-    });
-
-    $("#search_filtro").keyup(function () {
-        filtrar();
-    });
-
-    $(".filtroall").change(function () {
-        filtrar();
-    });
 
 
-    function filtrar() {
-        var fasesSelecionadas = Array();
-        var setoresSelecionados = Array();
-        var tiposNegocioSelecionados = Array();
-        var value_search_filtro = undefined;
-
-        $(".faseFiltro").each(function () {
-            if ($(this).prop('checked'))
-                fasesSelecionadas.push($(this).attr("value"));
-        });
-
-        $(".setorFiltro").each(function () {
-            if ($(this).prop('checked'))
-                setoresSelecionados.push($(this).attr("value"));
-        });
-
-        $(".tiponegocioFiltro").each(function () {
-            if ($(this).prop('checked'))
-                tiposNegocioSelecionados.push($(this).attr("value"));
-        });
-
-        value_search_filtro = $("#search_filtro").val();
-
-        $.ajax({
-            url: "/startup/filter",
-            type: "get",
-            data: {
-                '_token': '{{csrf_token()}}',
-                'fases': fasesSelecionadas,
-                'setores': setoresSelecionados,
-                'typeBusness': tiposNegocioSelecionados,
-                'search': value_search_filtro
-            },
-            success: function (response) {
-                $("#startup_cards_container").html('');
-                $("#startup_cards_container").html(response);
-                $("#startup_cards_container div").first().show(300,function showNext(){
-                    $(this).next("div").show(200,showNext);
-                }
-                );
-            },
-            error: function (error) {
-                console.log("Erro ao filtrar startups");
-                console.log(error);
-            }
-
-        });
-    }
 
 
 

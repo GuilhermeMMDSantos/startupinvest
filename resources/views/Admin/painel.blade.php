@@ -48,7 +48,7 @@
                             <div style="width:100%; height:260; border:1px solid #ccc;margin-bottom:10px;" id="video_cartao_user{{$startup->fk_user}}">
                                 <img src="{{asset('storage/'.$startup->comprovativo_registo_empresa)}}" style="width:100%;height:100%;">
                             </div>
-                            <p><strong>Pitch Elevator:</strong> <span class="pitch">{{$startup->pitch_elevator}}</span></p>
+                            <p><strong>Pitch Elevator:</strong> <span class="pitch">{{ str_replace('##',' ',$startup->pitch_elevator) }}</span></p>
 
                         </div>
                         <div class="card-footer" style="border-top:none;background-color:white;">

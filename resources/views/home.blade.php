@@ -130,30 +130,54 @@
                                 </div>
                             </div>
 
+
                             <div class="row">
-                                <div class="col-12">
-                                    <label for="my-input-file-emp" class="label_emp">Comprovativo de registro da empresa</label>
-                                    <div class="content-my-input-file-emp">
-                                        <label for="my-input-file-emp" class="btn-select-file-emp">Selecionar</label>
-                                        <div>
-                                            <input class="form-control" type="text" placeholder="Nenhum arquivo selecionado" id="my-input-file-disabled-emp" disabled>
-                                            <input type="file" id="my-input-file-emp" accept=".jpg,.png" name="comprovativo_registo">
-                                        </div>
+                                <div class="col-sm-12">
+                                    <div id="pitch">
+                                        <label for="pitch_line1" class="label_emp">Pitch Elevator</label>
+                                        <p>A startup, está desenvolvendo </p>
+                                        <input type="text" id="pitch_line1" class="elevator" placeholder="qual é o produto/serviço? ex: software, serviço de..." name="pitch_line1" value="{{old('pitch_line1')}}" autocomplete='off' maxlength="55" required>
+                                        <p> para ajudar</p>
+                                        <input type="text" class="elevator" placeholder="qual é publico alvo?" name="pitch_line2" value="{{old('pitch_line2')}}" autocomplete='off' maxlength="55" required>
+                                        <p>a</p>
+                                        <input type="text" class="elevator" placeholder="ajuda a fazer o quê?" name="pitch_line3" value="{{old('pitch_line3')}}" autocomplete='off' maxlength="55" required>
+                                        <p> com </p>
+                                        <input type="text" class="elevator" placeholder="o que torna a tua solução única?" name="pitch_line4" value="{{old('pitch_line4')}}" autocomplete='off' maxlength="55" required>
+
                                     </div>
                                 </div>
                             </div>
 
-                            <div id="pitch">
-                                <label for="pitch_line1" class="label_emp">Pitch Elevator</label>
-                                <p>A startup, está desenvolvendo </p>
-                                <input type="text" id="pitch_line1" class="elevator" placeholder="qual é o produto/serviço? ex: software, serviço de..." name="pitch_line1" value="{{old('pitch_line1')}}" autocomplete='off' maxlength="55" required>
-                                <p> para ajudar</p>
-                                <input type="text" class="elevator" placeholder="qual é publico alvo?" name="pitch_line2" value="{{old('pitch_line2')}}" autocomplete='off' maxlength="55" required>
-                                <p>a</p>
-                                <input type="text" class="elevator" placeholder="ajuda a fazer o quê?" name="pitch_line3" value="{{old('pitch_line3')}}" autocomplete='off' maxlength="55" required>
-                                <p> com </p>
-                                <input type="text" class="elevator" placeholder="o que torna a tua solução única?" name="pitch_line4" value="{{old('pitch_line4')}}" autocomplete='off' maxlength="55" required>
+                             
+                            <div>
+                                <label>Nome Aceleradora/Incubadora</label>
+                                <input type="text" id="nome-incubadora-aceleradora" name="nome_incubadora_aceleradora" class="form-control" autocomplete="off" value="{{old('nome_incubadora_aceleradora')}}">
+                                <input type="text" id="id_incubadora_aceleradora" name="id_incubadora_aceleradora" hidden value="{{old('id_incubadora_aceleradora')}}">
+                                <div style="position:relative;z-index:10;" id="lista-resultado-busca-incubadora-aceleradora">
+                                </div>
+                            </div>
+                            
 
+                            <div class="row">
+                                
+                                <div class="col-sm-12">
+                                    <label for="nif-incubadora-aceleradora" class="label_emp">NIF Aceleradora/Incubadora</label>
+                                    <input class="form-control" type="text" name="nif_incubadora_aceleradora" placeholder=" " value="{{old('nif_incubadora_aceleradora')}}" id="nif-incubadora-aceleradora" autocomplete="off" required>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <label for="my-input-file-emp" class="label_emp">Contrato Startup e Aceleradora/Incubadora (PDF)</label>
+                                    <div class="content-my-input-file-emp">
+                                        <label for="my-input-file-emp" class="btn-select-file-emp">Selecionar</label>
+                                        <div>
+                                            <input class="form-control" type="text" placeholder="Nenhum arquivo selecionado" id="my-input-file-disabled-emp" disabled>
+                                            <input type="file" id="my-input-file-emp" accept=".pdf" name="contrato_aceleracao_incubacao">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="content-btn-fazer-parte">
@@ -172,7 +196,7 @@
                             </div>
                             <div>
                                 <label for="nome1_inv" class="label_inv">Nome</label>
-                                <input type="text" name="primeiro_nome" value="{{old('primeiro_nome')}}" placeholder="Emanuel" class=" form-control yesForStyle" id="nome1_inv" autocomplete="off" required />
+                                <input type="text" name="primeiro_nome" value="{{old('primeiro_nome')}}"  class=" form-control yesForStyle" id="nome1_inv" autocomplete="off" />
                             </div>
                             <div id="divs_concorrentes">
 
@@ -181,21 +205,20 @@
 
                             <div>
                                 <label for="email_inv" class="label_inv">Email</label>
-                                <input type="email" placeholder="nome@provedor.tipo" name="email_investidor" value="{{old('email_investidor')}}" class="form-control yesForStyle" id="email_inv" autocomplete="off" required>
+                                <input type="email"  name="email_investidor" value="{{old('email_investidor')}}" class="form-control yesForStyle" id="email_inv" autocomplete="off" >
                             </div>
 
                             <div class="row">
                                 <div class="col-12">
                                     <div class="jumbotron" style="padding-left: 1rem;padding-right: 1rem;padding-top: 0.5rem;padding-bottom: 0.5rem;font-size: 15px;color: #212529cf;">
-                                        <span>Submeta um vídeo de 30 min explicando "o que é startup?", "Qual o maior risco de investir em startup?", 
-                                            "Quanto tempo pode demorar p´ra obter retorno do investimento em startup?"</span>
+                                        <span>Somente Pessoa fisica ou jurídica que tenha sido fundador/investidor(Já antes empreendeu-investiu, trazem algum know how tal alem de dinheiro) de alguma empresa</span>
                                     </div>
-                                    <label for="my-input-file-inv" class="label_inv">Sobre Investimento Em Startup(<span class="label_max_size">max 30MB</span>)</label>
+                                    <label for="my-input-file-inv" class="label_inv">Contrato de sociedade (PDF) De Uma Das Empresas investidas, que estejam a funcionar ate a data presente e que tenham mais de 3 anos de operação(Tempo medio para as empresa se estabelecerem)</label>
                                     <div class="content-my-input-file-inv">
                                         <label for="my-input-file-inv" class="btn-select-file-inv">Selecionar</label>
                                         <div>
                                             <input class="form-control" type="text" placeholder="Nenhum arquivo selecionado" id="my-input-file-disabled-inv" disabled>
-                                            <input type="file" id="my-input-file-inv" accept=".mp4,.mkv" name="video_validar_investidor">
+                                            <input type="file" id="my-input-file-inv" accept=".pdf" name="pacto_social">
                                         </div>
                                     </div>
                                 </div>

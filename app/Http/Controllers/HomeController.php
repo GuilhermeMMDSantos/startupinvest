@@ -9,18 +9,20 @@ use Illuminate\Support\Facades\DB;
 
 use App\Setores;
 use App\Fases;
+use App\IncubadorasAceleradoras;
+use App\Investidores;
 use App\Startups;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        
-        $setores = Setores::orderBy('nome','ASC')
-        ->get();
+
+        $setores = Setores::orderBy('nome', 'ASC')
+            ->get();
         $fases = Fases::get();
 
-        return view('home',compact('setores','fases'));
+        return view('home', compact('setores', 'fases'));
     }
 
     public function loadHomePag()
@@ -49,6 +51,30 @@ class HomeController extends Controller
         }
 
         return Redirect::to("home")->with('error', 'Faça Login');
+    }
+
+    public function buscarIncubadoraAceleradora(Request $request){
+
+        $palavras = $request->valorNome;
+
+        $incubadorasAceleradoras = IncubadorasAceleradoras::where('nome', 'like', $palavras . '%')
+            ->get();
+
+        $returnHtml = view('blocos_html/lista_resultado_busca_incubadora_aceleradora', compact('incubadorasAceleradoras'))->render();
+
+        return response()->json($returnHtml);
+    }
+
+    public function loadInvestidoresPage()
+    {
+
+        if (!Auth::check()) {
+            return Redirect::to("home")->with('error', 'Faça Login');
+        }
+
+        $investidores = Investidores::with('user')
+            ->get();
+        return view('stackholder_investidores', compact('investidores'));
     }
 
     public function loadWaitValidationPag()
