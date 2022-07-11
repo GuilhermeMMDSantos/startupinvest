@@ -82,12 +82,12 @@
                             <div class="row row-cols-1 row-cols-dm-1 row-cols-lg-2 ">
                                 <div class="col">
                                     <label for="nome_emp" class="label_emp">Nome startup</label>
-                                    <input class="form-control" type="text" name="nome" placeholder="ecostartup" class="typeNormal" id="nome_emp" value="{{old('nome')}}" autocomplete="off" required>
+                                    <input class="form-control" type="text" name="nome"  class="typeNormal" id="nome_emp" value="{{old('nome')}}" autocomplete="off" required>
 
                                 </div>
                                 <div class="col">
                                     <label for="email_emp" class="label_emp">Email</label>
-                                    <input class="form-control" type="email" name="email" placeholder="nome@provedor.tipo" class="typeNormal" id="email_emp" value="{{old('email')}}" autocomplete="off" required>
+                                    <input class="form-control" type="email" name="email"  class="typeNormal" id="email_emp" value="{{old('email')}}" autocomplete="off" required>
 
                                 </div>
                             </div>
@@ -150,7 +150,7 @@
 
                              
                             <div>
-                                <label>Nome Aceleradora/Incubadora</label>
+                                <label class="label_emp">Nome Aceleradora/Incubadora</label>
                                 <input type="text" id="nome-incubadora-aceleradora" name="nome_incubadora_aceleradora" class="form-control" autocomplete="off" value="{{old('nome_incubadora_aceleradora')}}">
                                 <input type="text" id="id_incubadora_aceleradora" name="id_incubadora_aceleradora" hidden value="{{old('id_incubadora_aceleradora')}}">
                                 <div style="position:relative;z-index:10;" id="lista-resultado-busca-incubadora-aceleradora">
@@ -162,7 +162,7 @@
                                 
                                 <div class="col-sm-12">
                                     <label for="nif-incubadora-aceleradora" class="label_emp">NIF Aceleradora/Incubadora</label>
-                                    <input class="form-control" type="text" name="nif_incubadora_aceleradora" placeholder=" " value="{{old('nif_incubadora_aceleradora')}}" id="nif-incubadora-aceleradora" autocomplete="off" required>
+                                    <input class="form-control" type="text" name="nif_incubadora_aceleradora"  value="{{old('nif_incubadora_aceleradora')}}" id="nif-incubadora-aceleradora" autocomplete="off" required>
 
                                 </div>
                             </div>
@@ -191,12 +191,13 @@
                         <form method="POST" action="{{route('cadastro.investidor')}}" enctype="multipart/form-data" class="formInvestidor" id="formInvestidor">
                             @csrf
                             <div class="tipo_investidor">
-                                <label for="singular">Pessoa física</label> <input type="radio" value="2" name="tipo_investidor" id="singular" @if(old('tipo_investidor')!=1 ) checked @endif>
-                                <label for="juridico">Pessoa Jurídica</label> <input type="radio" value="1" name="tipo_investidor" id="juridico" @if(old('tipo_investidor')==1 ) checked @endif>
+                                <label for="singular">Pessoa física</label> <input type="radio" value="1" name="tipo_investidor" id="singular" @if(old('tipo_investidor')==1 ) checked @endif>
+                                <label for="juridico">Pessoa Jurídica</label> <input type="radio" value="2" name="tipo_investidor" id="juridico" @if(old('tipo_investidor')!=1 ) checked @endif>
                             </div>
                             <div>
                                 <label for="nome1_inv" class="label_inv">Nome</label>
-                                <input type="text" name="primeiro_nome" value="{{old('primeiro_nome')}}"  class=" form-control yesForStyle" id="nome1_inv" autocomplete="off" />
+                                <input type="text" name="primeiro_nome" value="{{old('primeiro_nome')}}"  class=" form-control yesForStyle" id="nome1_inv"  />
+                                
                             </div>
                             <div id="divs_concorrentes">
 
@@ -218,7 +219,7 @@
                                         <label for="my-input-file-inv" class="btn-select-file-inv">Selecionar</label>
                                         <div>
                                             <input class="form-control" type="text" placeholder="Nenhum arquivo selecionado" id="my-input-file-disabled-inv" disabled>
-                                            <input type="file" id="my-input-file-inv" accept=".pdf" name="pacto_social">
+                                            <input type="file" id="my-input-file-inv" accept=".pdf" name="contrato_sociedade">
                                         </div>
                                     </div>
                                 </div>

@@ -14,8 +14,9 @@ class Investidores extends Model
         'sobrenome',
         'nif',
         'tipo_entidade',
-        'video_validar',
-        'img'
+        'bilhete_identidade',
+        'contrato_sociedade',
+        'foto'
     ];
 
     public function user()
@@ -25,6 +26,14 @@ class Investidores extends Model
 
     public function rodadas()
     {
-        return $this->belongsToMany('App\RodadasInvestimento','rodadas_investidores','fk_investidor','fk_rodada');
+        return $this->belongsToMany('App\RodadasInvestimento','rodadas_investidores','fk_investidor','fk_rodada','fk_user','id');
+    }
+
+    public function formacoes(){
+        return $this->hasMany('App\FormacaoInvestidor','fk_investidor','fk_user');
+    }
+
+    public function experiencias(){
+        return $this->hasMany('App\ExperienciaInvestidor','fk_investidor','fk_user');
     }
 }

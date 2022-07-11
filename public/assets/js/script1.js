@@ -32,10 +32,11 @@ $(function () {
         $("#my-input-file-disabled-inv").attr("placeholder", $(this)[0].files[0].name);
     });
 
-    $("#my-input-file-inv-bi").change(function () {
-
+    $("#divs_concorrentes").on('change', '#my-input-file-inv-bi', function () {
         $("#my-input-file-disabled-inv-bi").attr("placeholder", $(this)[0].files[0].name);
     });
+
+
 
 
     $("input[name='tipo_investidor']").click(function () {
@@ -56,9 +57,9 @@ $(function () {
     });
 
 
-    
 
-    $("#nome-incubadora-aceleradora").keyup(function() {
+
+    $("#nome-incubadora-aceleradora").keyup(function () {
 
         let valorNome = $(this).val().trim();
         $("#id_incubadora_aceleradora").val(0);
@@ -74,12 +75,12 @@ $(function () {
                 '_token': '{{csrf_token()}}',
                 'valorNome': valorNome
             },
-            success: function(response) {
+            success: function (response) {
                 $("#lista-resultado-busca-incubadora-aceleradora").empty();
                 $("#lista-resultado-busca-incubadora-aceleradora").append(response);
                 $("#lista-resultado-busca-incubadora-aceleradora").show(400);
             },
-            error: function(error) {
+            error: function (error) {
                 console.log("ERRO AO BUSCAR INCUBADORAS-ACELERADORAS");
                 console.log(error);
             }
@@ -87,16 +88,16 @@ $(function () {
     });
 
 
-   $(document).click(function(){
-    $("#lista-resultado-busca-incubadora-aceleradora").hide(400);
-   });
+    $(document).click(function () {
+        $("#lista-resultado-busca-incubadora-aceleradora").hide(400);
+    });
 
 
-   $("#lista-resultado-busca-incubadora-aceleradora").on('click','a',function(){
-       $("#nome-incubadora-aceleradora").val($(this).html());
-       $("#id_incubadora_aceleradora").val($(this).attr('valor'));
-       
-   });
+    $("#lista-resultado-busca-incubadora-aceleradora").on('click', 'a', function () {
+        $("#nome-incubadora-aceleradora").val($(this).html());
+        $("#id_incubadora_aceleradora").val($(this).attr('valor'));
+
+    });
 
 
     function identifyUserType() {
@@ -136,13 +137,14 @@ $(function () {
         var content = "";
 
 
-        if (action == 1)
+        if (action == 1) {
             $("#div_message_error").hide(400);
 
-        $("#nome1_inv").val('');
-        $("#nome2_inv").val('');
-        $("#nif_inv").val('');
-        $("#email_inv").val('');
+            $("#nome1_inv").val('');
+            $("#nome2_inv").val('');
+            $("#nif_inv").val('');
+            $("#email_inv").val('');
+        }
 
         $("#divs_concorrentes").empty();
 
@@ -150,7 +152,7 @@ $(function () {
 
             content = "<div class='sobrenome_investidor_singular'>\
       <label for='nome2_inv' class='label_inv'>Sobrenome</label>\
-      <input type='text' name='segundo_nome' value='" + old_value_sobrenome_js + "' placeholder='Tunga' class='form-control yesForStyle' id='nome2_inv'  >\
+      <input type='text' name='segundo_nome' value='" + old_value_sobrenome_js + "'  class='form-control yesForStyle' id='nome2_inv'  >\
       </div>\
       \
       <div>\
@@ -169,7 +171,7 @@ $(function () {
 
             content = "<div class='nif_pessoa_juridica'>\
           <label class='label_inv'>NIF da pessoa jurídica</label>\
-          <input type='text' name='nif' value='" + old_value_nif_js + "' class='form-control yesForStyle' id='nif_inv' placeholder='95003ASD22234567999'  >\
+          <input type='text' name='nif' value='" + old_value_nif_js + "' class='form-control yesForStyle' id='nif_inv'   >\
           </div>";
 
         }

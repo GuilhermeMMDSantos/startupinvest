@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class RodadasInvestimento extends Model
 {
     protected $table = "rodadas_investimento";
+    protected $fillable = [
+        'fk_startup',
+        'valor_objetivo',
+        'oferta',
+        'data_limite',
+        'estado'
+    ];
+
 
     public function investidores(){
         return $this->belongsToMany('App\Investidores','rodadas_investidores','fk_rodada','fk_investidor','id','fk_user');

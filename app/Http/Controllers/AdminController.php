@@ -20,18 +20,21 @@ class AdminController extends Controller
     {
         if (Auth::check()) {
 
-            $startups = Startups::whereHas('user', function (Builder $query) {
-                $query->where('estado', 'espera'); // 0 - ainda não avaliado, 1- aceite, 2-regeitado
-            })
+            $startups = Startups::with('incubadorAceleradora')
+                ->whereHas('user', function (Builder $query) {
+                    $query->where('estado', 'espera'); // 0 - ainda não avaliado, 1- aceite, 2-regeitado
+                })
                 ->orderBy('fk_user', 'desc')
                 ->get();
-
+             
 
             $investidores = Investidores::whereHas('user', function (Builder $query) {
                 $query->where('estado', 'espera'); // 0 - ainda não avaliado, 1- aceite, 2-regeitado
             })
                 ->orderBy('fk_user', 'desc')
                 ->get();
+
+
 
             return view('Admin/painel', compact('startups', 'investidores'));
         }
@@ -51,10 +54,10 @@ class AdminController extends Controller
 
         $id_user = $request->id;
 
-        
+
 
         $user = User::find($id_user);
-        
+
         if ($request->action_ == 'Aceitar') {
             $user->estado = 'aceite';
         } else if ($request->action_ == 'Regeitar') {
@@ -63,8 +66,6 @@ class AdminController extends Controller
 
         $user->save();
 
-       // Mail::to('guiframart1@gmail.com')->send(new EmailSenha());
+        // Mail::to('guiframart1@gmail.com')->send(new EmailSenha());
     }
-
-
 }

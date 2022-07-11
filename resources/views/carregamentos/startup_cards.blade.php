@@ -2,6 +2,8 @@
     .link-card:hover {
         transform: scale(1.02);
         transition: all 0.7s;
+        border: 1px solid rgb(119, 129, 123);
+        border-radius: 5px;
     }
 
     .link-card {
@@ -14,7 +16,7 @@
     <a href="{{route('startup.perfil',$startupCard->user->code_user)}}" style="display:block;width:100%;height:100%;text-decoration:none;color:#333;" class="link-card">
         <div class="h-100 card">
             <div style="height:230px;">
-                <img src="{{asset('storage/'.$startupCard->logotipo)}}" class="card-img-top" style="height:100%;width:100%;">
+                <img src="{{asset('storage/'.$startupCard->logotipo)}}" class="card-img-top" style="height:100%;width:100%;object-fit:cover !important;">
             </div>
             <div class="card-body">
                 <h5 class="card-title">{{$startupCard->nome}}</h5>

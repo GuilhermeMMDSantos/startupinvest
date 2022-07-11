@@ -53,7 +53,8 @@ class HomeController extends Controller
         return Redirect::to("home")->with('error', 'Faça Login');
     }
 
-    public function buscarIncubadoraAceleradora(Request $request){
+    public function buscarIncubadoraAceleradora(Request $request)
+    {
 
         $palavras = $request->valorNome;
 
@@ -72,8 +73,13 @@ class HomeController extends Controller
             return Redirect::to("home")->with('error', 'Faça Login');
         }
 
-        $investidores = Investidores::with('user')
+        $investidores = Investidores::with(['user', 'rodadas' => function ($query) {
+            $query->where('estado', 'fechada')
+                ->get();
+        }])
+            ->where('fk_user', '!=', Auth::user()->id)
             ->get();
+
         return view('stackholder_investidores', compact('investidores'));
     }
 

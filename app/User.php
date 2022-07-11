@@ -17,10 +17,10 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'email',
-         'password',
-         'estado',
-         'tipo',
-         'code_user'
+        'password',
+        'estado',
+        'tipo',
+        'code_user'
     ];
 
     /**
@@ -28,7 +28,7 @@ class User extends Authenticatable
      *
      * @var array
      */
- 
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -38,12 +38,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function startup(){
-        return $this->hasOne('App\Startups','fk_user');
+    public function startup()
+    {
+        return $this->hasOne('App\Startups', 'fk_user');
     }
 
-    
-    public function investidor(){
-        return $this->hasOne('App\Investidores','fk_user');
+
+    public function investidor()
+    {
+        return $this->hasOne('App\Investidores', 'fk_user');
     }
+
+    public function receivesBroadcastNotificationsOn()
+    {
+        return 'users.'.$this->id;
+    }
+
+   
 }

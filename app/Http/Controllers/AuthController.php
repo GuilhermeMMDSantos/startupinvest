@@ -104,36 +104,37 @@ class AuthController extends Controller
 
     public function cadastrarInvestidor(Request $request)
     {
- 
 
-       $parametrosValidacao = [
-        'primeiro_nome' => 'required',
-        'email_investidor' => 'required|unique:users,email',
-        'pacto_social' => 'required'
-       ]; 
 
-       $mensagensValidacao = [
-        'primeiro_nome.required' => 'Nome do investidor em falta',
-        'email_investidor.required' => 'Email do Invetidor em falta',
-        'email_investidor.unique' => 'Email do Investidor já existe',
-        'pacto_social.required' => 'Contrato de sociedade em falta'
-       ];
 
-       if($request->tipo_investidor == 2){
-        $parametrosValidacao['segundo_nome'] = 'required';
-        $mensagensValidacao['segundo_nome.required'] = 'Sobrenome do investidor em falta';
-       }
+        $parametrosValidacao = [
+            'primeiro_nome' => 'required',
+            'email_investidor' => 'required|unique:users,email',
+            'contrato_sociedade' => 'required'
+        ];
 
-       if($request->tipo_investidor == 2){
-        
-        $parametrosValidacao['bilhete_identidade_investidor'] = 'required';
-        $mensagensValidacao['bilhete_identidade_investidor.required'] = 'Bilhete de identidade do investidor em falta';
-       }
+        $mensagensValidacao = [
+            'primeiro_nome.required' => 'Nome do investidor em falta',
+            'email_investidor.required' => 'Email do Invetidor em falta',
+            'email_investidor.unique' => 'Email do Investidor já existe',
+            'contrato_sociedadel.required' => 'Contrato de sociedade em falta'
+        ];
 
-       if($request->tipo_investidor == 1){
-        $parametrosValidacao['nif'] = 'required';
-        $mensagensValidacao['nif.required'] = 'NIF do investidor em falta';
-       }
+        if ($request->tipo_investidor == 1) {
+            $parametrosValidacao['segundo_nome'] = 'required';
+            $mensagensValidacao['segundo_nome.required'] = 'Sobrenome do investidor em falta';
+        }
+
+        if ($request->tipo_investidor == 1) {
+
+            $parametrosValidacao['bilhete_identidade_investidor'] = 'required';
+            $mensagensValidacao['bilhete_identidade_investidor.required'] = 'Bilhete de identidade do investidor em falta';
+        }
+
+        if ($request->tipo_investidor == 2) {
+            $parametrosValidacao['nif'] = 'required';
+            $mensagensValidacao['nif.required'] = 'NIF do investidor em falta';
+        }
 
         $validador = Validator::make(
             $request->all(),
@@ -168,12 +169,20 @@ class AuthController extends Controller
         $codeUser = $codeUser . '' . Carbon::now()->format('mYdhsm');
         $user = $this->create($dados, 'investidor', $codeUser);
 
-        $extensaoArquivo = $request->file('video_validar_investidor')->extension();
-        $nomeArquivo = "video{$user->id}.{$extensaoArquivo}";
-
-        $uploadFicheiro = $request->file('video_validar_investidor')->storeAs('armazenamento/investidor/videos', $nomeArquivo);
 
 
+
+        $extensaoContratoSociedade = $request->file('contrato_sociedade')->extension();
+        $nomeContratoSociedade = "contrato_sociedade{$user->id}.{$extensaoContratoSociedade}";
+        $uploadContratoSociedade = $request->file('contrato_sociedade')->storeAs('armazenamento/investidor/contrato_sociedade', $nomeContratoSociedade);
+        $uploadBilheteIdentidade = null;
+
+        if ($request->tipo_investidor == 1) {
+
+            $extensaoBilheteIdentidade = $request->file('bilhete_identidade_investidor')->extension();
+            $nomeBilheteIdentidade = "bilhete_identidade{$user->id}.{$extensaoBilheteIdentidade}";
+            $uploadBilheteIdentidade = $request->file('bilhete_identidade_investidor')->storeAs('armazenamento/investidor/bilhete_identidade', $nomeBilheteIdentidade);
+        }
 
 
         Investidores::create([
@@ -182,8 +191,9 @@ class AuthController extends Controller
             'sobrenome' => $sobrenome,
             'nif' => $nif,
             'tipo_entidade' => $dados['tipo_investidor'],
-            'video_validar' => $uploadFicheiro,
-            'img' => 'armazenamento/investidor/img/img_standard_investidor.png'
+            'bilhete_identidade' => $uploadBilheteIdentidade,
+            'contrato_sociedade' => $uploadContratoSociedade,
+            'foto' => 'armazenamento/investidor/img/img_standard_investidor.png'
         ]);
 
         return redirect()->intended("processamento_cadastro");

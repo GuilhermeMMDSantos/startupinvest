@@ -1,6 +1,6 @@
 
         <div style="width:110px;height:110px;border:1px solid #ccc;border-radius:50%;">
-            <img src="{{asset('storage/'.$startup->logotipo)}}" style="width:100%;height:100%;border-radius:50%;">
+            <img src="{{asset('storage/'.$startup->logotipo)}}" style="width:100%;height:100%;border-radius:50%;object-fit:contain !important;">
         </div>
 
 

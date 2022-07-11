@@ -7,12 +7,12 @@
 
  <section style="padding-left:6.5%;padding-right:6.5%;" class="container-fluid">
      <div class="row">
-         <div class="col-sm-12">
+         <div class="col-sm-12"  >
 
-             <div class="card">
-                 <div class="card-body">
-                     <div class="row">
-                         <div class="col-sm-8">
+             <div class="card" >
+                 <div class="card-body"  >
+                     <div class="row" >
+                         <div class="col-sm-8"  >
                              <div class="form-row" style="font-size:13px;">
                                  <div class="form-group col-md-4">
                                      <label for="fase-desenvolvimento-filter">Fase Desenvolvimento</label>

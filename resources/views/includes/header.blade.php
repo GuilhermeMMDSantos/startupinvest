@@ -11,7 +11,9 @@
             <ul>
                 <li class="liMenu"><a href="#" class="anchorMenu"><i class="fa fa-bell"></i><span>Notificões</span></a></li>
                 <li class="liMenu"><a href="#" class="anchorMenu"><i class="fa fa-envelope"></i><span>Mensagens</span></a></li>
+                @if(Auth::user()->tipo == 'investidor')
                 <li class="liMenu"><a href="{{route('investidor.menu')}}" class="anchorMenu"><i class="fa fa-envelope"></i><span>Investidores</span></a></li>
+                @endif
                 <li class="liMenu"><a href="{{route('startup.menu')}}" class="anchorMenu"><i class="fa fa-users"></i><span>Startups</span></a></li>
 
             </ul>
@@ -21,10 +23,11 @@
         <div class="col-lg-1 more_perfil" style="padding-top:7px;padding-right:0px !important;">
             <div style="position:relative;right:-28px; width:50px;">
                 @php
-                $img = Auth::user()->tipo == 'startup' ? Auth::user()->startup->logotipo : Auth::user()->investidor->img; 
+                $img = Auth::user()->tipo == 'startup' ? Auth::user()->startup->logotipo : Auth::user()->investidor->foto;
+                $code = Auth::user()->id;
                 @endphp
                 <div id="myself" style="width:45px;height:45px;border-radius:25px;border:2px solid white;display:inline-block;cursor:pointer;">
-                    <img src="{{asset('storage/'.$img)}}" id="myself_img" style="width:100%;height:100%;border-radius:25px;" />
+                    <img src="{{asset('storage/'.$img)}}" id="myself_img" style="width:100%;height:100%;border-radius:25px;object-fit:cover !important;" />
                 </div>
 
                 <ul class="submenu">
@@ -41,7 +44,7 @@
 <br>
 <br>
 <br>
-
+<script src="{{asset('js/app.js')}}"></script>
 <script type="text/javascript">
     $(function() {
 
@@ -57,6 +60,24 @@
                 $(".submenu").hide(100);
             }
         });
+
+
+        Echo.channel('channels-guito')
+            .listen('FirstEvent', function(e) {
+                console.log("RealTime Event: " + e.message)
+            });
+
+        Echo.private('private-channel-guito')
+            .listen('FirstEventPrivateChannel', function(e) {
+                console.log("RealTime Private Event: " + e.message);
+            });
+
+
+
+        Echo.private('users.'+'{{$code}}')
+            .notification((notification) => {
+                console.log("funcionando");
+            });
 
     });
 </script>

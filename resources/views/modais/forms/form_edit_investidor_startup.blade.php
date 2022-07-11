@@ -11,8 +11,8 @@
     <div class="form-group">
         <label>Tipo Entidade</label>
         <div>
-            <label for="singular">Pessoa física</label> <input type="radio" value="2" name="tipo_investidor" class="tipo-investidor-edit" id="fisico-opt" @if($investidorDaStartup->tipo_entidade == 'fisica') checked @endif>
-            <label for="juridico">Pessoa Jurídica</label> <input type="radio" value="1" name="tipo_investidor" class="tipo-investidor-edit" id="juridico-opt" @if($investidorDaStartup->tipo_entidade == 'juridica') checked @endif >
+            <label for="singular">Pessoa física</label> <input type="radio" value="2" name="tipo_investidor" class="tipo-investidor-edit" id="fisico-opt" @if($investidorDaStartup->tipo_entidade == 'Física') checked @endif>
+            <label for="juridico">Pessoa Jurídica</label> <input type="radio" value="1" name="tipo_investidor" class="tipo-investidor-edit" id="juridico-opt" @if($investidorDaStartup->tipo_entidade == 'Jurídica') checked @endif >
         </div>
     </div>
     <div class="form-group">

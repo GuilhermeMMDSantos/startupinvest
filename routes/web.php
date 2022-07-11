@@ -48,6 +48,8 @@ Route::group(['prefix' => '/startup', 'middleware' => 'auth'], function () {
 
 Route::get('/profile/{codeUser}', 'UserController@showPerfil')->name('startup.perfil')->middleware('auth');
 
+Route::get('/load_oferta','UserController@loadOferta');
+
 Route::get('load_form_editar_introducao_startup','UserController@loadFormEditIntroStartup');
 
 Route::post('load_tmp_img','UserController@loadTmpImg');
@@ -55,6 +57,15 @@ Route::post('load_tmp_img','UserController@loadTmpImg');
 Route::post('edit_intro_startup','UserController@editarIntroStartup');
 
 Route::get('atualizar_introducao_startup','UserController@atualizarIntroducaoStartup');
+
+
+
+
+Route::get('load_investors_table/{page?}','UserController@loadInvestorsTable');
+
+
+
+
 
 Route::get('adicionar_investidor','UserController@adicionarInvestidor');
 
@@ -71,9 +82,26 @@ Route::get('buscar_areas_formacao','UserController@buscarAreasFormacao');
 
 Route::get('buscar_cargos_executvo','UserController@buscarCargosExecutvo');
 
+Route::get('buscar_funcao_experiencia','UserController@buscarFuncaoExperiencia');
+
+Route::get('buscar_intituicao_experiencia','UserController@buscarIntituicaoExperiencia');
+
 Route::get('/email','AuthController@sendMail');
 
 
 Route::post('load_tmp_img_membro_equipa','UserController@loadTmpImgMembroEquipa');
 
 Route::post('/add_membro_equipa','UserController@adicionarMembroEquipa');
+
+Route::post('/criar_oferta','UserController@cadastrarOferta');
+
+Route::get('/anular_oferta','UserController@anularOferta');
+
+
+Route::get('/get_experiencia_investidor','UserController@getExperienciasDoInvestidor');
+
+Route::post('/cadastrar_experiencia_investidor','UserController@cadastrarExperienciasDoInvestidor');
+
+Route::get('/get_formacao_investidor','UserController@getFormacoesDoInvestidor');
+
+Route::post('/cadastrar_formacao_investidor','UserController@cadastrarFormacaoInvestidor');

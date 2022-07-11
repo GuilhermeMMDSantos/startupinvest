@@ -9,6 +9,17 @@ body {
     background-color: #e9ecef;
 } 
  
+.link-card:hover {
+    transform: scale(1.02);
+    transition: all 0.7s;
+    border:1px solid rgb(119, 129, 123);
+    border-radius:5px;
+}
+
+.link-card {
+    transition: all 0.7s;
+}
+
 
 /*custom bootstrap*/
 

@@ -47,7 +47,7 @@ class Startups extends Model
    }
 
    public function incubadorAceleradora(){
-       return $this->belongsTo('IncubadorasAceleradoras','fk_incubadora_aceleradora','id');
+       return $this->belongsTo('App\IncubadorasAceleradoras','fk_incubadora_aceleradora','id');
    }
 
 }

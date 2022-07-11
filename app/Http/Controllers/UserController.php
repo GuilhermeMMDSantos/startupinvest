@@ -21,22 +21,21 @@ use SebastianBergmann\Environment\Console;
 use App\CertificadosFormacao;
 use App\AreasFormacao;
 use App\CargosExecutivo;
+use App\ExperienciaInvestidor;
+use App\ExperienciaMembroEquipa;
+use App\FormacaoInvestidor;
+use App\MembrosEquipaStartup;
+use App\FormacaoMembroEquipa;
+use App\FuncoesExperiencia;
+use App\InstituicaoExperiencia;
+use App\MembrosEquipaCargosExecutivos;
+use App\PermissoesVerPitch;
 
 class UserController extends Controller
 {
 
     public function loadStartups(Request $request)
     {
-
-
-
-        /*  if (!request()->ajax()) {
-            Session::flush();
-            Auth::logout();
-            return Redirect("home");
-        } */
-
-
 
         $dataAtual = Carbon::now()->format('Y-m-d H:m:s');
         $faseDesenvolvimento = $request->faseDesenvolvimento;
@@ -58,6 +57,7 @@ class UserController extends Controller
                 ->select('*', DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_limite) AS tempo_restante'))
                 ->get();
         }])
+            ->where('estado_busca_invest', 'sim')
             ->whereHas('user', function ($query) {
                 $query->where('estado', 'aceite');
             })
@@ -105,6 +105,7 @@ class UserController extends Controller
                 return $query->where('nome', 'like', '%' . $value_search_filtro . '%');
             })
             ->where('fk_user', '!=', Auth::user()->id)
+            ->where('estado_busca_invest', 'sim')
             ->get();
 
         $returnHtml = view('carregamentos.startup_cards', compact('startupsCards'))->render();
@@ -115,7 +116,11 @@ class UserController extends Controller
     {
 
         $user = User::where('code_user', $codeUser)->first();
+        $codigoStartup = $codeUser;
+
         $myProfile = ($user->id == Auth::user()->id);
+
+
 
         if ($user->tipo == 'startup') {
 
@@ -129,19 +134,36 @@ class UserController extends Controller
                 ->where('estado', 'aberta')
                 ->first();
 
-            $investidoresDaStartup = DB::table('investidores_da_startup')
+
+
+            $membrosEquipa = MembrosEquipaStartup::with(['cargosExecutivos', 'formacoes' => function ($query) {
+                $query->with(['areafuncao', 'certificado'])
+                    ->select(
+                        '*',
+                        DB::raw('DATE_FORMAT(data_inicio, "%Y-%m") AS dataInicioFormatada'),
+                        DB::raw('DATE_FORMAT(data_fim, "%Y-%m") AS dataFimFormatada')
+                    )
+                    ->get();
+            }, 'experiencias' => function ($query2) {
+                $query2->with(['funcao', 'instituicao'])
+                    ->select(
+                        '*',
+                        DB::raw('DATE_FORMAT(data_inicio, "%Y-%m") AS dataInicioFormatada'),
+                        DB::raw('DATE_FORMAT(data_fim, "%Y-%m") AS dataFimFormatada')
+                    )
+                    ->get();
+            }])
+
                 ->where('fk_startup', $startup->fk_user)
                 ->get();
 
-            $membrosEquipa = DB::table('membros_equipa_startup')
-                ->where('fk_startup', $startup->fk_user)
-                ->get();
-
-            $returnHtml = view('perfil_startup', compact('startup', 'rodada', 'investidoresDaStartup', 'membrosEquipa', 'myProfile'));
+            $returnHtml = view('perfil_startup', compact('startup', 'rodada', 'membrosEquipa', 'myProfile', 'codigoStartup'));
         } else if ($user->tipo == 'investidor') {
-            $investidor = Investidores::where('fk_user', $user->id)
+            $investidor = Investidores::with(['formacoes', 'experiencias'])
+                ->where('fk_user', $user->id)
                 ->first();
-            $returnHtml = view('perfil_investidor', compact('investidor'));
+
+            $returnHtml = view('perfil_investidor', compact('investidor', 'myProfile', 'codeUser'));
         }
 
         return $returnHtml;
@@ -243,6 +265,61 @@ class UserController extends Controller
         );
     }
 
+    public function loadOferta(Request $request)
+    {
+        $codeUser = $request->codeStartup;
+        $havePermissionToWatchPitch = false;
+
+        $startup = Startups::whereHas('user', function ($query) use ($codeUser) {
+            $query->where('code_user', $codeUser);
+        })->first();
+
+        $rodada = RodadasInvestimento::with(['investidores', 'finalidadesInvestimento'])
+            ->select('*', DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_limite) AS tempo_restante'))
+            ->where('fk_startup', $startup->fk_user)
+            ->where('estado', 'aberta')
+            ->first();
+
+        if (Auth::user()->tipo == 'investidor') {
+            $permissao = PermissoesVerPitch::select('estado', DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_permissao) AS tempo_restante'))
+                ->where('fk_startup', $startup->fk_user)
+                ->where('fk_investidor', Auth::user()->id)
+                ->first();
+          
+            if (!empty($permissao) && $permissao->tempo_restante > 1) {
+                $permissao->update([
+                    'estado' => 'vencido'
+                ]);
+            } else if (!empty($permissao) && $permissao->tempo_restante < 1)
+                $havePermissionToWatchPitch = true;
+        }
+       
+        $returnHtml = view('blocos_html/content_oferta', compact('rodada', 'startup', 'havePermissionToWatchPitch'))->render();
+
+        return response()->json([
+            'html' =>    $returnHtml
+        ]);
+    }
+
+    public function loadInvestorsTable(Request $request)
+    {
+
+        $isMyProfile = $request->ismyprofile == 'true' ? true : false;
+        $codeUser = $request->codigoStartup;
+        $idUser = User::where('code_user', $codeUser)->first()->id;
+
+        $investidoresDaStartup = DB::table('investidores_da_startup')
+            ->where('fk_startup', $idUser)
+
+            ->simplePaginate(3);
+
+        $html = view('blocos_html/table_investors_startup', compact('investidoresDaStartup', 'isMyProfile'))->render();
+
+        return response()->json([
+            'html' => $html
+        ]);
+    }
+
     public function adicionarInvestidor(Request $request)
     {
         $userCode = $request->codeUser;
@@ -251,7 +328,7 @@ class UserController extends Controller
         })
             ->first();
 
-        $tipoEntidade = $request->tipo_investidor == 1 ? 'juridica' : 'fisica';
+        $tipoEntidade = $request->tipo_investidor == 1 ? 'Física' : 'Jurídica';
 
 
         $values = [
@@ -288,7 +365,7 @@ class UserController extends Controller
     public function editarInvestidorStartup(Request $request)
     {
         $idInvestidorDaStartup = $request->codeInvest;
-        $tipoEntidade = $request->tipo_investidor == 1 ? 'juridica' : 'fisica';
+        $tipoEntidade = $request->tipo_investidor == 1 ? 'Física' : 'Jurídica';
 
         $valores = [
             'email' => $request->email,
@@ -329,7 +406,23 @@ class UserController extends Controller
     public function buscarCargosExecutvo()
     {
         $cargosExecutivo = CargosExecutivo::get();
-        $returnHtml = view('blocos_html/intens_cargos_executivo', compact('cargosExecutivo'))->render();
+        $idCargosJaAtribuidos = [];
+        $startup = Startups::with(['membrosEquipa' => function ($query) {
+            $query->with('cargosExecutivos')
+                ->get();
+        }])
+            ->where('fk_user', Auth::user()->id)
+            ->first();
+
+        foreach ($startup->membrosEquipa as $membro) {
+            foreach ($membro->cargosExecutivos as $cargo) {
+                if (!in_array($cargo->id, $idCargosJaAtribuidos))
+                    array_push($idCargosJaAtribuidos, $cargo->id);
+            }
+        }
+
+
+        $returnHtml = view('blocos_html/intens_cargos_executivo', compact('cargosExecutivo', 'idCargosJaAtribuidos'))->render();
 
         return response()->json($returnHtml);
     }
@@ -358,6 +451,41 @@ class UserController extends Controller
         return response()->json($returnHtml);
     }
 
+    public function buscarFuncaoExperiencia(Request $request)
+    {
+        $palavras = $request->wordsSearch;
+
+
+        $funcoes = FuncoesExperiencia::where('nome', 'like', $palavras . '%')
+            ->where('outro', 'no')
+            ->get();
+
+        $qtdFuncoes = count($funcoes);
+        $returnHtml = view('blocos_html/lista_resultado_busca_funcoes_experiencia', compact('funcoes'))->render();
+
+        return response()->json([
+            'html' => $returnHtml,
+            'qtd' => $qtdFuncoes
+        ]);
+    }
+
+    public function buscarIntituicaoExperiencia(Request $request)
+    {
+        $palavras = $request->wordsSearch;
+
+        $instituicoes = InstituicaoExperiencia::where('nome', 'like', $palavras . '%')
+            ->where('outro', 'no')
+            ->get();
+
+        $qtdInstituicoes = count($instituicoes);
+        $returnHtml = view('blocos_html/lista_resultado_busca_instituicoes_experiencia', compact('instituicoes'))->render();
+
+        return response()->json([
+            'html' => $returnHtml,
+            'qtd' => $qtdInstituicoes
+        ]);
+    }
+
     public function loadTmpImgMembroEquipa(Request $request)
     {
 
@@ -378,6 +506,263 @@ class UserController extends Controller
 
     public function adicionarMembroEquipa(Request $request)
     {
-        return response()->json($request->formacao);
+        $haveNewImage = $request->haveImg;
+        $nome = $request->nome;
+        $sobrenome = $request->sobrenome;
+        $cargosExecutivos = strlen($request->cargos) > 1 ? explode('|', $request->cargos) : array();
+        $formacoes = empty($request->formacao) ? array() : explode(',', $request->formacao);
+        $experiencias = empty($request->experiencia) ? array() : explode(',', $request->experiencia);
+
+
+
+
+        $membro = MembrosEquipaStartup::create([
+            'nome' => $nome,
+            'sobrenome' => $sobrenome,
+            'fk_startup' => Auth::user()->id
+        ]);
+
+        $uploadFicheiro = 'armazenamento/startups/img/membros/img_standard_membro_equipa.png';
+
+        if ($haveNewImage == 'true') {
+            $extensao = $request->file('imagem')->extension();
+            $nomeArquivo = "imagem_membro{$membro->id}.{$extensao}";
+            $filesForDelete = public_path() . '/storage/armazenamento/startups/img/membros/imagem_membro' . $membro->id . '*';
+            chmod(public_path() . '/storage/armazenamento/startups/img/membros/', 0777); // Caso o sistema seja hospedado num linux server
+            array_map("unlink", glob($filesForDelete));
+
+            $uploadFicheiro = $request->file('imagem')->storeAs('armazenamento/startups/img/membros', $nomeArquivo);
+        }
+
+        MembrosEquipaStartup::where('id', $membro->id)
+            ->update([
+                'img' => $uploadFicheiro
+            ]);
+
+
+        foreach ($formacoes as $formacao) {
+
+            $formacaoSplit = explode('|', $formacao);
+            $dataInicioFormacao = $formacaoSplit[2] . '-01';
+            $dataFimFormacao = $formacaoSplit[3] . '-01';
+
+            FormacaoMembroEquipa::create([
+                'fk_membro_equipa' => $membro->id,
+                'fk_area_formacao' => $formacaoSplit[1],
+                'fk_certificado_formacao' => $formacaoSplit[0],
+                'data_inicio' => $dataInicioFormacao,
+                'data_fim' => $dataFimFormacao
+            ]);
+        }
+
+        foreach ($experiencias as $experiencia) {
+            $experienciaSplit = explode('|', $experiencia);
+            $idFuncao = null;
+            $idInstituicao = null;
+
+            if ($experienciaSplit[1] == 0) {
+                $funcao = FuncoesExperiencia::create([
+                    'nome' => $experienciaSplit[0],
+                    'outro' => 'yes'
+                ]);
+
+                $idFuncao =  $funcao->id;
+            } else
+                $idFuncao = $experienciaSplit[1];
+
+            if ($experienciaSplit[3] == 0) {
+
+                $instituicao = InstituicaoExperiencia::create([
+                    'nome' => $experienciaSplit[2],
+                    'outro' => 'yes'
+                ]);
+
+                $idInstituicao = $instituicao->id;
+            } else
+                $idInstituicao = $experienciaSplit[3];
+
+            $dataInicio = $experienciaSplit[4] . '-01';
+            $dataFimExperiencia = $experienciaSplit[5] == "momento" ? NULL : $experienciaSplit[5] . '-01';
+
+            ExperienciaMembroEquipa::create([
+                'fk_membro_equipa' => $membro->id,
+                'fk_funcao' => $idFuncao,
+                'fk_instituicao' => $idInstituicao,
+                'data_inicio' => $dataInicio,
+                'data_fim' => $dataFimExperiencia
+            ]);
+        }
+
+        foreach ($cargosExecutivos as $cargo) {
+            if (strlen($cargo) > 0) {
+                MembrosEquipaCargosExecutivos::create(['fk_cargo_executivo' => $cargo, 'fk_membro_equipa' => $membro->id]);
+            }
+        }
+
+
+        $membrosEquipa = MembrosEquipaStartup::with(['cargosExecutivos', 'formacoes' => function ($query) {
+            $query->with(['areafuncao', 'certificado'])
+                ->select(
+                    '*',
+                    DB::raw('DATE_FORMAT(data_inicio, "%Y-%m") AS dataInicioFormatada'),
+                    DB::raw('DATE_FORMAT(data_fim, "%Y-%m") AS dataFimFormatada')
+                )
+                ->get();
+        }, 'experiencias' => function ($query2) {
+            $query2->with(['funcao', 'instituicao'])
+                ->select(
+                    '*',
+                    DB::raw('DATE_FORMAT(data_inicio, "%Y-%m") AS dataInicioFormatada'),
+                    DB::raw('DATE_FORMAT(data_fim, "%Y-%m") AS dataFimFormatada')
+                )
+                ->get();
+        }])
+
+            ->where('fk_startup', Auth::user()->id)
+            ->get();
+
+
+        $html = view('blocos_html/content_membros_equipa', compact('membrosEquipa'))->render();
+
+        return response()->json($html);
+    }
+
+    public function cadastrarOferta(Request $request)
+    {
+        $meta = $request->meta;
+        $porcentagem = $request->porcentagem;
+        $dataTermino = $request->termino;
+
+        $extensaoPitch = $request->file('pitch_video')->extension();
+        $userId = Auth::user()->id;
+        $nomePitch = "pitch_{$userId}.{$extensaoPitch}";
+
+        $filesForDelete = public_path() . '/storage/armazenamento/startups/pitch/pitch_' . $userId . '*';
+        chmod(public_path() . '/storage/armazenamento/startups/pitch/', 0777); // Caso o sistema seja hospedado num linux server
+        array_map("unlink", glob($filesForDelete));
+
+        $uploadFicheiro = $request->file('pitch_video')->storeAs('armazenamento/startups/pitch', $nomePitch);
+
+        $rodadaInvestimento = RodadasInvestimento::create([
+            'fk_startup' => $userId,
+            'valor_objetivo' => $meta,
+            'oferta' => $porcentagem,
+            'data_limite' => $dataTermino,
+            'estado' => 'aberta'
+        ]);;
+
+
+
+        Startups::where('fk_user', $userId)
+            ->update([
+                'estado_busca_invest' => 'sim',
+                'pitch_deck' => $uploadFicheiro
+            ]);
+    }
+
+    public function anularOferta()
+    {
+        $idUser = Auth::user()->id;
+
+        Startups::where('fk_user', $idUser)
+            ->update([
+                'estado_busca_invest' => 'nao'
+            ]);
+
+        RodadasInvestimento::where('fk_startup', $idUser)
+            ->where('estado', 'aberta')
+            ->update([
+                'estado' => 'anulada'
+            ]);
+    }
+
+    public function getExperienciasDoInvestidor(Request $request)
+    {
+        $codeUser = $request->codeUser;
+        $user = User::where('code_user', $codeUser)->first();
+        $myProfile = Auth::user()->id == $user->id ? true : false;
+
+        $experiencias = ExperienciaInvestidor::select(
+            '*',
+            DB::raw('DATE_FORMAT(data_inicio, "%Y-%m") AS dataInicioFormatada'),
+            DB::raw('DATE_FORMAT(data_fim, "%Y-%m") AS dataFimFormatada')
+        )
+            ->where('fk_investidor', $user->id)->get();
+        $html = view('blocos_html/lista_experiencia_investidor', compact('experiencias', 'myProfile'))->render();
+
+        return response()->json([
+            'html' => $html
+        ]);
+    }
+
+    public function cadastrarExperienciasDoInvestidor(Request $request)
+    {
+        $idFuncao = $request->id_experiencia_funcao;
+        $idInstituicao = $request->id_experiencia_instituicao;
+        if ($idFuncao == 0) {
+            $funcao = FuncoesExperiencia::create([
+                'nome' => $request->experiencia_funcao_input,
+                'outro' => 'yes'
+            ]);
+
+            $idFuncao = $funcao->id;
+        }
+
+        if ($idInstituicao == 0) {
+            $instituicao = InstituicaoExperiencia::create([
+                'nome' => $request->experiencia_instituicao_input,
+                'outro' => 'yes'
+            ]);
+
+            $idInstituicao =  $instituicao->id;
+        }
+
+        $dataInicio = $request->experiencia_mes_ano_inicio . '-01';
+        $dataFim = empty($request->experiencia_mes_ano_fim) ? NULL : $request->experiencia_mes_ano_fim . '-01';
+
+        ExperienciaInvestidor::create([
+            'fk_investidor' => Auth::user()->id,
+            'fk_funcao' => $idFuncao,
+            'fk_instituicao' => $idInstituicao,
+            'data_inicio' => $dataInicio,
+            'data_fim' => $dataFim
+        ]);
+    }
+
+    public function getFormacoesDoInvestidor(Request $request)
+    {
+
+        $codeUser = $request->codeUser;
+        $user = User::where('code_user', $codeUser)->first();
+        $myProfile = Auth::user()->id == $user->id ? true : false;
+        $formacoes = FormacaoInvestidor::select(
+            '*',
+            DB::raw('DATE_FORMAT(data_inicio, "%Y-%m") AS dataInicioFormatada'),
+            DB::raw('DATE_FORMAT(data_fim, "%Y-%m") AS dataFimFormatada')
+        )
+            ->where('fk_investidor', $user->id)
+            ->get();
+
+        $html = view('blocos_html/lista_formacao_investidor', compact('formacoes', 'myProfile'))->render();
+
+        return response()->json([
+            'html' => $html
+        ]);
+    }
+
+    public function cadastrarFormacaoInvestidor(Request $request)
+    {
+        $idCartificado = $request->id_formacao_certificado;
+        $idAreaFormacao =  $request->id_formacao_area_formacao;
+        $dataInicio =  $request->formacao_mes_ano_inicio . '-01';
+        $dataFim =  $request->formacao_mes_ano_fim . '-01';
+
+        FormacaoInvestidor::create([
+            'fk_investidor' => Auth::user()->id,
+            'fk_area_formacao' => $idAreaFormacao,
+            'fk_certificado_formacao' => $idCartificado,
+            'data_inicio' => $dataInicio,
+            'data_fim' => $dataFim
+        ]);
     }
 }

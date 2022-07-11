@@ -1,7 +1,7 @@
 <form enctype="multipart/form-data" id="form-edit-intro-startup">
     @csrf
     <div style="width:120px;height:120px;border:1px solid #ccc;border-radius:50%;margin:auto;">
-        <img id="img-startup-to-edit" src="{{asset('storage/'.$user->startup->logotipo)}}" accept=".jpg,.png" style="width:100%;height:100%;border-radius:50%;">
+        <img id="img-startup-to-edit" src="{{asset('storage/'.$user->startup->logotipo)}}" accept=".jpg,.png" style="width:100%;height:100%;border-radius:50%;object-fit:contain !important;">
     </div>
     <input type="file" name="img_startup_edit" id="load_logotipo_edit_intro" hidden>
     <label for="load_logotipo_edit_intro" style="background-color:#cccccc78; display:inline-block;width:30px;height:30px;font-size:12px;border:thin;padding:5px;border-radius:50%;position:relative;top:-20px;left:57%;padding-left:10px;padding-top:7px;"><i class="fa fa-bell"></i></label>
