@@ -101,14 +101,14 @@
             $.ajax({
                 url: '/edit_intro_startup',
                 type: 'POST',
-                async:false,
+                async: false,
                 contentType: false,
                 processData: false,
-                data:form,
+                data: form,
                 success: function(response) {
-                  
+
                     $('#modal-editar-introducao-startup').modal('hide');
-                    atualizarIntroStartup();
+                    loadIntroducaoStartup();
                 },
                 error: function(error) {
                     console.log("ERRO");
@@ -120,30 +120,24 @@
 
         });
 
-        function atualizarIntroStartup() {
+        function loadIntroducaoStartup() {
 
-
-            var codigoStartup = "{{$userStartupCode}}";
+            let codigoStartup= '{{$userStartupCode}}';
+            
             $.ajax({
-                url: "/atualizar_introducao_startup",
+                url: "/load_introducao_startup",
                 type: "get",
                 data: {
-                    '_token': '{{csrf_token()}}',
-                    'codigoStartup': codigoStartup
+                    "codigoStartup": codigoStartup
                 },
                 success: function(response) {
+
                     $("#content-intro-startup").empty();
-                    $("#content-intro-startup").html(response['returnHtm']);
-
-                    console.log();
-
-                    let srcDaImg = $("#myself_img").attr('src');
-                    let novaSrc = srcDaImg.substring(0, srcDaImg.indexOf("armazenamento")) + '' + response['urlImg'];
-                    $("#myself_img").attr('src', novaSrc)
+                    $("#content-intro-startup").append(response['html']);
                 },
-                error: function(erro) {
-                    console.log("ERRO");
-                    console.log(erro);
+                error: function(error) {
+                    console.log("Erro ao carregar introducao startup");
+                    console.log(error);
                 }
             });
         }

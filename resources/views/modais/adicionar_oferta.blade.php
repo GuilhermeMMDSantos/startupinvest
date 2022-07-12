@@ -7,7 +7,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" id="modal-adicionar-oferta">
+            <div class="modal-body">
                 <form enctype="multipart/form-data" id="form-criar-oferta">
                     @csrf
 

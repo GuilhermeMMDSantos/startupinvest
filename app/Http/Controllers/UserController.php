@@ -246,27 +246,35 @@ class UserController extends Controller
         ]);
     }
 
-    public function atualizarIntroducaoStartup(Request $request)
+    public function loadIntroducaoStartup(Request $request)
     {
         $userCode = $request->codigoStartup;
-
+        $tipoUser = Auth::user()->tipo;
+        
         $startup = Startups::whereHas('user', function ($query) use ($userCode) {
             $query->where('code_user', $userCode);
         })
             ->first();
 
-        $returnHtm = view('blocos_html/introducao_startup', compact('startup'))->render();
+        
+
+        $myprofile = $startup->fk_user == Auth::user()->id;
+
+        
+
+        $html = view('blocos_html/introducao_startup', compact('startup', 'myprofile','tipoUser'))->render();
 
         return response()->json(
             [
-                'returnHtm' => $returnHtm,
-                'urlImg' => $startup->logotipo
+                'html' => $html
             ]
         );
     }
 
     public function loadOferta(Request $request)
     {
+
+
         $codeUser = $request->codeStartup;
         $havePermissionToWatchPitch = false;
 
@@ -274,18 +282,22 @@ class UserController extends Controller
             $query->where('code_user', $codeUser);
         })->first();
 
+        $myprofile = $startup->fk_user == Auth::user()->id;
+
         $rodada = RodadasInvestimento::with(['investidores', 'finalidadesInvestimento'])
             ->select('*', DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_limite) AS tempo_restante'))
             ->where('fk_startup', $startup->fk_user)
             ->where('estado', 'aberta')
             ->first();
 
+           
+
         if (Auth::user()->tipo == 'investidor') {
             $permissao = PermissoesVerPitch::select('estado', DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_permissao) AS tempo_restante'))
                 ->where('fk_startup', $startup->fk_user)
                 ->where('fk_investidor', Auth::user()->id)
                 ->first();
-          
+
             if (!empty($permissao) && $permissao->tempo_restante > 1) {
                 $permissao->update([
                     'estado' => 'vencido'
@@ -293,8 +305,10 @@ class UserController extends Controller
             } else if (!empty($permissao) && $permissao->tempo_restante < 1)
                 $havePermissionToWatchPitch = true;
         }
+
        
-        $returnHtml = view('blocos_html/content_oferta', compact('rodada', 'startup', 'havePermissionToWatchPitch'))->render();
+
+        $returnHtml = view('blocos_html/content_oferta', compact('rodada', 'startup', 'havePermissionToWatchPitch','myprofile'))->render();
 
         return response()->json([
             'html' =>    $returnHtml

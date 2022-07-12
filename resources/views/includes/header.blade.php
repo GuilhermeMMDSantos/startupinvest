@@ -9,7 +9,16 @@
         <nav class="col-lg-6 menu" style="padding-top:7px;padding-bottom:7px;">
 
             <ul>
-                <li class="liMenu"><a href="#" class="anchorMenu"><i class="fa fa-bell"></i><span>Notificões</span></a></li>
+
+                <li class="liMenu" style="position: relative !important;">
+                    <a href="#" class="anchorMenu" >
+                        <i class="fa fa-bell"></i><span>Notificões</span>
+                    </a>
+                    <span id="indicador-existe-notificacao" class="badge badge-light" style="position: absolute !important ;top:0px;left:33px;min-width:13px;border-radius:50%;padding:1px !important;border:1px solid black;font-size:10px;text-align:center;background-color:#ffcb2f;display:none;"></span>
+                </li>
+
+
+
                 <li class="liMenu"><a href="#" class="anchorMenu"><i class="fa fa-envelope"></i><span>Mensagens</span></a></li>
                 @if(Auth::user()->tipo == 'investidor')
                 <li class="liMenu"><a href="{{route('investidor.menu')}}" class="anchorMenu"><i class="fa fa-envelope"></i><span>Investidores</span></a></li>
@@ -74,7 +83,7 @@
 
 
 
-        Echo.private('users.'+'{{$code}}')
+        Echo.private('users.' + '{{$code}}')
             .notification((notification) => {
                 console.log("funcionando");
             });

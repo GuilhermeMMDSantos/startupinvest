@@ -1,9 +1,10 @@
 <div class="col-sm-8">
-    <video src="@if($havePermissionToWatchPitch){{asset('storage/'.$startup->pitch_deck)}}@endif" controls="true" width="100%" height="500" />
+    <video src="@if($havePermissionToWatchPitch || $myprofile){{asset('storage/'.$startup->pitch_deck)}}@endif" controls="true" width="100%" height="500" />
 </div>
 <div class="col-sm-4" style="padding-top:10px;">
     <div class="card ">
         <div class="card-body">
+            @if(!empty($rodada))
             <h5 class="card-title" style="text-align:center;">Oferta - <span style="font-size:14px;">Faltam {{$rodada->tempo_restante}} Dias</span>
             </h5>
             <hr>
@@ -25,6 +26,16 @@
             </div>
             @if($havePermissionToWatchPitch)
             <a href="#" class="btn btn-primary btn-lg btn-block">Investir</a>
+            @endif
+
+            @else
+
+            <div style="width:40px;height:40px;margin:auto;">
+                <img src="{{asset('assets/img/experiencia1.png')}}" style="width:100%;height:100%;object-fit:contain !important;" />
+            </div>
+
+            <p class="card-text" style="padding:5px 15px;text-align:center;font-size:17px;">Sem oferta declarada</p>
+            <p class="card-text" style="padding:5px 15px;text-align:center;font-size:14px;">Startup não está a buscar investimento no momento</p>
 
             @endif
         </div>
