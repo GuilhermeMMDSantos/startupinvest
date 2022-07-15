@@ -12,15 +12,15 @@ use Illuminate\Notifications\Notification;
 class FirstNotification extends Notification implements ShouldBroadcast
 {
     use Queueable;
-    public $message;
+    public $qtdNotications;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($message)
+    public function __construct($qtdNotications)
     {
-        $this->message = $message;
+        $this->qtdNotications = $qtdNotications;
     }
 
     /**
@@ -64,7 +64,7 @@ class FirstNotification extends Notification implements ShouldBroadcast
     public function toBroadcast($notifiable): BroadcastMessage
     {
         return new BroadcastMessage([
-            'message' => "$this->message (User $notifiable->id)"
+            'notifications' => $this->qtdNotications
         ]);
     }
 }

@@ -841,6 +841,24 @@
         });
 
 
+        $("#content-intro-startup").on('click', '#btn-solicitar-pitch', function() {
+            var codeStartup = '{{$codigoStartup}}';
+            $.ajax({
+                url: "/solicitar_pitch",
+                type: "get",
+                data: {
+                    'codeStartup': codeStartup
+                },
+                success: function(response) {
+                    console.log("Notificado");
+                    loadIntroducaoStartup();
+                },
+                error: function(error) {
+                    console.log("Erro ao solicitar pitch");
+                    console.log(error);
+                }
+            });
+        });
 
         function resetarFormularioAdicionarMembro() {
 

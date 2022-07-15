@@ -30,6 +30,8 @@ use App\FuncoesExperiencia;
 use App\InstituicaoExperiencia;
 use App\MembrosEquipaCargosExecutivos;
 use App\PermissoesVerPitch;
+use App\Notifications;
+use NunoMaduro\Collision\Adapters\Phpunit\State;
 
 class UserController extends Controller
 {
@@ -116,11 +118,15 @@ class UserController extends Controller
     {
 
         $user = User::where('code_user', $codeUser)->first();
-        $codigoStartup = $codeUser;
+
 
         $myProfile = ($user->id == Auth::user()->id);
 
+        $notifications = Notifications::where('fk_user_distination', Auth::user()->id)
+            ->where('status', 'nao_visto')
+            ->get();
 
+        $qtdnotifications = (int)count($notifications);
 
         if ($user->tipo == 'startup') {
 
@@ -157,13 +163,16 @@ class UserController extends Controller
                 ->where('fk_startup', $startup->fk_user)
                 ->get();
 
-            $returnHtml = view('perfil_startup', compact('startup', 'rodada', 'membrosEquipa', 'myProfile', 'codigoStartup'));
+            $codigoStartup = $codeUser;
+
+            $returnHtml = view('perfil_startup', compact('startup', 'qtdnotifications', 'rodada', 'membrosEquipa', 'myProfile', 'codigoStartup'));
         } else if ($user->tipo == 'investidor') {
+
             $investidor = Investidores::with(['formacoes', 'experiencias'])
                 ->where('fk_user', $user->id)
                 ->first();
-
-            $returnHtml = view('perfil_investidor', compact('investidor', 'myProfile', 'codeUser'));
+            $codigoInvestidor = $codeUser;
+            $returnHtml = view('perfil_investidor', compact('investidor', 'qtdnotifications', 'myProfile', 'codeUser', 'codigoInvestidor'));
         }
 
         return $returnHtml;
@@ -250,19 +259,33 @@ class UserController extends Controller
     {
         $userCode = $request->codigoStartup;
         $tipoUser = Auth::user()->tipo;
-        
+
         $startup = Startups::whereHas('user', function ($query) use ($userCode) {
             $query->where('code_user', $userCode);
         })
             ->first();
 
+
+        $alreadySendRequestForSeePitch =  false;
+
+        $this->verificarValidadePermissoesPitch($startup->fk_user, Auth::user()->id);
+
+
+        $permissoesVerPitch = PermissoesVerPitch::where('fk_startup', $startup->fk_user)
+            ->where('fk_investidor', Auth::user()->id)
+            ->whereIn('estado', ['espera','ativo'])
+            ->first();
         
+       
+
+        if (!empty($permissoesVerPitch))
+            $alreadySendRequestForSeePitch = true;
 
         $myprofile = $startup->fk_user == Auth::user()->id;
 
-        
 
-        $html = view('blocos_html/introducao_startup', compact('startup', 'myprofile','tipoUser'))->render();
+
+        $html = view('blocos_html/introducao_startup', compact('startup', 'myprofile', 'tipoUser', 'alreadySendRequestForSeePitch'))->render();
 
         return response()->json(
             [
@@ -290,12 +313,13 @@ class UserController extends Controller
             ->where('estado', 'aberta')
             ->first();
 
-           
+
 
         if (Auth::user()->tipo == 'investidor') {
             $permissao = PermissoesVerPitch::select('estado', DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_permissao) AS tempo_restante'))
                 ->where('fk_startup', $startup->fk_user)
                 ->where('fk_investidor', Auth::user()->id)
+                ->where('estado','ativo')
                 ->first();
 
             if (!empty($permissao) && $permissao->tempo_restante > 1) {
@@ -306,9 +330,9 @@ class UserController extends Controller
                 $havePermissionToWatchPitch = true;
         }
 
-       
 
-        $returnHtml = view('blocos_html/content_oferta', compact('rodada', 'startup', 'havePermissionToWatchPitch','myprofile'))->render();
+
+        $returnHtml = view('blocos_html/content_oferta', compact('rodada', 'startup', 'havePermissionToWatchPitch', 'myprofile'))->render();
 
         return response()->json([
             'html' =>    $returnHtml
@@ -690,6 +714,34 @@ class UserController extends Controller
             ]);
     }
 
+    public function getIntroducaoInvestidor(Request $request)
+    {
+        $codeUser = $request->codeUser;
+
+
+        $investidor = Investidores::whereHas('user', function ($query) use ($codeUser) {
+            $query->where('code_user', $codeUser);
+        })
+            ->first();
+
+        $myProfile = Auth::user()->id == $investidor->fk_user;
+
+        if (Auth::user()->tipo == "startup") {
+
+            $this->verificarValidadePermissoesPitch(Auth::user()->id, $investidor->fk_user);
+            $permissoesVerPitch = PermissoesVerPitch::where('fk_startup', Auth::user()->id)
+                ->where('fk_investidor', $investidor->fk_user)
+                ->whereIn('estado', ['espera', 'ativo'])
+                ->first();
+        }
+
+        $html = view('blocos_html/introducao_investidor', compact('investidor', 'permissoesVerPitch'))->render();
+
+        return response()->json([
+            'html' => $html
+        ]);
+    }
+
     public function getExperienciasDoInvestidor(Request $request)
     {
         $codeUser = $request->codeUser;
@@ -778,5 +830,118 @@ class UserController extends Controller
             'data_inicio' => $dataInicio,
             'data_fim' => $dataFim
         ]);
+    }
+
+    public function solicitarPitch(Request $request)
+    {
+        $codeUser = $request->codeStartup;
+
+        $startup = Startups::whereHas('user', function ($query) use ($codeUser) {
+            $query->where('code_user', $codeUser);
+        })->first();
+
+        $investidor = Investidores::where('fk_user', Auth::user()->id)->first();
+
+        $nomeCompletoInvestidor = $investidor->nome;
+
+        if ($investidor->sobrenome != null)
+            $nomeCompletoInvestidor  = $nomeCompletoInvestidor . ' ' . $investidor->sobrenome;
+
+        $message = "Investidor {$nomeCompletoInvestidor} deseja assistir vosso pitch!";
+
+        Notifications::create([
+            'message' => $message,
+            'fk_user_distination' => $startup->fk_user,
+            'fk_user_origin' => $investidor->fk_user,
+            'status' => 'nao_visto',
+            'tipo' => 'ver_pitch'
+        ]);
+
+        PermissoesVerPitch::create([
+            'fk_startup' => $startup->fk_user,
+            'fk_investidor' => $investidor->fk_user,
+            'estado' => 'espera'
+        ]);
+
+        $notificacoes = Notifications::where('fk_user_distination', $startup->fk_user)
+            ->where('status', 'nao_visto')
+            ->get();
+
+        $qtdNotification = (int)count($notificacoes);
+
+        $user = User::where('code_user', $codeUser)->first();
+        $user->notify(new \App\Notifications\FirstNotification($qtdNotification));
+    }
+
+    public function setPermissaoVerPitch(Request $request)
+    {
+        $codeUser = $request->codeUser;
+
+        $investidor = Investidores::whereHas('user', function ($query) use ($codeUser) {
+            $query->where('code_user', $codeUser);
+        })
+        ->first();
+
+      
+
+        $startup = Startups::where('fk_user', Auth::user()->id)
+            ->first();
+
+        $user = User::where('code_user', $codeUser)->first();
+
+        $message = "A startup {$startup->nome} aceitou sua solicitação para ver o pitch.";
+
+        Notifications::create([
+            'message' => $message,
+            'fk_user_distination' => $investidor->fk_user,
+            'fk_user_origin' => $startup->fk_user,
+            'status' => 'nao_visto',
+            'tipo' => 'ver_pitch'
+        ]);
+
+        PermissoesVerPitch::where([
+            ['fk_startup', $startup->fk_user],
+            ['fk_investidor', $investidor->fk_user],
+            ['estado', 'espera']
+        ])
+            ->update([
+                'estado' => 'ativo'
+            ]);
+
+        $notificacoes = Notifications::where('fk_user_distination', $investidor->fk_user)
+            ->where('status', 'nao_visto')
+            ->get();
+
+        $qtdNotification = (int)count($notificacoes);
+
+        $user->notify(new \App\Notifications\FirstNotification($qtdNotification));
+    }
+
+    public function verificarValidadePermissoesPitch($idStartup, $idInvestidor)
+    {
+
+        $permissoesEmEspera = PermissoesVerPitch::select(
+            DB::raw("TIMESTAMPDIFF(DAY,NOW(),created_at) AS tempo_espera"),
+            DB::raw("TIMESTAMPDIFF(DAY,NOW(),data_permissao) AS tempo_ativo")
+        )
+            ->where('fk_startup', $idStartup)
+            ->where('fk_investidor', $idInvestidor)
+            ->whereIn('estado', ['espera', 'ativo'])
+            ->get();
+
+
+        foreach ($permissoesEmEspera as $permissao) {
+            if ($permissao->tempo_espera > 2 && $permissao->estado == 'espera') {
+                PermissoesVerPitch::where('id', $permissao->id)
+                    ->update([
+                        'estado' => 'ignorado'
+                    ]);
+            } else if ($permissao->tempo_ativo > 2 && $permissao->estado == 'ativo') {
+                PermissoesVerPitch::where('id', $permissao->id)
+                    ->update([
+                        'estado' => 'vencido'
+                    ]);
+            }
+        }
     }
 }

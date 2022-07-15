@@ -11,6 +11,13 @@ class Notifications extends Model
     protected $fillable = [
         'message',
         'fk_user_distination',
-        'clicked'
+        'status',
+        'fk_user_origin',
+        'tipo'
     ];
+
+    public function userdeorigem()
+    {
+        return $this->belongsTo('App\User','fk_user_origin','id');
+    }
 }

@@ -25,7 +25,18 @@
         <button type="button" class="btn btn-outline-secondary" id="btn-anular-ivestimento" style="height:33px;font-size:14px;@if($startup->estado_busca_invest == 'nao') display:none; @endif">Anular Investimento</button>
         @else
         @if($startup->estado_busca_invest == 'sim' && $tipoUser=='investidor')
+        
+        @if($alreadySendRequestForSeePitch) 
+        <button type="button" class="btn btn-outline-secondary"  style="height:33px;font-size:14px;">Solicitação enviada...</button>
+        
+        @else
         <button type="button" class="btn btn-outline-secondary" id="btn-solicitar-pitch" style="height:33px;font-size:14px;">Solicitar pitch</button>
+        
+        @endif
+        
+       
+        
+        
         &nbsp;
         @endif
         @endif

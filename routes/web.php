@@ -39,7 +39,10 @@ Route::post('loginuser', 'AuthController@loginuser')->name('user.login');
 Route::get('userout', 'AuthController@logoutUser');
 
 Route::get('stackholder_startup', 'HomeController@loadHomePag')->name('startup.menu');
+
 Route::get('stackholder_investidor', 'HomeController@loadInvestidoresPage')->name('investidor.menu');
+
+Route::get('notificacoes', 'NotificationController@loadNotifications')->name('notificacao.menu');
 
 Route::group(['prefix' => '/startup', 'middleware' => 'auth'], function () {
     Route::get('/load', 'UserController@loadStartups');
@@ -104,4 +107,10 @@ Route::post('/cadastrar_experiencia_investidor','UserController@cadastrarExperie
 
 Route::get('/get_formacao_investidor','UserController@getFormacoesDoInvestidor');
 
+Route::get('/get_introducao_investidor','UserController@getIntroducaoInvestidor');
+
 Route::post('/cadastrar_formacao_investidor','UserController@cadastrarFormacaoInvestidor');
+
+Route::get('/solicitar_pitch','UserController@solicitarPitch');
+
+Route::get('/set_permissao_ver_pitch','UserController@setPermissaoVerPitch');

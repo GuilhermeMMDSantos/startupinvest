@@ -16,7 +16,7 @@
         <tr id="tupla_{{$investors->id}}">
             <td>{{$investors->nome}} @if($investors->sobrenome != null) {{$investors->sobrenome}} @endif</td>
             <td style="text-align:center;">{{$investors->tipo_entidade}}</td>
-            <td style="text-align:center;">{{$investors->porcentagem_na_startup}}</td>
+            <td style="text-align:center;">{{$investors->porcentagem_na_startup}}%</td>
             <td style="text-align:center;">{{$investors->email}}</td>
 
             @if($isMyProfile)

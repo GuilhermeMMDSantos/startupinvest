@@ -34,5 +34,5 @@
 
  @endsection
  @section('scripts_base_inicio')
- <script src="assets/js/script2.js"></script>
+
  @endsection

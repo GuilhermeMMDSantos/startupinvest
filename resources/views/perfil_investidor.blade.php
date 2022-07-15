@@ -6,29 +6,10 @@
 @section('contentBody_base_inicio')
 <section class="container-fluid" style="padding-left:6.5%;padding-right:6.5%; padding-bottom:10px;">
 
-  <div style="display:flex;padding-bottom:15px;border-bottom:2px solid #e9ecef;background: #f8f9fa;padding-left:5px;padding-top:5px;">
-
-
-    <div style="width:110px;height:110px;border:1px solid #ccc;border-radius:50%;">
-      <img src="{{asset('storage/'.$investidor->foto)}}" style="width:100%;height:100%;border-radius:50%;object-fit:cover !important;">
-    </div>
+  <div id="container-introducao-investidor" style="display:flex;padding-bottom:15px;border-bottom:2px solid #e9ecef;background: #f8f9fa;padding-left:5px;padding-top:5px;">
 
 
 
-    <div style="width:87%;padding-left:15px;padding-right:5px;">
-      <p>
-        <span style="font-size:25px;margin-right:15px;">{{$investidor->nome}} @if($investidor->sobrenome!=null){{$investidor->sobrenome}}@endif</span>
-      </p>
-      <p style="margin-top:-15px;color:#0c141bb3;">
-        Entidade: {{$investidor->tipo_entidade}}
-      </p>
-      <div style="text-align:right;;margin-top:-13px;">
-        @if(!$myProfile)
-        <button type="button" class="btn btn-outline-secondary" style="height:33px;font-size:14px;">Mensagem</button>
-        @endif
-
-      </div>
-    </div>
   </div>
 
   <div class="row">
@@ -91,6 +72,7 @@
   $experienciaIsClicked = false;
 
   $(function() {
+    getIntroducaoInvestidor();
     getExperienciaInvestidor();
     getFormacaoInvestidor();
     //----------------------------FORMULARIO DE CADASTRO EXPERIENCIA INVESTIDOR
@@ -425,6 +407,26 @@
       $("#content-alert-unselected-data-formacao-fim").html('');
     });
 
+
+    $("#container-introducao-investidor").on('click', '#btn-pode-assistir-pitch', function() {
+      $.ajax({
+        url: "/set_permissao_ver_pitch",
+        type: "get",
+        data: {
+          codeUser: '{{$codigoInvestidor}}'
+        },
+        success: function(response) {
+         
+          console.log("Notificado");
+          getIntroducaoInvestidor();
+        },
+        error: function(error) {
+          console.log("Erro ao dar permissao ver pitch");
+          console.log(error);
+        }
+      });
+    });
+
     //----------------------------------------------------
 
     $(document).click(function(elemento) {
@@ -468,7 +470,23 @@
       });
     }
 
-
+    function getIntroducaoInvestidor() {
+      $.ajax({
+        url: "/get_introducao_investidor",
+        type: "get",
+        data: {
+          codeUser: '{{$codigoInvestidor}}'
+        },
+        success: function(response) {
+          $("#container-introducao-investidor").empty();
+          $("#container-introducao-investidor").append(response['html']);
+        },
+        error: function(error) {
+          console.log("Erro ao carregar introdução investidor");
+          console.log(error);
+        }
+      });
+    }
 
   });
 </script>

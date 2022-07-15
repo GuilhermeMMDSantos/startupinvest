@@ -12,6 +12,7 @@ use App\Fases;
 use App\IncubadorasAceleradoras;
 use App\Investidores;
 use App\Startups;
+use App\Notifications;
 
 class HomeController extends Controller
 {
@@ -46,8 +47,14 @@ class HomeController extends Controller
                 ->select('id', 'nome')
                 ->get();
 
+            $notifications = Notifications::where('fk_user_distination', Auth::user()->id)
+                ->where('status', 'nao_visto')
+                ->get();
 
-            return view('inicio', compact('setores', 'tiposBusness', 'fases'));
+            $qtdnotifications = (int)count($notifications);
+
+
+            return view('inicio', compact('setores', 'tiposBusness', 'fases', 'qtdnotifications'));
         }
 
         return Redirect::to("home")->with('error', 'Faça Login');
@@ -80,7 +87,13 @@ class HomeController extends Controller
             ->where('fk_user', '!=', Auth::user()->id)
             ->get();
 
-        return view('stackholder_investidores', compact('investidores'));
+        $notifications = Notifications::where('fk_user_distination', Auth::user()->id)
+            ->where('status', 'nao_visto')
+            ->get();
+
+        $qtdnotifications = (int)count($notifications);
+
+        return view('stackholder_investidores', compact('investidores','qtdnotifications'));
     }
 
     public function loadWaitValidationPag()
