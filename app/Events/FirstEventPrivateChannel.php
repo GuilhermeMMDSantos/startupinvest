@@ -13,15 +13,18 @@ use Illuminate\Queue\SerializesModels;
 class FirstEventPrivateChannel implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $message;
+    
+    public $qtdNotification;
+    public $userId; 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($message)
+    public function __construct($userId,$qtdNotification)
     {
-        $this->message = $message;
+        $this->userId = $userId;
+        $this->qtdNotification = $qtdNotification;
     }
 
     /**
@@ -31,6 +34,6 @@ class FirstEventPrivateChannel implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('private-channel-guito');
+        return new PrivateChannel('private-channel-notification');
     }
 }

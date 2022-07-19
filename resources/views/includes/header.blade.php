@@ -19,7 +19,7 @@
 
 
 
-                <li class="liMenu"><a href="#" class="anchorMenu"><i class="fa fa-envelope"></i><span>Mensagens</span></a></li>
+
                 @if(Auth::user()->tipo == 'investidor')
                 <li class="liMenu"><a href="{{route('investidor.menu')}}" class="anchorMenu"><i class="fa fa-envelope"></i><span>Investidores</span></a></li>
                 @endif
@@ -76,26 +76,41 @@
                 console.log("RealTime Event: " + e.message)
             });
 
-        Echo.private('private-channel-guito')
+        Echo.private('private-channel-notification')
             .listen('FirstEventPrivateChannel', function(e) {
-                console.log("RealTime Private Event: " + e.message);
-            });
+                var pega = '{{$code}}';
+                
+                if (e.userId == pega) {
+                    
+                    let qtdNotification = e.qtdNotification;
 
-
-
-        Echo.private('users.' + '{{$code}}')
-            .notification((notification) => {
-                console.log("Esta merda funciona");
-                let qtdNotification = notification.notifications;
-                if (qtdNotification > 0) {
-                    $("#indicador-existe-notificacao").html(qtdNotification);
-                    $("#indicador-existe-notificacao").show();
-                } else {
-                    $("#indicador-existe-notificacao").html('');
-                    $("#indicador-existe-notificacao").hide();
+                    if (qtdNotification > 0) {
+                      
+                        $("#indicador-existe-notificacao").html(qtdNotification);
+                        $("#indicador-existe-notificacao").show();
+                    } else {
+                        console.log("falso");
+                        $("#indicador-existe-notificacao").html('');
+                        $("#indicador-existe-notificacao").hide();
+                    }
                 }
-
             });
+
+
+
+        /* Echo.private('users.' + '{{$code}}')
+             .notification((notification) => {
+                 console.log("Esta merda funciona");
+                 let qtdNotification = notification.notifications;
+                 if (qtdNotification > 0) {
+                     $("#indicador-existe-notificacao").html(qtdNotification);
+                     $("#indicador-existe-notificacao").show();
+                 } else {
+                     $("#indicador-existe-notificacao").html('');
+                     $("#indicador-existe-notificacao").hide();
+                 }
+
+             });*/
 
     });
 </script>

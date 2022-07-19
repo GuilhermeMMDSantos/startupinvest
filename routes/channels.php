@@ -21,6 +21,6 @@ Broadcast::channel('users.{id}', function ($user, $id) {
 });
 
 
-Broadcast::channel('private-channel-guito', function ($user) {
+Broadcast::channel('private-channel-notification', function ($user) {
     return true;
 });

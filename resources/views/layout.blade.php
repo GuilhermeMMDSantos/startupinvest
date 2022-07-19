@@ -1,29 +1,33 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{csrf_token()}}">
 
-        <title>ecoStartup</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{csrf_token()}}">
 
-        <!-- Fonts -->
-        <!--<link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">-->
+    <title>ecoStartup</title>
 
-        
-        <!--Scripts-->
-        <script src="{{asset('assets/js/jquery.js')}}"></script>
-        <script src="{{asset('assets/js/popper.min.js')}}"></script>
-        <script src="{{asset('assets/js/bootstrap.min.js')}}"></script>
+    <!-- Fonts -->
+    <!--<link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">-->
 
-        <!-- Styles -->
-        <link href="{{asset('assets/fontawesome/css/all.css')}}" type="text/css" rel="stylesheet">
-        <link href="{{asset('assets/css/main.css')}}" type="text/css" rel="stylesheet">
-        @yield('stylesheets')
-        
-    </head>
-    <body>
-     @yield('contentBody')
-    </body>
-    @yield('scripts')
+
+    <!--Scripts-->
+    <script src="{{asset('assets/js/jquery.js')}}"></script>
+    <script src="{{asset('assets/js/popper.min.js')}}"></script>
+    <script src="{{asset('assets/js/bootstrap.min.js')}}"></script>
+
+
+    <!-- Styles -->
+    <link href="{{asset('assets/fontawesome/css/all.css')}}" type="text/css" rel="stylesheet">
+    <link href="{{asset('assets/css/main.css')}}" type="text/css" rel="stylesheet">
+    @yield('stylesheets')
+
+</head>
+
+<body>
+    @yield('contentBody')
+</body>
+@yield('scripts')
+
 </html>

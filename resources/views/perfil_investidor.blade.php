@@ -72,6 +72,7 @@
   $experienciaIsClicked = false;
 
   $(function() {
+
     getIntroducaoInvestidor();
     getExperienciaInvestidor();
     getFormacaoInvestidor();
@@ -416,7 +417,7 @@
           codeUser: '{{$codigoInvestidor}}'
         },
         success: function(response) {
-         
+
           console.log("Notificado");
           getIntroducaoInvestidor();
         },
@@ -478,6 +479,7 @@
           codeUser: '{{$codigoInvestidor}}'
         },
         success: function(response) {
+
           $("#container-introducao-investidor").empty();
           $("#container-introducao-investidor").append(response['html']);
         },
@@ -487,6 +489,7 @@
         }
       });
     }
+
 
   });
 </script>

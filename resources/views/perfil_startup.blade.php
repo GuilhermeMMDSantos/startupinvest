@@ -850,7 +850,7 @@
                     'codeStartup': codeStartup
                 },
                 success: function(response) {
-                    console.log("Notificado");
+                    
                     loadIntroducaoStartup();
                 },
                 error: function(error) {
@@ -1018,6 +1018,9 @@
             return false;
         })
 
+
+
+        
 
 
 

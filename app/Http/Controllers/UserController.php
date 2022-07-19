@@ -32,6 +32,7 @@ use App\MembrosEquipaCargosExecutivos;
 use App\PermissoesVerPitch;
 use App\Notifications;
 use NunoMaduro\Collision\Adapters\Phpunit\State;
+use App\Events\FirstEventPrivateChannel;
 
 class UserController extends Controller
 {
@@ -725,6 +726,7 @@ class UserController extends Controller
             ->first();
 
         $myProfile = Auth::user()->id == $investidor->fk_user;
+        $permissoesVerPitch = null;
 
         if (Auth::user()->tipo == "startup") {
 
@@ -734,6 +736,8 @@ class UserController extends Controller
                 ->whereIn('estado', ['espera', 'ativo'])
                 ->first();
         }
+
+        
 
         $html = view('blocos_html/introducao_investidor', compact('investidor', 'permissoesVerPitch'))->render();
 
@@ -836,6 +840,7 @@ class UserController extends Controller
     {
         $codeUser = $request->codeStartup;
 
+        
         $startup = Startups::whereHas('user', function ($query) use ($codeUser) {
             $query->where('code_user', $codeUser);
         })->first();
@@ -870,7 +875,10 @@ class UserController extends Controller
         $qtdNotification = (int)count($notificacoes);
 
         $user = User::where('code_user', $codeUser)->first();
-        $user->notify(new \App\Notifications\FirstNotification($qtdNotification));
+       // $user->notify(new \App\Notifications\FirstNotification($qtdNotification));
+    
+       event(new FirstEventPrivateChannel($user->id,$qtdNotification));
+
     }
 
     public function setPermissaoVerPitch(Request $request)
