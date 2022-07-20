@@ -1,5 +1,22 @@
-<div class="col-sm-8">
-    <video src="@if($havePermissionToWatchPitch || $myprofile){{asset('storage/'.$startup->pitch_deck)}}@endif" controls="true" width="100%" height="500" />
+<div class="col-sm-8" style="padding-top:10px;">
+    <div class="card">
+        <div class="card-body">
+            <video style="border:2px solid #e9ecef9c;" src="@if($havePermissionToWatchPitch || $myprofile){{asset('storage/'.$startup->pitch_deck)}}@endif" controls="true" width="100%" height="500" />
+            <div style="text-align:right;font-size:14px;">
+                <a role="button" style="background:#dedede;padding:5px;border-radius:2px; color:#6c757d;"><i class="fa fa-clock"></i>Histórico</a> &nbsp;&nbsp;
+                <a role="button" style="background:#dedede;padding:5px;border-radius:2px;color:#6c757d;"><i class="fa fa-comment-dots"></i> Conversa</a>
+            </div>
+
+            <div id="container-chat">
+                <div id="bady-chat">
+                </div>
+                <div id="footer-chat">
+                </div>
+            </div>
+
+
+        </div>
+    </div>
 </div>
 <div class="col-sm-4" style="padding-top:10px;">
     <div class="card ">
