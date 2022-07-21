@@ -120,6 +120,7 @@ class UserController extends Controller
 
         $user = User::where('code_user', $codeUser)->first();
 
+        $code = Auth::user()->id;
 
         $myProfile = ($user->id == Auth::user()->id);
 
@@ -166,14 +167,14 @@ class UserController extends Controller
 
             $codigoStartup = $codeUser;
 
-            $returnHtml = view('perfil_startup', compact('startup', 'qtdnotifications', 'rodada', 'membrosEquipa', 'myProfile', 'codigoStartup'));
+            $returnHtml = view('perfil_startup', compact('code','startup', 'qtdnotifications', 'rodada', 'membrosEquipa', 'myProfile', 'codigoStartup'));
         } else if ($user->tipo == 'investidor') {
 
             $investidor = Investidores::with(['formacoes', 'experiencias'])
                 ->where('fk_user', $user->id)
                 ->first();
             $codigoInvestidor = $codeUser;
-            $returnHtml = view('perfil_investidor', compact('investidor', 'qtdnotifications', 'myProfile', 'codeUser', 'codigoInvestidor'));
+            $returnHtml = view('perfil_investidor', compact('code','investidor', 'qtdnotifications', 'myProfile', 'codeUser', 'codigoInvestidor'));
         }
 
         return $returnHtml;
@@ -274,10 +275,10 @@ class UserController extends Controller
 
         $permissoesVerPitch = PermissoesVerPitch::where('fk_startup', $startup->fk_user)
             ->where('fk_investidor', Auth::user()->id)
-            ->whereIn('estado', ['espera','ativo'])
+            ->whereIn('estado', ['espera', 'ativo'])
             ->first();
-        
-       
+
+
 
         if (!empty($permissoesVerPitch))
             $alreadySendRequestForSeePitch = true;
@@ -320,7 +321,7 @@ class UserController extends Controller
             $permissao = PermissoesVerPitch::select('estado', DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_permissao) AS tempo_restante'))
                 ->where('fk_startup', $startup->fk_user)
                 ->where('fk_investidor', Auth::user()->id)
-                ->where('estado','ativo')
+                ->where('estado', 'ativo')
                 ->first();
 
             if (!empty($permissao) && $permissao->tempo_restante > 1) {
@@ -737,7 +738,7 @@ class UserController extends Controller
                 ->first();
         }
 
-        
+
 
         $html = view('blocos_html/introducao_investidor', compact('investidor', 'permissoesVerPitch'))->render();
 
@@ -840,7 +841,7 @@ class UserController extends Controller
     {
         $codeUser = $request->codeStartup;
 
-        
+
         $startup = Startups::whereHas('user', function ($query) use ($codeUser) {
             $query->where('code_user', $codeUser);
         })->first();
@@ -875,10 +876,9 @@ class UserController extends Controller
         $qtdNotification = (int)count($notificacoes);
 
         $user = User::where('code_user', $codeUser)->first();
-       // $user->notify(new \App\Notifications\FirstNotification($qtdNotification));
-    
-       event(new FirstEventPrivateChannel($user->id,$qtdNotification));
+        // $user->notify(new \App\Notifications\FirstNotification($qtdNotification));
 
+        event(new FirstEventPrivateChannel($user->id, $qtdNotification));
     }
 
     public function setPermissaoVerPitch(Request $request)
@@ -888,9 +888,9 @@ class UserController extends Controller
         $investidor = Investidores::whereHas('user', function ($query) use ($codeUser) {
             $query->where('code_user', $codeUser);
         })
-        ->first();
+            ->first();
 
-      
+
 
         $startup = Startups::where('fk_user', Auth::user()->id)
             ->first();

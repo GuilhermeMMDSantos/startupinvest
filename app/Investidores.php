@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Conversas;
 
 class Investidores extends Model
 {
@@ -36,4 +37,9 @@ class Investidores extends Model
     public function experiencias(){
         return $this->hasMany('App\ExperienciaInvestidor','fk_investidor','fk_user');
     }
+
+    public function conversas(){
+        return $this->hasMany(Conversas::class,'fk_investidor','fk_user');
+    }
+
 }

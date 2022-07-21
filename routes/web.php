@@ -114,3 +114,9 @@ Route::post('/cadastrar_formacao_investidor','UserController@cadastrarFormacaoIn
 Route::get('/solicitar_pitch','UserController@solicitarPitch');
 
 Route::get('/set_permissao_ver_pitch','UserController@setPermissaoVerPitch');
+
+Route::get('/get_conversas','ChatController@getConversas');
+
+Route::get('/send_message','ChatController@sendMessage');
+
+Route::get('/get_messages','ChatController@getMessages');

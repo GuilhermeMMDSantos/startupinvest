@@ -2,17 +2,25 @@
     <div class="card">
         <div class="card-body">
             <video style="border:2px solid #e9ecef9c;" src="@if($havePermissionToWatchPitch || $myprofile){{asset('storage/'.$startup->pitch_deck)}}@endif" controls="true" width="100%" height="500" />
+
             <div style="text-align:right;font-size:14px;">
-                <a role="button" style="background:#dedede;padding:5px;border-radius:2px; color:#6c757d;"><i class="fa fa-clock"></i>Histórico</a> &nbsp;&nbsp;
-                <a role="button" style="background:#dedede;padding:5px;border-radius:2px;color:#6c757d;"><i class="fa fa-comment-dots"></i> Conversa</a>
+                <a role="button" id="btn-conversa" style="background:#dedede;padding:5px;border-radius:2px;color:#6c757d;"><i class="fa fa-comment-dots"></i> Conversa</a>
             </div>
 
-            <div id="container-chat">
-                <div id="bady-chat">
+            <div id="container-list-conversas" style="border:1px solid #ccc;height:200px;margin-top:10px;display:none;overflow-y:auto;">
+            </div>
+
+            <div id="container-chat" style=" height:270px;margin-top:10px; display:none;">
+                 
+                <div id="bady-chat" style="border:1px solid #ccc;height:200px;background: #f8f9fa;overflow-y:auto;">
                 </div>
-                <div id="footer-chat">
+                <div id="footer-chat" style="display:flex;padding-top:5px;overflow-y:auto;">
+                    <input type="text" id="conteudo-message-chat" class="form-control" placeholder="Escreva aqui"> &nbsp;
+                    <button style="font-size:14px;" id="btn-enviar-message-chat">enviar</button>
                 </div>
             </div>
+
+
 
 
         </div>

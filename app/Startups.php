@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Conversas;
 
 class Startups extends Model
 {
@@ -50,4 +51,7 @@ class Startups extends Model
        return $this->belongsTo('App\IncubadorasAceleradoras','fk_incubadora_aceleradora','id');
    }
 
+   public function conversas(){
+    return $this->hasMany(Conversas::class,'fk_startup','fk_user');
+   }
 }

@@ -60,7 +60,6 @@
                 </div>
                 @if($myProfile)
                 <div class="card-footer">
-                    <!--<button type="button" class="btn btn-primary btn-editar">Editar</button> &nbsp;-->
                     <button type="button" class="btn btn-primary btn-editar" data-toggle="modal" data-target="#modal-excluir-membro-startup" data-code="{{$membro->id}}">Eliminar</button>
                 </div>
                 @endif
@@ -101,6 +100,8 @@
     var areaFormacaoInputFocus = false;
     var areaFormacaoItemClicked = false;
     var haveImgMembro = false;
+    var showChat = false;
+    var destinatarioMessageChat = '';
     //------------------------------------------------------
 
     $(function() {
@@ -109,6 +110,8 @@
         loadIntroducaoStartup();
         loadOferta();
         loadInvestorsTable();
+        destinatarioMessageChat = "{{$startup->fk_user}}";
+
 
         $('#modal-editar-introducao-startup').on('show.bs.modal', function(event) {
 
@@ -850,7 +853,7 @@
                     'codeStartup': codeStartup
                 },
                 success: function(response) {
-                    
+
                     loadIntroducaoStartup();
                 },
                 error: function(error) {
@@ -859,6 +862,81 @@
                 }
             });
         });
+
+
+        //----------------------CHAT--------------------------
+
+
+
+        $("#content-oferta").on('click', '#btn-conversa', function() {
+            let myprofile = '{{$myProfile}}';
+
+            if (!showChat) {
+                showChat = true;
+                if (myprofile == 1) {
+                    $("#container-list-conversas").show();
+                    getConversas();
+                } else {
+                    $("#container-chat").show();
+                    getMessages();
+                }
+            } else {
+                showChat = false;
+                $("#container-list-conversas").hide();
+                $("#container-chat").hide();
+            }
+
+        });
+
+        $("#content-oferta").on('click', '.btn-item-conversa', function() {
+            $("#container-list-conversas").hide();
+            $("#container-chat").show();
+           
+            destinatarioMessageChat = $(this).attr("investidor");
+            getMessages();
+
+        });
+
+
+
+        $("#content-oferta").on('click', '#btn-enviar-message-chat', function() {
+
+            let remetente = "{{$code}}";
+            let distinatario = destinatarioMessageChat;
+            let conteudoMessage = $("#conteudo-message-chat").val().trim();
+
+            if (conteudoMessage.length == 0)
+                return false;
+
+
+
+            $.ajax({
+                url: '/send_message',
+                type: 'get',
+                data: {
+                    'remetente': remetente,
+                    'distinatario': distinatario,
+                    'conteudoMessage': conteudoMessage
+                },
+                success: function(response) {
+                    $("#conteudo-message-chat").val('');
+                    getMessages();
+                },
+                error: function(error) {
+                    console.log("Erro a enviar mensagem");
+                    console.log(error);
+                }
+            });
+
+        });
+
+        Echo.private('users.' + '{{$code}}')
+            .notification((notification) => {
+                getMessages();
+                getConversas();
+            });
+
+        //-----------------------------------------------------
 
         function resetarFormularioAdicionarMembro() {
 
@@ -988,6 +1066,52 @@
             });
         }
 
+        function getConversas() {
+            $.ajax({
+                url: '/get_conversas',
+                type: 'get',
+                data: {
+
+                },
+                success: function(response) {
+                    $("#container-list-conversas").empty();
+                    $("#container-list-conversas").append(response['html']);
+
+                },
+                error: function(error) {
+                    console.log("Erro ao carregar conversas");
+                    console.log(error);
+                }
+
+            });
+        }
+
+        function getMessages() {
+
+            let remetente = "{{$code}}";
+            let distinatario = destinatarioMessageChat;
+
+            $.ajax({
+                url: '/get_messages',
+                type: 'get',
+                data: {
+                    'remetente': remetente,
+                    'distinatario': distinatario
+
+                },
+                success: function(response) {
+                    $("#bady-chat").empty();
+                    $("#bady-chat").append(response['html']);
+
+                },
+                error: function(error) {
+                    console.log("Erro ao carregar conversas");
+                    console.log(error);
+                }
+
+            });
+        }
+
         $(document).on("click", "#pagination a,#search_btn", function() {
 
 
@@ -1020,7 +1144,7 @@
 
 
 
-        
+
 
 
 
