@@ -167,14 +167,14 @@ class UserController extends Controller
 
             $codigoStartup = $codeUser;
 
-            $returnHtml = view('perfil_startup', compact('code','startup', 'qtdnotifications', 'rodada', 'membrosEquipa', 'myProfile', 'codigoStartup'));
+            $returnHtml = view('perfil_startup', compact('code', 'startup', 'qtdnotifications', 'rodada', 'membrosEquipa', 'myProfile', 'codigoStartup'));
         } else if ($user->tipo == 'investidor') {
 
             $investidor = Investidores::with(['formacoes', 'experiencias'])
                 ->where('fk_user', $user->id)
                 ->first();
             $codigoInvestidor = $codeUser;
-            $returnHtml = view('perfil_investidor', compact('code','investidor', 'qtdnotifications', 'myProfile', 'codeUser', 'codigoInvestidor'));
+            $returnHtml = view('perfil_investidor', compact('code', 'investidor', 'qtdnotifications', 'myProfile', 'codeUser', 'codigoInvestidor'));
         }
 
         return $returnHtml;
@@ -713,6 +713,11 @@ class UserController extends Controller
             ->where('estado', 'aberta')
             ->update([
                 'estado' => 'anulada'
+            ]);
+
+        PermissoesVerPitch::where('fk_startup', $idUser)
+            ->update([
+                'estado' => 'vencido'
             ]);
     }
 

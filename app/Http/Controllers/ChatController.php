@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Mensagens;
 use App\Notifications\Message;
+use App\PermissoesVerPitch;
 use PhpParser\Node\Expr\FuncCall;
+use Illuminate\Support\Facades\DB;
 
 use function React\Promise\Stream\first;
 
@@ -90,14 +92,18 @@ class ChatController extends Controller
             $fk_investidor =  $remetente;
             $fk_startup = $distinatario;
         }
- 
 
-        $mensagens = Mensagens::whereHas('conversa', function ($query) use ($fk_startup, $fk_investidor) {
-            $query->where([
-                ['fk_startup', $fk_startup],
-                ['fk_investidor', $fk_investidor]
-            ]);
-        })
+
+        $mensagens = Mensagens::select(
+            '*',
+            DB::raw('DATE_FORMAT(created_at, "%d/%m/%Y %h:%m") AS dataenvio')
+        )
+            ->whereHas('conversa', function ($query) use ($fk_startup, $fk_investidor) {
+                $query->where([
+                    ['fk_startup', $fk_startup],
+                    ['fk_investidor', $fk_investidor]
+                ]);
+            })
             ->get();
 
 
@@ -105,6 +111,66 @@ class ChatController extends Controller
 
         return response()->json([
             'html' => $html
+        ]);
+    }
+
+    public function getInfoDestinatario(Request $request)
+    {
+        $destinatario = $request->distinatario;
+        $nome = "";
+
+        $user = User::with(['startup', 'investidor'])
+            ->where('id', $destinatario)
+            ->first();
+
+        if (!empty($user->startup))
+            $nome = $user->startup->nome;
+        else if (!empty($user->investidor)) {
+            $nome = $user->investidor->nome;
+            if ($user->investidor->sobrenome != null)
+                $nome = $nome . ' ' . $user->investidor->sobrenome;
+        }
+
+        $html = view('blocos_html/info_destinatario', compact('nome'))->render();
+
+        return response()->json([
+            'html' => $html
+        ]);
+    }
+
+    public function verificarPermissaoParaEnviarMensagem(Request $request)
+    {
+        $remetente = $request->remetente;
+        $destinatario = $request->destinatario;
+        $havePermissao = false;
+
+        $fk_investidor = '';
+        $fk_startup = '';
+
+
+        $user = User::where('id', $destinatario)
+            ->first();
+
+        if ($user->tipo == 'investidor') {
+            $fk_investidor = $destinatario;
+            $fk_startup = $remetente;
+        } else {
+            $fk_investidor =  $remetente;
+            $fk_startup = $destinatario;
+        }
+
+        $permissao = PermissoesVerPitch::where([
+            ['fk_startup', $fk_startup],
+            ['fk_investidor', $fk_investidor]
+        ])
+            ->first();
+
+        if (!empty($permissao) && $permissao->estado == 'ativo')
+            $havePermissao = true;
+
+
+        return response()->json([
+            'permissao' => (bool)$havePermissao
         ]);
     }
 }

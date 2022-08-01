@@ -102,6 +102,7 @@
     var haveImgMembro = false;
     var showChat = false;
     var destinatarioMessageChat = '';
+    var heightComponenteMessage = 0;
     //------------------------------------------------------
 
     $(function() {
@@ -878,6 +879,7 @@
                     getConversas();
                 } else {
                     $("#container-chat").show();
+                    getInfoDestinatario();
                     getMessages();
                 }
             } else {
@@ -891,9 +893,11 @@
         $("#content-oferta").on('click', '.btn-item-conversa', function() {
             $("#container-list-conversas").hide();
             $("#container-chat").show();
-           
+
             destinatarioMessageChat = $(this).attr("investidor");
+            getInfoDestinatario();
             getMessages();
+
 
         });
 
@@ -1074,8 +1078,8 @@
 
                 },
                 success: function(response) {
-                    $("#container-list-conversas").empty();
-                    $("#container-list-conversas").append(response['html']);
+                    $("#content-list-conversas").empty();
+                    $("#content-list-conversas").append(response['html']);
 
                 },
                 error: function(error) {
@@ -1100,8 +1104,13 @@
 
                 },
                 success: function(response) {
+                    heightComponenteMessage = heightComponenteMessage + 100;
+                    let alturaScroll = heightComponenteMessage + 198;
                     $("#bady-chat").empty();
                     $("#bady-chat").append(response['html']);
+
+                    $("#bady-chat").scrollTop(alturaScroll);
+
 
                 },
                 error: function(error) {
@@ -1109,6 +1118,53 @@
                     console.log(error);
                 }
 
+            });
+
+            verificarPermissaoParaEnviarMensagem();
+        }
+
+        function getInfoDestinatario() {
+            let distinatario = destinatarioMessageChat;
+
+            $.ajax({
+                url: '/get_info_destinatario',
+                type: 'get',
+                data: {
+                    'distinatario': distinatario
+                },
+                success: function(response) {
+                    $("#container-info-destinatario").empty();
+                    $("#container-info-destinatario").prepend(response['html']);
+                },
+                error: function(error) {
+                    console.log("Erro a enviar mensagem");
+                    console.log(error);
+                }
+            });
+
+        }
+
+        function verificarPermissaoParaEnviarMensagem() {
+
+            let remetente = "{{$code}}";
+            let destinatario = destinatarioMessageChat;
+            
+            $.ajax({
+                url: '/verificar_permissao_para_enviar_mensagem',
+                type: 'get',
+                data: {
+                    'remetente': remetente,
+                    'destinatario': destinatario
+                },
+                success: function(response) {
+                    
+                    $("#conteudo-message-chat").prop('disabled', !response['permissao']);
+                    $("#btn-enviar-message-chat").prop('disabled', !response['permissao']);
+                },
+                error: function(error) {
+                    console.log("Erro ao verificar permissao para enviar mensagem");
+                    console.log(error);
+                }
             });
         }
 

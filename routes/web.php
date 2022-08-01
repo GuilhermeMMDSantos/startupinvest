@@ -120,3 +120,7 @@ Route::get('/get_conversas','ChatController@getConversas');
 Route::get('/send_message','ChatController@sendMessage');
 
 Route::get('/get_messages','ChatController@getMessages');
+
+Route::get('/get_info_destinatario','ChatController@getInfoDestinatario');
+
+Route::get('/verificar_permissao_para_enviar_mensagem','ChatController@verificarPermissaoParaEnviarMensagem');

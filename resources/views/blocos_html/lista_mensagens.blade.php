@@ -23,9 +23,9 @@ $nome = $mensagem->remetente->startup->nome;
     <img src="{{asset('storage/'.$imagem)}}" style="width:100%;height:100%;border-radius:50%;object-fit:contain !important;">
   </div>
 
-  <div style="padding-left:5px;">
-    <h6 style="font-weight:bold;font-size:14px;"> {{$nome}} </h6>
-    <p>{{$mensagem->conteudo}}</p>
+  <div style="padding-left:5px; background:#6c757d3d; margin-left:5px; padding:10px; border-radius:10px;">
+    <h6 style="font-weight:bold;font-size:14px;"> {{$nome}} <span style="font-size:12px;color:#6c757d69;">•</span>&nbsp; <span style="font-size:12px;color:#6c757d69;">{{$mensagem->dataenvio}}</span></h6>
+    <p style="max-width:500px;">{{$mensagem->conteudo}}</p>
   </div>
 
 
