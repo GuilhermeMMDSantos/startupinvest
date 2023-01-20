@@ -29,7 +29,19 @@
         </tr>
         @empty
         <tr>
-            <td colspan="4" style="color:#3333339c;">Startup sem investidor informado</td>
+            <td colspan="4" class="card">
+
+               
+                    <div class="card-body">
+                        <div style="width:60px;height:60px;margin:auto;">
+                            <img src="{{asset('assets/img/formacao1.png')}}" style="width:100%;height:100%;object-fit:contain !important;" />
+                        </div>
+
+                        <p class="card-text" style="padding:5px 15px;text-align:center;font-size:17px;">Startup sem investidor informado</p>
+                    </div>
+                 
+
+            </td>
         </tr>
         @endforelse
     </tbody>

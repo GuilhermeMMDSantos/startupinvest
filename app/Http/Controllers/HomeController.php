@@ -100,4 +100,20 @@ class HomeController extends Controller
     {
         return view('processamentocadastro');
     }
+
+    public function showNewHome(){
+        return view('new_home');
+    }
+
+    public function showNewCadastroPage(){
+        $setores = Setores::orderBy('nome', 'ASC')
+            ->get();
+        $fases = Fases::get();
+
+        return view('new_cadastro_page', compact('setores', 'fases'));
+    }
+
+    public function showNewLoginPage(){
+        return view('new_login_page');
+    }
 }

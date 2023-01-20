@@ -211,10 +211,14 @@
 
                             <div class="row">
                                 <div class="col-12">
-                                    <div class="jumbotron" style="padding-left: 1rem;padding-right: 1rem;padding-top: 0.5rem;padding-bottom: 0.5rem;font-size: 15px;color: #212529cf;">
+                                  <!--<div class="jumbotron" style="padding-left: 1rem;padding-right: 1rem;padding-top: 0.5rem;padding-bottom: 0.5rem;font-size: 15px;color: #212529cf;">
                                         <span>Somente Pessoa fisica ou jurídica que tenha sido fundador/investidor(Já antes empreendeu-investiu, trazem algum know how tal alem de dinheiro) de alguma empresa</span>
-                                    </div>
-                                    <label for="my-input-file-inv" class="label_inv">Contrato de sociedade (PDF) De Uma Das Empresas investidas, que estejam a funcionar ate a data presente e que tenham mais de 3 anos de operação(Tempo medio para as empresa se estabelecerem)</label>
+                                    </div>-->
+                                    <label for="my-input-file-inv" class="label_inv">
+                                        Contrato de sociedade (PDF) De Uma Das Empresas investidas,
+                                         que estejam a funcionar até a data presente
+                                          e que tenham mais de 3 anos de operação
+                                          <!--(Tempo médio para as empresa se estabelecerem)--></label>
                                     <div class="content-my-input-file-inv">
                                         <label for="my-input-file-inv" class="btn-select-file-inv">Selecionar</label>
                                         <div>

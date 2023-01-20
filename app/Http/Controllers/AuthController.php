@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailSenha;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\User;
 use App\Startups;
@@ -76,15 +77,20 @@ class AuthController extends Controller
 
         $uploadFicheiro = $request->file('contrato_aceleracao_incubacao')->storeAs('armazenamento/startups/contrato_com_incubadora_aceleradora', $nomeArquivo);
 
-        if ($dados['id_incubadora_aceleradora'] == 0) {
+
+        $incubadoraAceleradora = IncubadorasAceleradoras::where([
+            ['nome','like',$dados['nome_incubadora_aceleradora']],
+            ['nif',$dados['nif_incubadora_aceleradora']]
+        ])
+        ->first();
+
+        if (empty($incubadoraAceleradora)) {
 
             $incubadoraAceleradora = IncubadorasAceleradoras::create([
                 'nome' => $dados['nome_incubadora_aceleradora'],
                 'nif' => $dados['nif_incubadora_aceleradora'],
                 'outro' => 'yes'
             ]);
-
-            $dados['id_incubadora_aceleradora'] = $incubadoraAceleradora->id;
         }
 
         Startups::create([
@@ -95,8 +101,7 @@ class AuthController extends Controller
             'contrato_incubadora_aceleradora' => $uploadFicheiro,
             'pitch_elevator' => $pitch,
             'logotipo' => "armazenamento/startups/img/img_standard_startup.png",
-            'fk_tipo_negocio' => $dados['busnessType'],
-            'fk_incubadora_aceleradora' => $dados['id_incubadora_aceleradora']
+            'fk_incubadora_aceleradora' => $incubadoraAceleradora->id
         ]);
 
         return redirect()->intended("processamento_cadastro");
@@ -108,32 +113,23 @@ class AuthController extends Controller
 
 
         $parametrosValidacao = [
-            'primeiro_nome' => 'required',
+            'tipo_investidor' => 'required',
+            'nome_legal_investidor' => 'required',
             'email_investidor' => 'required|unique:users,email',
             'contrato_sociedade' => 'required'
         ];
 
         $mensagensValidacao = [
-            'primeiro_nome.required' => 'Nome do investidor em falta',
-            'email_investidor.required' => 'Email do Invetidor em falta',
-            'email_investidor.unique' => 'Email do Investidor já existe',
-            'contrato_sociedadel.required' => 'Contrato de sociedade em falta'
+            'nome_legal_investidor.required' => 'Nome do investidor em falta',
+            'email_investidor.required' => 'Email do investidor em falta',
+            'email_investidor.unique' => 'Email do investidor já existe',
+            'contrato_sociedade.required' => 'Contrato de sociedade em falta'
         ];
 
-        if ($request->tipo_investidor == 1) {
-            $parametrosValidacao['segundo_nome'] = 'required';
-            $mensagensValidacao['segundo_nome.required'] = 'Sobrenome do investidor em falta';
-        }
-
-        if ($request->tipo_investidor == 1) {
-
-            $parametrosValidacao['bilhete_identidade_investidor'] = 'required';
-            $mensagensValidacao['bilhete_identidade_investidor.required'] = 'Bilhete de identidade do investidor em falta';
-        }
-
+       
         if ($request->tipo_investidor == 2) {
-            $parametrosValidacao['nif'] = 'required';
-            $mensagensValidacao['nif.required'] = 'NIF do investidor em falta';
+            $parametrosValidacao['nif_investidor_juridico'] = 'required';
+            $mensagensValidacao['nif_investidor_juridico.required'] = 'NIF do investidor em falta';
         }
 
         $validador = Validator::make(
@@ -216,6 +212,8 @@ class AuthController extends Controller
         ]);
     }
 
+    
+
     public function loginuser(Request $request)
     {
 
@@ -236,7 +234,7 @@ class AuthController extends Controller
             return redirect()->intended("stackholder_startup");
         }
 
-        return Redirect::to("home")->with('error', 'Credenciais erradas');
+        return Redirect::to("new_login_page")->with('error', 'Dados incorrectos, tente novamente');
     }
 
 
@@ -256,6 +254,6 @@ class AuthController extends Controller
     {
         Session::flush();
         Auth::logout();
-        return Redirect("home");
+        return Redirect("/");
     }
 }

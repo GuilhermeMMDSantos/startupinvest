@@ -50,7 +50,7 @@
         <div class="card-header">
           <h3>Startups Investidas</h3>
         </div>
-        <div class="card-body">
+        <div class="card-body" id="container-startups-investidas">
 
         </div>
       </div>
@@ -490,6 +490,21 @@
       });
     }
 
+    function getStartupsInvestidas() {
+      $.ajax({
+        url: "/get_startups_investidas",
+        type: "get",
+        success: function(response) {
+
+          $("#container-startups-investidas").empty();
+          $("#container-startups-investidas").append(response['html']);
+        },
+        error: function(error) {
+          console.log("Erro ao carregar startups investidas");
+          console.log(error);
+        }
+      });
+    }
 
   });
 </script>

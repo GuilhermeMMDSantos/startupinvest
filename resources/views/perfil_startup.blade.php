@@ -34,40 +34,7 @@
         </div>
     </div>
     <div class="row" style="padding-bottom:30px;" id="container-membros-equipa">
-        @forelse($membrosEquipa as $membro)
-        <div class="col-sm-6" style="margin-top:10px;">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div style="width:80px;height:80px;border:1px solid #ccc;border-radius:50%;margin:auto;">
-                        <img src="{{asset('storage/'.$membro->img)}}" style="width:100%;height:100%;border-radius:50%;object-fit:contain !important;">
-                    </div>
-                    <p style="text-align:center;">{{$membro->nome}}&nbsp;{{$membro->sobrenome}}</p>
-                    <p style="margin-top:-10px;text-decoration:underline;font-weight:bold;">
-                        @foreach($membro->cargosExecutivos as $cargo)
-                        <span>{{$cargo->descricao}}({{$cargo->sigla}})</span><br>
-                        @endforeach
-                    </p>
-                    <p style="margin-top:-10px;"><span style="color:#adb5bd;">Formação:</span>
-                        @foreach($membro->formacoes as $formacao)
-                        <span>{{$formacao->certificado->nome}} em {{$formacao->areafuncao->nome}} {{$formacao->dataInicioFormatada}} - {{$formacao->dataFimFormatada}}</span><br>
-                        @endforeach
-                    </p>
-                    <p style="margin-top:-10px;"><span style="color:#adb5bd;">Experiência</span>:
-                        @foreach($membro->experiencias as $experiencia)
-                        <span>{{$experiencia->funcao->nome}} no(a) {{$experiencia->instituicao->nome}} </span><br>
-                        @endforeach
-                    </p>
-                </div>
-                @if($myProfile)
-                <div class="card-footer">
-                    <button type="button" class="btn btn-primary btn-editar" data-toggle="modal" data-target="#modal-excluir-membro-startup" data-code="{{$membro->id}}">Eliminar</button>
-                </div>
-                @endif
-            </div>
-        </div>
-        @empty
-        <p style="color:#3333339c;text-indent:25px;">Startup sem colaborador informado</p>
-        @endforelse
+
     </div>
 </section>
 
@@ -111,6 +78,7 @@
         loadIntroducaoStartup();
         loadOferta();
         loadInvestorsTable();
+        loadMembrosEquipa();
         destinatarioMessageChat = "{{$startup->fk_user}}";
 
 
@@ -833,8 +801,9 @@
                 data: form,
                 success: function(response) {
 
-                    $("#container-membros-equipa").empty();
-                    $("#container-membros-equipa").append(response);
+                    //  $("#container-membros-equipa").empty();
+                    //  $("#container-membros-equipa").append(response);
+                    loadMembrosEquipa();
                     $('#modal-adicionar-membro-equipa').modal('hide');
                 },
                 error: function(error) {
@@ -1148,7 +1117,7 @@
 
             let remetente = "{{$code}}";
             let destinatario = destinatarioMessageChat;
-            
+
             $.ajax({
                 url: '/verificar_permissao_para_enviar_mensagem',
                 type: 'get',
@@ -1157,12 +1126,55 @@
                     'destinatario': destinatario
                 },
                 success: function(response) {
-                    
+
                     $("#conteudo-message-chat").prop('disabled', !response['permissao']);
                     $("#btn-enviar-message-chat").prop('disabled', !response['permissao']);
                 },
                 error: function(error) {
                     console.log("Erro ao verificar permissao para enviar mensagem");
+                    console.log(error);
+                }
+            });
+        }
+
+        function loadMembrosEquipa() {
+            var codeStartup = "{{$codigoStartup}}";
+
+            $.ajax({
+                url: "/load_membros_equipa",
+                type: "get",
+                data: {
+                    "codeStartup": codeStartup
+                },
+                success: function(response) {
+
+                    $("#container-membros-equipa").empty();
+                    $("#container-membros-equipa").append(response['html']);
+                },
+                error: function(error) {
+                    console.log("Erro ao carregar membros");
+                    console.log(error);
+                }
+            });
+        }
+
+        $("#container-membros-equipa").on('click','.btn-editar',function(){
+            deleteMembroEquipa();
+        });
+        function deleteMembroEquipa() {
+            var idMembro = 3;
+
+            $.ajax({
+                url: "/delete_membros_equipa",
+                type: "get",
+                data: {
+                    "idMembro": idMembro
+                },
+                success: function(response) {
+                    loadMembrosEquipa();
+                },
+                error: function(error) {
+                    console.log("Erro ao carregar deletar membros");
                     console.log(error);
                 }
             });

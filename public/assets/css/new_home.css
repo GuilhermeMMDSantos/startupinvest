@@ -1,0 +1,100 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+#header {
+  background-color: var(--secundary);
+}
+#logo {
+  color: var(--primary);
+  font-size:27px;
+  margin-top:5px;
+}
+#logo a {
+  color: inherit;
+  display: inherit;
+  text-decoration: none;
+}
+#header .container-fluid,
+#slide .container-fluid,
+#why-crowdfunding-content .container-fluid {
+  padding: 2px 80px;
+}
+
+#why-crowdfunding-content p {
+  font-size: 20px;
+  padding: 0 15px;
+}
+
+#why-crowdfunding-content figure {
+  width: 100px;
+  height: 100px;
+  padding-left: 15px;
+}
+
+#header li a {
+  color: white;
+}
+
+nav {
+  padding: 0 !important;
+}
+
+#slide p {
+  color: var(--primary_alt);
+} 
+@media (max-width: 580px) {
+  #header .container-fluid,
+  #slide .container-fluid,
+  #why-crowdfunding-content .container-fluid {
+    padding: 10px 25px;
+  }
+  #header h1 {
+    font-size: 25px;
+  }
+  .card {
+    width: 95%;
+  }
+
+  #why-crowdfunding-content figure {
+    padding-left: 15px;
+    margin: auto;
+  }
+
+  #why-crowdfunding-content p {
+    text-align: center;
+  }
+}
+
+@media (max-width: 903px) {
+  #navbarNav ul {
+    display: flex;
+    flex-direction: row;
+  }
+  #header h1 {
+    font-size: 20px;
+  }
+  #slide h1,
+  #slide p {
+    font-size: 20px !important;
+    margin-top: 20px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 991px) and (min-width: 903px) {
+  #navbarNav ul {
+    display: flex;
+    flex-direction: row;
+  }
+  #header h1 {
+    font-size: 20px;
+  }
+  #slide h1,
+  #slide p {
+    font-size: 19px !important;
+    margin-top: 20px;
+  }
+}

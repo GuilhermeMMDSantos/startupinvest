@@ -22,7 +22,7 @@ Route::get('paineladmin', 'AdminController@index');
 
 Route::post('atualizar_stado', 'AdminController@atualizarEstadoUser');
 
-Route::get('/', 'HomeController@index');
+//Route::get('/', 'HomeController@index');
 
 Route::get('home', 'HomeController@index')->name('home');
 Route::get('buscar_incubadora_aceleradora', 'HomeController@buscarIncubadoraAceleradora');
@@ -124,3 +124,16 @@ Route::get('/get_messages','ChatController@getMessages');
 Route::get('/get_info_destinatario','ChatController@getInfoDestinatario');
 
 Route::get('/verificar_permissao_para_enviar_mensagem','ChatController@verificarPermissaoParaEnviarMensagem');
+
+Route::get('/load_membros_equipa','UserController@loadMembrosEquipa');
+
+Route::get('/delete_membros_equipa','UserController@deleteMembrosEquipa');
+
+Route::get('/get_startups_investidas','UserController@getStartupsInvestidas');
+
+
+Route::get('/teste_api','UserController@testeAPI');
+Route::get('/','HomeController@showNewHome')->name('new_home_page');
+
+Route::get('/new_cadastro_page','HomeController@showNewCadastroPage')->name('new_cadastro_page');
+Route::get('/new_login_page','HomeController@showNewLoginPage')->name('new_login_page');

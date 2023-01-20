@@ -22,13 +22,21 @@
                 @endforeach
             </p>
         </div>
-
+        @if($myprofile)
         <div class="card-footer">
             <button type="button" class="btn btn-primary btn-editar" data-toggle="modal" data-target="#modal-excluir-membro-startup" data-code="{{$membro->id}}">Eliminar</button>
         </div>
-
+        @endif
     </div>
 </div>
 @empty
-<p style="color:#3333339c;text-indent:25px;">Startup sem colaborador informado</p>
+<div class=" col-12 card">
+    <div class="card-body">
+        <div style="width:60px;height:60px;margin:auto;">
+            <img src="{{asset('assets/img/formacao1.png')}}" style="width:100%;height:100%;object-fit:contain !important;" />
+        </div>
+
+        <p class="card-text" style="padding:5px 15px;text-align:center;font-size:17px;">Sem membro informado</p>
+    </div>
+</div>
 @endforelse

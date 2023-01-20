@@ -9,6 +9,7 @@
     <title>ecoStartup</title>
 
     <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <!--<link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">-->
 
 
@@ -27,7 +28,8 @@
 
 <body>
     @yield('contentBody')
+    @yield('scripts')
 </body>
-@yield('scripts')
+
 
 </html>

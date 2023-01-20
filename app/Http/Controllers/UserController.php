@@ -33,6 +33,7 @@ use App\PermissoesVerPitch;
 use App\Notifications;
 use NunoMaduro\Collision\Adapters\Phpunit\State;
 use App\Events\FirstEventPrivateChannel;
+use Illuminate\Support\Facades\Http;
 
 class UserController extends Controller
 {
@@ -144,30 +145,10 @@ class UserController extends Controller
 
 
 
-            $membrosEquipa = MembrosEquipaStartup::with(['cargosExecutivos', 'formacoes' => function ($query) {
-                $query->with(['areafuncao', 'certificado'])
-                    ->select(
-                        '*',
-                        DB::raw('DATE_FORMAT(data_inicio, "%Y-%m") AS dataInicioFormatada'),
-                        DB::raw('DATE_FORMAT(data_fim, "%Y-%m") AS dataFimFormatada')
-                    )
-                    ->get();
-            }, 'experiencias' => function ($query2) {
-                $query2->with(['funcao', 'instituicao'])
-                    ->select(
-                        '*',
-                        DB::raw('DATE_FORMAT(data_inicio, "%Y-%m") AS dataInicioFormatada'),
-                        DB::raw('DATE_FORMAT(data_fim, "%Y-%m") AS dataFimFormatada')
-                    )
-                    ->get();
-            }])
-
-                ->where('fk_startup', $startup->fk_user)
-                ->get();
 
             $codigoStartup = $codeUser;
 
-            $returnHtml = view('perfil_startup', compact('code', 'startup', 'qtdnotifications', 'rodada', 'membrosEquipa', 'myProfile', 'codigoStartup'));
+            $returnHtml = view('perfil_startup', compact('code', 'startup', 'qtdnotifications', 'rodada', 'myProfile', 'codigoStartup'));
         } else if ($user->tipo == 'investidor') {
 
             $investidor = Investidores::with(['formacoes', 'experiencias'])
@@ -956,5 +937,61 @@ class UserController extends Controller
                     ]);
             }
         }
+    }
+
+    public function loadMembrosEquipa(Request $request)
+    {
+        $idStartup = User::where('code_user', $request->codeStartup)->first()->id;
+        $myprofile = $idStartup == Auth::user()->id;
+
+        $membrosEquipa = MembrosEquipaStartup::with(['cargosExecutivos', 'formacoes' => function ($query) {
+            $query->with(['areafuncao', 'certificado'])
+                ->select(
+                    '*',
+                    DB::raw('DATE_FORMAT(data_inicio, "%Y-%m") AS dataInicioFormatada'),
+                    DB::raw('DATE_FORMAT(data_fim, "%Y-%m") AS dataFimFormatada')
+                )
+                ->get();
+        }, 'experiencias' => function ($query2) {
+            $query2->with(['funcao', 'instituicao'])
+                ->select(
+                    '*',
+                    DB::raw('DATE_FORMAT(data_inicio, "%Y-%m") AS dataInicioFormatada'),
+                    DB::raw('DATE_FORMAT(data_fim, "%Y-%m") AS dataFimFormatada')
+                )
+                ->get();
+        }])
+
+            ->where('fk_startup', $idStartup)
+            ->get();
+
+
+        $html = view('blocos_html/content_membros_equipa', compact('membrosEquipa', 'myprofile'))->render();
+
+        return response()->json([
+            'html' => $html
+        ]);
+    }
+
+    public function deleteMembrosEquipa(Request $request)
+    {
+        $idMembro = $request->idMembro;
+
+        MembrosEquipaStartup::where('id', $idMembro)
+            ->delete();
+
+        MembrosEquipaCargosExecutivos::where('fk_membro_equipa', $idMembro)
+            ->delete();
+    }
+
+    public function getStartupsInvestidas()
+    {
+        $idInvestidor = Auth::user()->id;
+    }
+
+    public function testeAPI()
+    {
+        $response = Http::get('https://996d966e-6983-4853-8ec3-eac267dc463d.mock.pstmn.io/ping');
+        dd($response->headers());
     }
 }
