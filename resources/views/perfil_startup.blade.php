@@ -17,7 +17,7 @@
 
     <div class="row" style="background:#e9ecefa6;margin-top:30px;">
         <div class="col-sm-12">
-            <h2 style="text-align: center;">Investidores @if($myProfile)
+            <h2>Investidores @if($myProfile)
                 <button type="button" class="btn btn-primary btn-editar" data-toggle="modal" data-target="#modal-adicionar-investidores-startup">Adicionar</button> @endif
             </h2>
 
@@ -72,7 +72,12 @@
     var heightComponenteMessage = 0;
     //------------------------------------------------------
 
+
+ 
+
+
     $(function() {
+
 
         var codigoStartup = "{{$codigoStartup}}";
         loadIntroducaoStartup();
@@ -1158,9 +1163,10 @@
             });
         }
 
-        $("#container-membros-equipa").on('click','.btn-editar',function(){
+        $("#container-membros-equipa").on('click', '.btn-editar', function() {
             deleteMembroEquipa();
         });
+
         function deleteMembroEquipa() {
             var idMembro = 3;
 
@@ -1209,11 +1215,6 @@
             });
             return false;
         })
-
-
-
-
-
 
 
 

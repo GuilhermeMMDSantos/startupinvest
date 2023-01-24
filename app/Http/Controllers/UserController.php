@@ -34,9 +34,15 @@ use App\Notifications;
 use NunoMaduro\Collision\Adapters\Phpunit\State;
 use App\Events\FirstEventPrivateChannel;
 use Illuminate\Support\Facades\Http;
+use App\Events\PermitirVerPitch;
 
 class UserController extends Controller
 {
+
+    public function teste(){
+    
+      event(new PermitirVerPitch());
+    }
 
     public function loadStartups(Request $request)
     {

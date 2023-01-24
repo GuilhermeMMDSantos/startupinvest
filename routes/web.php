@@ -16,7 +16,7 @@ use App\Mail\EmailSenha;
 */
 
 
-
+Route::get('/canal', 'UserController@teste');
 Route::get('paineladmin', 'AdminController@index');
 
 

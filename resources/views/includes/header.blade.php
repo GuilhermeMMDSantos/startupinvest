@@ -71,45 +71,38 @@
         });
 
 
-        Echo.channel('channels-guito')
+      /*  Echo.channel('channels-guito')
             .listen('FirstEvent', function(e) {
                 console.log("RealTime Event: " + e.message)
-            });
+            });*/
 
-        Echo.private('private-channel-notification')
+      /* Echo.private('private-channel-notification')
             .listen('FirstEventPrivateChannel', function(e) {
                 var pega = '{{$code}}';
-                
+
                 if (e.userId == pega) {
-                    
+
                     let qtdNotification = e.qtdNotification;
 
                     if (qtdNotification > 0) {
-                      
+
                         $("#indicador-existe-notificacao").html(qtdNotification);
                         $("#indicador-existe-notificacao").show();
+                        
+                       
                     } else {
-                        console.log("falso");
+                        
                         $("#indicador-existe-notificacao").html('');
                         $("#indicador-existe-notificacao").hide();
                     }
                 }
             });
 
-
+         */
 
         /* Echo.private('users.' + '{{$code}}')
              .notification((notification) => {
                  console.log("Esta merda funciona");
-                 let qtdNotification = notification.notifications;
-                 if (qtdNotification > 0) {
-                     $("#indicador-existe-notificacao").html(qtdNotification);
-                     $("#indicador-existe-notificacao").show();
-                 } else {
-                     $("#indicador-existe-notificacao").html('');
-                     $("#indicador-existe-notificacao").hide();
-                 }
-
              });*/
 
     });

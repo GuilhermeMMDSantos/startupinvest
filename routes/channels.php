@@ -13,14 +13,18 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('users.{id}', function ($user, $id) {
+/*Broadcast::channel('users.{id}', function ($user, $id) {
 
   return (int) $user->id === (int) $id;
   
   
+});*/
+
+
+Broadcast::channel('private-channel-notification', function () {
+    return true;
 });
 
-
-Broadcast::channel('private-channel-notification', function ($user) {
-    return true;
+Broadcast::channel('permitir-ver-pitch-channel', function () {
+  return true;
 });
