@@ -73,7 +73,7 @@
     //------------------------------------------------------
 
 
- 
+   
 
 
     $(function() {
@@ -908,11 +908,11 @@
 
         });
 
-        Echo.private('users.' + '{{$code}}')
+      /*  Echo.private('users.' + '{{$code}}')
             .notification((notification) => {
                 getMessages();
                 getConversas();
-            });
+            });*/
 
         //-----------------------------------------------------
 
