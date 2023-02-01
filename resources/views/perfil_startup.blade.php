@@ -72,19 +72,17 @@
     var heightComponenteMessage = 0;
     //------------------------------------------------------
 
+    var codigoStartup = "{{$codigoStartup}}";
+    destinatarioMessageChat = "{{$startup->fk_user}}";
 
-   
 
 
     $(function() {
 
-
-        var codigoStartup = "{{$codigoStartup}}";
         loadIntroducaoStartup();
         loadOferta();
         loadInvestorsTable();
         loadMembrosEquipa();
-        destinatarioMessageChat = "{{$startup->fk_user}}";
 
 
         $('#modal-editar-introducao-startup').on('show.bs.modal', function(event) {
@@ -908,13 +906,54 @@
 
         });
 
-      /*  Echo.private('users.' + '{{$code}}')
-            .notification((notification) => {
-                getMessages();
-                getConversas();
-            });*/
+        $("#container-membros-equipa").on('click', '.btn-editar', function() {
+            deleteMembroEquipa();
+        });
 
-        //-----------------------------------------------------
+
+
+        $(document).on("click", "#pagination a,#search_btn", function() {
+
+
+            var url = $(this).attr("href");
+
+            var finalURL = url;
+
+            var isMyProfile = '{{$myProfile}}' == 1 ? true : false;
+
+            let codeUser = '{{$codigoStartup}}';
+
+            $.ajax({
+                url: finalURL,
+                type: 'get',
+                data: {
+                    'ismyprofile': isMyProfile,
+                    'codigoStartup': codeUser
+                },
+                success: function(response) {
+                    $("#container-table-investor-of-startup").empty();
+                    $("#container-table-investor-of-startup").append(response['html']);
+                },
+                error: function(error) {
+                    console.log("Erro ao carregar tabela de investidores");
+                    console.log(error);
+                }
+            });
+            return false;
+        })
+
+        ///---------------------------------------------------OUVINTES---------
+
+       
+console.log('{{$code}}');
+
+        Echo.private('permitir-ver-pitch-channel.'+ '{{$code}}')
+            .listen('PermitirVerPitch', function(e) {
+               loadOferta();
+            });
+
+        //------------------------EXPLICIT FUNCTIONS-----------------------------
+
 
         function resetarFormularioAdicionarMembro() {
 
@@ -1163,10 +1202,6 @@
             });
         }
 
-        $("#container-membros-equipa").on('click', '.btn-editar', function() {
-            deleteMembroEquipa();
-        });
-
         function deleteMembroEquipa() {
             var idMembro = 3;
 
@@ -1185,38 +1220,6 @@
                 }
             });
         }
-
-        $(document).on("click", "#pagination a,#search_btn", function() {
-
-
-            var url = $(this).attr("href");
-
-            var finalURL = url;
-
-            var isMyProfile = '{{$myProfile}}' == 1 ? true : false;
-
-            let codeUser = '{{$codigoStartup}}';
-
-            $.ajax({
-                url: finalURL,
-                type: 'get',
-                data: {
-                    'ismyprofile': isMyProfile,
-                    'codigoStartup': codeUser
-                },
-                success: function(response) {
-                    $("#container-table-investor-of-startup").empty();
-                    $("#container-table-investor-of-startup").append(response['html']);
-                },
-                error: function(error) {
-                    console.log("Erro ao carregar tabela de investidores");
-                    console.log(error);
-                }
-            });
-            return false;
-        })
-
-
 
     });
 </script>

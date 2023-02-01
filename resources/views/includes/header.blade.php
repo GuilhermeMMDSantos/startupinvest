@@ -3,7 +3,7 @@
     <div class="row" id="headMenu">
 
         <div class="col-sm-5 col-lg-5 logo" style="padding-top:12px;">
-            <h1><a href="{{url('stackholder_startup')}}">ecoStartup</h1>
+            <h1 id="logo"><a href="{{url('stackholder_startup')}}">startup<strong style="color:white !important;">Investe</strong></h1>
         </div>
 
         <nav class="col-lg-6 menu" style="padding-top:7px;padding-bottom:7px;">
@@ -70,19 +70,9 @@
             }
         });
 
-
-        Echo.channel('channels-guito')
-            .listen('FirstEvent', function(e) {
-                console.log("RealTime Event: " + e.message)
-            });
-
-        Echo.private('private-channel-notification')
-            .listen('FirstEventPrivateChannel', function(e) {
-                var pega = '{{$code}}';
-
-                if (e.userId == pega) {
-
-                    let qtdNotification = e.qtdNotification;
+        Echo.private('users.' + '{{$code}}')
+            .notification((notification) => {
+                let qtdNotification = notification.qtdNotification;
 
                     if (qtdNotification > 0) {
 
@@ -95,15 +85,7 @@
                         $("#indicador-existe-notificacao").html('');
                         $("#indicador-existe-notificacao").hide();
                     }
-                }
             });
-
-         
-/*
-         Echo.private('users.' + '{{$code}}')
-             .notification((notification) => {
-                 console.log("Esta merda funciona");
-             });*/
 
     });
 </script>

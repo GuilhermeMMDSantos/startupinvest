@@ -21,9 +21,9 @@ class PermitirVerPitch implements ShouldBroadcast
      */
     private $toUser;
 
-    public function __construct()
+    public function __construct($toUser)
     {
-        $this->toUser = 2;
+        $this->toUser = $toUser;
     }
 
     /**
@@ -33,6 +33,6 @@ class PermitirVerPitch implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('permitir-ver-pitch-channel');
+        return new PrivateChannel('permitir-ver-pitch-channel.'.$this->toUser);
     }
 }

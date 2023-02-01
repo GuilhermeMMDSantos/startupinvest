@@ -32,17 +32,15 @@ use App\MembrosEquipaCargosExecutivos;
 use App\PermissoesVerPitch;
 use App\Notifications;
 use NunoMaduro\Collision\Adapters\Phpunit\State;
-use App\Events\FirstEventPrivateChannel;
 use Illuminate\Support\Facades\Http;
 use App\Events\PermitirVerPitch;
+use App\Notifications\Notificao;
 
 class UserController extends Controller
 {
 
-    public function teste(){
-    
-      event(new PermitirVerPitch());
-    }
+
+
 
     public function loadStartups(Request $request)
     {
@@ -868,9 +866,8 @@ class UserController extends Controller
         $qtdNotification = (int)count($notificacoes);
 
         $user = User::where('code_user', $codeUser)->first();
-        // $user->notify(new \App\Notifications\FirstNotification($qtdNotification));
 
-        event(new FirstEventPrivateChannel($user->id, $qtdNotification));
+        $user->notify(new Notificao($qtdNotification));
     }
 
     public function setPermissaoVerPitch(Request $request)
@@ -914,7 +911,10 @@ class UserController extends Controller
 
         $qtdNotification = (int)count($notificacoes);
 
-        $user->notify(new \App\Notifications\FirstNotification($qtdNotification));
+        $user->notify(new Notificao($qtdNotification));
+
+        event(new PermitirVerPitch($investidor->fk_user));
+        
     }
 
     public function verificarValidadePermissoesPitch($idStartup, $idInvestidor)

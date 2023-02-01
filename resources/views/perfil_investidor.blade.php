@@ -417,8 +417,6 @@
           codeUser: '{{$codigoInvestidor}}'
         },
         success: function(response) {
-
-          console.log("Notificado");
           getIntroducaoInvestidor();
         },
         error: function(error) {

@@ -12,14 +12,15 @@ class PermitirVerPitch extends Notification implements ShouldBroadcast
 {
     use Queueable;
 
+    private $qtdNotification;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($qtdNotification)
     {
-        //
+        $this->qtdNotification = $qtdNotification;
     }
 
     /**
@@ -31,6 +32,10 @@ class PermitirVerPitch extends Notification implements ShouldBroadcast
     public function via($notifiable)
     {
         return ['broadcast'];
+    }
+
+    public function broadcastType(){
+        return 'permitirVerPitch';
     }
 
     /**
@@ -63,7 +68,7 @@ class PermitirVerPitch extends Notification implements ShouldBroadcast
     public function toBroadcast($notifiable): BroadcastMessage
     {
         return new BroadcastMessage([
-            
+            'qtdNotification' => $this->qtdNotification
         ]);
     }
 }

@@ -2,25 +2,26 @@
 
 namespace App\Notifications;
 
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-use Illuminate\Notifications\Messages\BroadcastMessage;
-
-class Message extends Notification
+class Notificao extends Notification implements ShouldBroadcast
 {
     use Queueable;
-    public $conteudoMessage;
+
+    private $qtdNotification;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($conteudoMessage)
+    public function __construct($qtdNotification)
     {
-        $this->conteudoMessage = $conteudoMessage;
+        $this->qtdNotification = $qtdNotification;
     }
 
     /**
@@ -34,8 +35,6 @@ class Message extends Notification
         return ['broadcast'];
     }
 
-  
-
     /**
      * Get the mail representation of the notification.
      *
@@ -45,9 +44,9 @@ class Message extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**
@@ -66,7 +65,7 @@ class Message extends Notification
     public function toBroadcast($notifiable): BroadcastMessage
     {
         return new BroadcastMessage([
-            'conteudo' => $this->conteudoMessage
+            'qtdNotification' => $this->qtdNotification
         ]);
     }
 }
