@@ -36,3 +36,7 @@ Broadcast::channel('private-channel-notification', function ($user) {
 Broadcast::channel('permitir-ver-pitch-channel.{toUser}', function ($user,$toUser) {
   return (int) $user->id === (int) $toUser;
 });
+
+Broadcast::channel('send-message-channel.{toUser}', function ($user,$toUser) {
+  return (int) $user->id === (int) $toUser;
+});

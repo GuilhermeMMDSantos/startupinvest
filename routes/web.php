@@ -40,7 +40,9 @@ Route::get('stackholder_startup', 'HomeController@loadHomePag')->name('startup.m
 
 Route::get('stackholder_investidor', 'HomeController@loadInvestidoresPage')->name('investidor.menu');
 
-Route::get('notificacoes', 'NotificationController@loadNotifications')->name('notificacao.menu');
+Route::get('notificacoes', 'NotificationController@loadNotifications')->name('notificacao.menu')->middleware('auth');
+
+Route::get('/shownotification/{notificationId}','NotificationController@showOwnerNotification')->name('showownernotification');
 
 Route::group(['prefix' => '/startup', 'middleware' => 'auth'], function () {
     Route::get('/load', 'UserController@loadStartups');
@@ -135,3 +137,10 @@ Route::get('/','HomeController@showNewHome')->name('new_home_page');
 
 Route::get('/new_cadastro_page','HomeController@showNewCadastroPage')->name('new_cadastro_page');
 Route::get('/new_login_page','HomeController@showNewLoginPage')->name('new_login_page');
+
+
+Route::get('/load_popup_chat','UserController@loadPopUpChat');
+
+Route::post('/send_message','UserController@sendMessage');
+
+Route::get('/get_new_message','UserController@getNewMessage');

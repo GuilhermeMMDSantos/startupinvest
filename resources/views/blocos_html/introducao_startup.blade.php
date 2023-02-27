@@ -26,6 +26,7 @@
         @else
         @if($startup->estado_busca_invest == 'sim' && $tipoUser=='investidor')
         
+        <button type="button" id="btn-meeting" class="btn btn-outline-secondary "  style="height:33px;font-size:14px;">Meeting</button>
         @if($alreadySendRequestForSeePitch) 
         <button type="button" class="btn btn-outline-secondary"  style="height:33px;font-size:14px;">Solicitação enviada...</button>
         

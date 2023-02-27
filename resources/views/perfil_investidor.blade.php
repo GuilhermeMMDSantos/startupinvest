@@ -57,6 +57,8 @@
     </div>
   </div>
 
+  <div id="popup-chat-container-investor">
+  </div>
 
 </section>
 
@@ -69,6 +71,11 @@
 @section('scripts_base_inicio')
 
 <script type="text/javascript">
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
   $experienciaIsClicked = false;
 
   $(function() {
@@ -425,8 +432,67 @@
         }
       });
     });
+    //--------------------chat
+    $("#container-introducao-investidor").on('click', '#btn-meeting-investor', function() {
 
+      var codeinvestor = "{{$codigoInvestidor}}";
+
+      $.ajax({
+        url: '/load_popup_chat',
+        type: 'get',
+        data: {
+          'codeUser': codeinvestor
+        },
+        success: function(response) {
+          $("#popup-chat-container-investor").append(response['html']);
+        },
+        error: function(error) {
+          console.log("Erro ao carregar popup-chat");
+        }
+      });
+
+    })
     //----------------------------------------------------
+
+    //--------------------------------------OUVINTES
+    Echo.private('send-message-channel.' + '{{$code}}')
+      .listen('SendMessage', function(e) {
+       
+        getNewMessage(e.messageId);
+        
+      });
+
+    //---------------------------------------------------
+
+    $("#popup-chat-container-investor").on('click', '#btn-enviar-popup-chat-investor', function() {
+
+    
+
+      var mensagem = $("#textarea").val().trim();
+      if (mensagem.length == 0)
+        return true;
+
+      var codeInvestor = "{{$codigoInvestidor}}";
+
+
+
+      $.ajax({
+        url: '/send_message',
+        type: 'post',
+        data: {
+          'codeUser': codeInvestor,
+          'mensagem': mensagem
+        },
+        success: function(response) {
+          $("#textarea").val('');
+          getNewMessage(response['messageId']);
+        },
+        error: function(error) {
+          console.log("Erro ao enviar mensagem investidor");
+          console.log(error);
+        }
+      });
+    });
 
     $(document).click(function(elemento) {
       $(".my-select-input").hide(100);
@@ -499,6 +565,24 @@
         },
         error: function(error) {
           console.log("Erro ao carregar startups investidas");
+          console.log(error);
+        }
+      });
+    }
+
+    function getNewMessage(idMessage) {
+      $.ajax({
+        url: "/get_new_message",
+        type: "get",
+        data: {
+          "idMessage": idMessage
+        },
+        success: function(response) {
+         $("#chat").append(response['html']);
+        
+        },
+        error: function(error) {
+          console.log("erro ao carregar nova mensagem investidor");
           console.log(error);
         }
       });

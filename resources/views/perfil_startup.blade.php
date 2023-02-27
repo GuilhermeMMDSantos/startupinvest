@@ -4,7 +4,7 @@
 @endsection
 
 @section('contentBody_base_inicio')
-<section class="container-fluid" style="padding-left:6.5%;padding-right:6.5%; padding-bottom:10px;">
+<section id="body-section" class="container-fluid" style="padding-left:6.5%;padding-right:6.5%; padding-bottom:10px;">
 
     <div id="content-intro-startup" style="display:flex;padding-bottom:15px;border-bottom:2px solid #e9ecef;background: #f8f9fa;padding-left:5px;padding-top:5px;">
 
@@ -35,6 +35,11 @@
     </div>
     <div class="row" style="padding-bottom:30px;" id="container-membros-equipa">
 
+    </div>
+
+
+
+    <div id="popup-chat-container">
     </div>
 </section>
 
@@ -911,7 +916,56 @@
         });
 
 
+        //--------------------------POPUP CHAT
 
+        $("#content-intro-startup").on('click', '#btn-meeting', function() {
+
+            var codeStartup = "{{$codigoStartup}}";
+
+            $.ajax({
+                url: '/load_popup_chat',
+                type: 'get',
+                data: {
+                    'codeUser': codeStartup
+                },
+                success: function(response) {
+                    $("#popup-chat-container").append(response['html']);
+                },
+                error: function(error) {
+                    console.log("Erro ao carregar popup-chat");
+                }
+            });
+
+
+        });
+
+        $("#popup-chat-container").on('click', '#btn-enviar-popup-chat', function() {
+            var mensagem = $("#textarea").val().trim();
+            if (mensagem.length == 0)
+                return true;
+
+            var codeStartup = "{{$codigoStartup}}";
+
+            $.ajax({
+                url: '/send_message',
+                type: 'post',
+                data: {
+                    'codeUser': codeStartup,
+                    'mensagem':mensagem
+                },
+                success: function(response) {
+                    
+                    $("#textarea").val('');
+                   
+                    getNewMessage(response['messageId']);
+                },
+                error: function(error) {
+                    console.log("Erro ao enviar mensagem");
+                    console.log(error);
+                }
+            });
+        });
+        //-------------------------------------------------------
         $(document).on("click", "#pagination a,#search_btn", function() {
 
 
@@ -944,13 +998,19 @@
 
         ///---------------------------------------------------OUVINTES---------
 
-       
-console.log('{{$code}}');
 
-        Echo.private('permitir-ver-pitch-channel.'+ '{{$code}}')
+
+
+        Echo.private('permitir-ver-pitch-channel.' + '{{$code}}')
             .listen('PermitirVerPitch', function(e) {
-               loadOferta();
+                loadOferta();
             });
+
+            Echo.private('send-message-channel.' + '{{$code}}')
+            .listen('SendMessage', function(e) {
+              getNewMessage(e.messageId);
+            });
+
 
         //------------------------EXPLICIT FUNCTIONS-----------------------------
 
@@ -1215,10 +1275,29 @@ console.log('{{$code}}');
                     loadMembrosEquipa();
                 },
                 error: function(error) {
-                    console.log("Erro ao carregar deletar membros");
+                    console.log("Erro ao deletar membros");
                     console.log(error);
                 }
             });
+        }
+
+        function getNewMessage(idMessage){
+          $.ajax({
+            url: "/get_new_message",
+                type: "get",
+                data: {
+                    "idMessage": idMessage
+                },
+                success: function(response) {
+
+                   
+                   $("#chat").append(response['html']);
+                },
+                error: function(error) {
+                    console.log("Erro ao carregar nova mensagem startup");
+                    console.log(error);
+                }
+          });
         }
 
     });

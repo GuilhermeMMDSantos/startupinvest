@@ -57,7 +57,7 @@ class HomeController extends Controller
             return view('inicio', compact('setores', 'tiposBusness', 'fases', 'qtdnotifications'));
         }
 
-        return Redirect::to("home")->with('error', 'Faça Login');
+        return Redirect::to("new_home_page")->with('error', 'Faça Login');
     }
 
     public function buscarIncubadoraAceleradora(Request $request)
@@ -77,7 +77,7 @@ class HomeController extends Controller
     {
 
         if (!Auth::check()) {
-            return Redirect::to("home")->with('error', 'Faça Login');
+            return Redirect::to("new_home_page")->with('error', 'Faça Login');
         }
 
         $investidores = Investidores::with(['user', 'rodadas' => function ($query) {

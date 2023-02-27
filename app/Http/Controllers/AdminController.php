@@ -39,7 +39,7 @@ class AdminController extends Controller
             return view('Admin/painel', compact('startups', 'investidores'));
         }
 
-        return Redirect::to("home")->with('error', 'Faça Login');
+        return Redirect::to("new_home_page")->with('error', 'Faça Login');
     }
 
 
@@ -49,7 +49,7 @@ class AdminController extends Controller
         if (!request()->ajax()) {
             Session::flush();
             Auth::logout();
-            return Redirect("home");
+            return Redirect("new_home_page");
         }
 
         $id_user = $request->id;

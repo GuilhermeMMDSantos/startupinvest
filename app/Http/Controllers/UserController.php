@@ -35,6 +35,8 @@ use NunoMaduro\Collision\Adapters\Phpunit\State;
 use Illuminate\Support\Facades\Http;
 use App\Events\PermitirVerPitch;
 use App\Notifications\Notificao;
+use App\Mensagens;
+use App\Events\SendMessage;
 
 class UserController extends Controller
 {
@@ -94,7 +96,7 @@ class UserController extends Controller
         if (!request()->ajax()) {
             Session::flush();
             Auth::logout();
-            return Redirect("home");
+            return Redirect("new_home_page");
         }  // E se eu criar um middleware
 
         $fasesSelecionadas = $request->fases;
@@ -119,6 +121,8 @@ class UserController extends Controller
         $returnHtml = view('carregamentos.startup_cards', compact('startupsCards'))->render();
         return response()->json($returnHtml);
     }
+
+
 
     public function showPerfil($codeUser)
     {
@@ -914,7 +918,6 @@ class UserController extends Controller
         $user->notify(new Notificao($qtdNotification));
 
         event(new PermitirVerPitch($investidor->fk_user));
-        
     }
 
     public function verificarValidadePermissoesPitch($idStartup, $idInvestidor)
@@ -990,14 +993,88 @@ class UserController extends Controller
             ->delete();
     }
 
-    public function getStartupsInvestidas()
-    {
-        $idInvestidor = Auth::user()->id;
-    }
+    
 
     public function testeAPI()
     {
         $response = Http::get('https://996d966e-6983-4853-8ec3-eac267dc463d.mock.pstmn.io/ping');
         dd($response->headers());
     }
+
+    public function loadPopUpChat(Request $request)
+    {
+        $codeUser = $request->codeUser;
+        $remetente = Auth::user()->id;
+        $userDestinatario = User::where('code_user', $codeUser)->first();
+        $destinatario = $userDestinatario->id;
+        $mensagens = Mensagens::where([
+
+            ['fk_remetente', $remetente],
+            ['fk_destinatario', $destinatario]
+        ])
+
+            ->orWhere(function ($query) use ($remetente, $destinatario) {
+                $query->where([
+                    ['fk_remetente', $destinatario],
+                    ['fk_destinatario', $remetente]
+                ]);
+            })
+            ->get();
+
+
+        $html = view('blocos_html/popup-chat', compact('mensagens', 'userDestinatario'))->render();
+
+        return response()->json([
+            'html' =>  $html
+        ]);
+    }
+
+    public function sendMessage(Request $request)
+    {
+
+
+
+        $codeUser = $request->codeUser;
+        $mensagem = $request->mensagem;
+
+
+
+        $remetente = Auth::user()->id;
+        $destinatario = User::where('code_user', $codeUser)->first()->id;
+
+        $mensagemEnviada = Mensagens::create([
+            'fk_remetente' => $remetente,
+            'fk_destinatario' => $destinatario,
+            'conteudo' => $mensagem
+        ]);
+
+
+         
+
+        event(new SendMessage($destinatario, $mensagemEnviada->id));
+
+        return response()->json([
+            'messageId' => $mensagemEnviada->id
+        ]);
+    }
+
+    public function getNewMessage(Request $request)
+    {
+        $idMessage = $request->idMessage;
+
+        
+
+        $message = Mensagens::where('id', $idMessage)->first();
+        
+
+        $html = view('blocos_html/nova_mensagem_chat', compact('message'))->render();
+
+
+        return response()->json([
+            'html' => $html
+        ]);
+    }
+
+    
+
 }

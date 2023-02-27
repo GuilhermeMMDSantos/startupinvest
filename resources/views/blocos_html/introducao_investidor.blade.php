@@ -12,13 +12,15 @@
     Entidade: {{$investidor->tipo_entidade}}
   </p>
   <div style="text-align:right;;margin-top:-13px;">
+    <button type="button" id="btn-meeting-investor" class="btn btn-outline-secondary " style="height:33px;font-size:14px;">Meeting</button>
+
     @if(isset($permissoesVerPitch) && $permissoesVerPitch->estado == 'espera')
     <button type="button" id="btn-pode-assistir-pitch" class="btn btn-outline-secondary" style="height:33px;font-size:14px;">Pode assistir pitch</button>
 
     @elseif(isset($permissoesVerPitch) && $permissoesVerPitch->estado == 'ativo')
-    
-    <button type="button" class="btn btn-outline-secondary"  style="height:33px;font-size:14px;">Solicitação atendida...</button>
-       
+
+    <button type="button" class="btn btn-outline-secondary" style="height:33px;font-size:14px;">Solicitação atendida...</button>
+
     @endif
 
   </div>
