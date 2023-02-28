@@ -101,6 +101,8 @@ body {
   color: white;
   padding: 10px;
   margin-bottom: 0px;
+  display:flex;
+  justify-content: space-between;
 }
 
 #popup-chat {

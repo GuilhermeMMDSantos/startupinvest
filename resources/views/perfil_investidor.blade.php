@@ -77,6 +77,7 @@
     }
   });
   $experienciaIsClicked = false;
+  var popupChatOpen = false;
 
   $(function() {
 
@@ -437,6 +438,12 @@
 
       var codeinvestor = "{{$codigoInvestidor}}";
 
+      if (popupChatOpen == true) {
+        $("#popup-chat-container-investor").empty();
+        popupChatOpen = false;
+        return false;
+      }
+
       $.ajax({
         url: '/load_popup_chat',
         type: 'get',
@@ -445,6 +452,7 @@
         },
         success: function(response) {
           $("#popup-chat-container-investor").append(response['html']);
+          popupChatOpen = true;
         },
         error: function(error) {
           console.log("Erro ao carregar popup-chat");
@@ -457,16 +465,16 @@
     //--------------------------------------OUVINTES
     Echo.private('send-message-channel.' + '{{$code}}')
       .listen('SendMessage', function(e) {
-       
+
         getNewMessage(e.messageId);
-        
+
       });
 
     //---------------------------------------------------
 
     $("#popup-chat-container-investor").on('click', '#btn-enviar-popup-chat-investor', function() {
 
-    
+
 
       var mensagem = $("#textarea").val().trim();
       if (mensagem.length == 0)
@@ -492,6 +500,12 @@
           console.log(error);
         }
       });
+    });
+
+    $("#popup-chat-container-investor").on('click', "#btn-close-chatmeeting", function() {
+      $("#popup-chat-container-investor").empty();
+      popupChatOpen = false;
+
     });
 
     $(document).click(function(elemento) {
@@ -578,8 +592,8 @@
           "idMessage": idMessage
         },
         success: function(response) {
-         $("#chat").append(response['html']);
-        
+          $("#chat").append(response['html']);
+
         },
         error: function(error) {
           console.log("erro ao carregar nova mensagem investidor");

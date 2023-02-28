@@ -75,6 +75,7 @@
     var showChat = false;
     var destinatarioMessageChat = '';
     var heightComponenteMessage = 0;
+    var popupChatOpen = false;
     //------------------------------------------------------
 
     var codigoStartup = "{{$codigoStartup}}";
@@ -922,6 +923,12 @@
 
             var codeStartup = "{{$codigoStartup}}";
 
+            if (popupChatOpen == true) {
+        $("#popup-chat-container").empty();
+        popupChatOpen = false;
+        return false;
+      }
+
             $.ajax({
                 url: '/load_popup_chat',
                 type: 'get',
@@ -930,6 +937,7 @@
                 },
                 success: function(response) {
                     $("#popup-chat-container").append(response['html']);
+                    popupChatOpen = true;
                 },
                 error: function(error) {
                     console.log("Erro ao carregar popup-chat");
@@ -951,12 +959,12 @@
                 type: 'post',
                 data: {
                     'codeUser': codeStartup,
-                    'mensagem':mensagem
+                    'mensagem': mensagem
                 },
                 success: function(response) {
-                    
+
                     $("#textarea").val('');
-                   
+
                     getNewMessage(response['messageId']);
                 },
                 error: function(error) {
@@ -965,6 +973,12 @@
                 }
             });
         });
+
+        $("#popup-chat-container").on('click', "#btn-close-chatmeeting", function() {
+            $("#popup-chat-container").empty();
+            popupChatOpen = false;
+        });
+
         //-------------------------------------------------------
         $(document).on("click", "#pagination a,#search_btn", function() {
 
@@ -1006,9 +1020,9 @@
                 loadOferta();
             });
 
-            Echo.private('send-message-channel.' + '{{$code}}')
+        Echo.private('send-message-channel.' + '{{$code}}')
             .listen('SendMessage', function(e) {
-              getNewMessage(e.messageId);
+                getNewMessage(e.messageId);
             });
 
 
@@ -1281,23 +1295,23 @@
             });
         }
 
-        function getNewMessage(idMessage){
-          $.ajax({
-            url: "/get_new_message",
+        function getNewMessage(idMessage) {
+            $.ajax({
+                url: "/get_new_message",
                 type: "get",
                 data: {
                     "idMessage": idMessage
                 },
                 success: function(response) {
 
-                   
-                   $("#chat").append(response['html']);
+
+                    $("#chat").append(response['html']);
                 },
                 error: function(error) {
                     console.log("Erro ao carregar nova mensagem startup");
                     console.log(error);
                 }
-          });
+            });
         }
 
     });

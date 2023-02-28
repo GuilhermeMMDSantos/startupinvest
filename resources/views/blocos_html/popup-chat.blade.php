@@ -1,7 +1,8 @@
 <div id="popup-chat">
-
-	<h6 id="header-popup-chat">MeetingChat</h6>
-
+	<div id="header-popup-chat">
+		<h6>MeetingChat</h6>
+		<h6 id="btn-close-chatmeeting"><i class="fa fa-envelope"></i></h6>
+	</div>
 	<div id="popup-chat-body">
 
 

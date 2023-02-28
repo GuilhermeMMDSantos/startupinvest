@@ -97,6 +97,8 @@ body {
   color: white;
   padding: 10px;
   margin-bottom: 0px;
+  display:flex;
+  justify-content: space-between;
 }
 
 #popup-chat {
@@ -208,10 +210,10 @@ body {
 }
 
 @media(max-width:1024px){
-  #popup-chat-container{
+  #popup-chat-container-investor{
     display:none;
   }
-  #btn-meeting{
+  #btn-meeting-investor{
     display:none;
   }
 }
