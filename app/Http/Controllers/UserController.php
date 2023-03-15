@@ -127,11 +127,14 @@ class UserController extends Controller
     public function showPerfil($codeUser)
     {
 
+
         $user = User::where('code_user', $codeUser)->first();
 
         $code = Auth::user()->id;
 
         $myProfile = ($user->id == Auth::user()->id);
+
+         
 
         $notifications = Notifications::where('fk_user_distination', Auth::user()->id)
             ->where('status', 'nao_visto')
@@ -1075,6 +1078,6 @@ class UserController extends Controller
         ]);
     }
 
-    
+
 
 }

@@ -12,7 +12,7 @@ body {
   width: 60%;
   margin: auto;
   text-indent: 10px;
-  display: none;
+  
 }
 
 .list-group {
@@ -50,11 +50,6 @@ body {
 .content-notification {
 }
 
-@media (max-width: 1022px) {
-  .title-notifications {
-    display: block;
-  }
-}
 
 @media (max-width: 795px) {
   .list-group {

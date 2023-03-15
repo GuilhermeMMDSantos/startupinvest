@@ -84,6 +84,7 @@
     getIntroducaoInvestidor();
     getExperienciaInvestidor();
     getFormacaoInvestidor();
+     
     //----------------------------FORMULARIO DE CADASTRO EXPERIENCIA INVESTIDOR
 
 
@@ -434,32 +435,7 @@
       });
     });
     //--------------------chat
-    $("#container-introducao-investidor").on('click', '#btn-meeting-investor', function() {
-
-      var codeinvestor = "{{$codigoInvestidor}}";
-
-      if (popupChatOpen == true) {
-        $("#popup-chat-container-investor").empty();
-        popupChatOpen = false;
-        return false;
-      }
-
-      $.ajax({
-        url: '/load_popup_chat',
-        type: 'get',
-        data: {
-          'codeUser': codeinvestor
-        },
-        success: function(response) {
-          $("#popup-chat-container-investor").append(response['html']);
-          popupChatOpen = true;
-        },
-        error: function(error) {
-          console.log("Erro ao carregar popup-chat");
-        }
-      });
-
-    })
+    $("#container-introducao-investidor").on('click', '#btn-meeting-investor', openMeetingChat)
     //----------------------------------------------------
 
     //--------------------------------------OUVINTES
@@ -580,6 +556,32 @@
         error: function(error) {
           console.log("Erro ao carregar startups investidas");
           console.log(error);
+        }
+      });
+    }
+
+
+    function openMeetingChat() {
+      var codeinvestor = "{{$codigoInvestidor}}";
+
+      if (popupChatOpen == true) {
+        $("#popup-chat-container-investor").empty();
+        popupChatOpen = false;
+        return false;
+      }
+
+      $.ajax({
+        url: '/load_popup_chat',
+        type: 'get',
+        data: {
+          'codeUser': codeinvestor
+        },
+        success: function(response) {
+          $("#popup-chat-container-investor").append(response['html']);
+          popupChatOpen = true;
+        },
+        error: function(error) {
+          console.log("Erro ao carregar popup-chat");
         }
       });
     }

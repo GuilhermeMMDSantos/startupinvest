@@ -10,6 +10,8 @@
 
             <ul>
 
+                
+
                 <li class="liMenu" style="position: relative !important;">
                     <a href="{{route('notificacao.menu')}}" class="anchorMenu">
                         <i class="fa fa-bell"></i><span>Notificões</span>
@@ -17,7 +19,7 @@
                     <span id="indicador-existe-notificacao" class="badge badge-light" style="position: absolute !important ;top:0px;left:33px;min-width:13px;border-radius:50%;padding:1px !important;border:1px solid black;font-size:10px;text-align:center;background-color:#ffcb2f;@if($qtdnotifications==0)display:none;@endif">@if($qtdnotifications>0) {{$qtdnotifications}} @endif</span>
                 </li>
 
-
+                <li class="liMenu"><a href="{{route('mensagens.menu')}}" class="anchorMenu"><i class="fa fa-envelope"></i><span>Mensagens</span></a></li>
 
 
                 @if(Auth::user()->tipo == 'investidor')
@@ -74,17 +76,17 @@
             .notification((notification) => {
                 let qtdNotification = notification.qtdNotification;
 
-                    if (qtdNotification > 0) {
+                if (qtdNotification > 0) {
 
-                        $("#indicador-existe-notificacao").html(qtdNotification);
-                        $("#indicador-existe-notificacao").show();
-                        
-                       
-                    } else {
-                        
-                        $("#indicador-existe-notificacao").html('');
-                        $("#indicador-existe-notificacao").hide();
-                    }
+                    $("#indicador-existe-notificacao").html(qtdNotification);
+                    $("#indicador-existe-notificacao").show();
+
+
+                } else {
+
+                    $("#indicador-existe-notificacao").html('');
+                    $("#indicador-existe-notificacao").hide();
+                }
             });
 
     });
