@@ -12,15 +12,15 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 class Message extends Notification
 {
     use Queueable;
-    public $conteudoMessage;
+    public $qtdUnviewMessage;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($conteudoMessage)
+    public function __construct($qtdUnviewMessage)
     {
-        $this->conteudoMessage = $conteudoMessage;
+        $this->qtdUnviewMessage = $qtdUnviewMessage;
     }
 
     /**
@@ -66,7 +66,7 @@ class Message extends Notification
     public function toBroadcast($notifiable): BroadcastMessage
     {
         return new BroadcastMessage([
-            'conteudo' => $this->conteudoMessage
+            'qtdUnviewMessage' => $this->qtdUnviewMessage
         ]);
     }
 }

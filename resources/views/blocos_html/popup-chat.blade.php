@@ -37,7 +37,7 @@
 			@if($userDestinatario->tipo == 'startup')
 			<button type="button" class="btn btn-primary btn-sm" id="btn-enviar-popup-chat">Enviar</button>
 			@else
-			<button type="button" class="btn btn-primary btn-sm" id="btn-enviar-popup-chat-investor">Enviar invest.</button>
+			<button type="button" class="btn btn-primary btn-sm" id="btn-enviar-popup-chat-investor">Enviar</button>
 			@endif
 		</div>
 

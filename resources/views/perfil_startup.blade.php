@@ -922,12 +922,13 @@
         $("#content-intro-startup").on('click', '#btn-meeting', function() {
 
             var codeStartup = "{{$codigoStartup}}";
+            var idUser = "{{$idUser}}";
 
             if (popupChatOpen == true) {
-        $("#popup-chat-container").empty();
-        popupChatOpen = false;
-        return false;
-      }
+                $("#popup-chat-container").empty();
+                popupChatOpen = false;
+                return false;
+            }
 
             $.ajax({
                 url: '/load_popup_chat',
@@ -938,6 +939,9 @@
                 success: function(response) {
                     $("#popup-chat-container").append(response['html']);
                     popupChatOpen = true;
+                    loadScrollBarToBottom();
+                    setStatusMessage(idUser);
+
                 },
                 error: function(error) {
                     console.log("Erro ao carregar popup-chat");
@@ -954,6 +958,8 @@
 
             var codeStartup = "{{$codigoStartup}}";
 
+           
+
             $.ajax({
                 url: '/send_message',
                 type: 'post',
@@ -966,6 +972,9 @@
                     $("#textarea").val('');
 
                     getNewMessage(response['messageId']);
+
+                    loadScrollBarToBottom();
+
                 },
                 error: function(error) {
                     console.log("Erro ao enviar mensagem");
@@ -1297,6 +1306,7 @@
 
         function getNewMessage(idMessage) {
             $.ajax({
+                async:false,
                 url: "/get_new_message",
                 type: "get",
                 data: {
@@ -1309,6 +1319,28 @@
                 },
                 error: function(error) {
                     console.log("Erro ao carregar nova mensagem startup");
+                    console.log(error);
+                }
+            });
+        }
+
+        function loadScrollBarToBottom() {
+            $("#chat").scrollTop($("#chat").prop('scrollHeight'));
+            
+        }
+
+        function setStatusMessage(idOtherUser) {
+            $.ajax({
+                url: "/set_status_message",
+                type: "get",
+                data: {
+                    "idOtherUser": idOtherUser
+                },
+                success: function(response) {
+
+                },
+                error: function(error) {
+                    console.log("Erro ao carregar ao alterar status das mensagens");
                     console.log(error);
                 }
             });

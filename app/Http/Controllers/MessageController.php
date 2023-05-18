@@ -8,15 +8,33 @@ use Illuminate\Support\Facades\Auth;
 use App\User;
 use Illuminate\Support\Facades\DB;
 use App\Events\SendMessage;
+use App\Notifications;
+use App\Notifications\Message;
 
 
 class MessageController extends Controller
 {
     public function index()
     {
-        $qtdnotifications = 0;
+        $presentUser = Auth::user()->id;
+        $notifications = Notifications::where('fk_user_distination', $presentUser)
+            ->where('status', 'nao_visto')
+            ->get();
+
+        $qtdnotifications = (int)count($notifications);
+
         $code = Auth::user()->id;
-        return view('message', compact('qtdnotifications','code'));
+
+        $messages = Mensagens::where([
+
+            ['fk_destinatario', $presentUser],
+            ['vista', 'nao']
+        ])
+            ->get();
+
+        $qtdMessageUnview = (int) count($messages);
+
+        return view('message', compact('qtdnotifications', 'qtdMessageUnview', 'code'));
     }
 
 
@@ -33,16 +51,19 @@ class MessageController extends Controller
                  ) as date_,
 
                  (
-                    select count(id) from mensagens where (fk_remetente  = tb.id and fk_destinatario = ?) or (fk_remetente  = ? and fk_destinatario = tb.id )
-                 ) as unview
+                    select count(id) from mensagens where (fk_remetente  = tb.id and fk_destinatario = ?) and (vista = ?)
+                 ) as unview,
+
+                 (select fk_remetente from mensagens where (fk_remetente  = tb.id and fk_destinatario = ?) or (fk_remetente  = ? and fk_destinatario = tb.id) order by created_at desc limit 1
+                 ) as remetente
       
                  
                 from 
                 (
-                select fk_destinatario as id  from mensagens where fk_remetente = ?
+                select fk_destinatario as id from mensagens where fk_remetente = ?
                 union
                 select fk_remetente as id from mensagens where fk_destinatario = ?
-                ) as tb  order by date_ desc',[$presentUser, $presentUser, $presentUser, $presentUser, $presentUser, $presentUser, $presentUser, $presentUser]);
+                ) as tb  order by date_ desc', [$presentUser, $presentUser, $presentUser, $presentUser, $presentUser, 'nao', $presentUser, $presentUser, $presentUser, $presentUser]);
 
 
         $html =  view('blocos_html/meetings', compact('dados'))->render();
@@ -59,6 +80,8 @@ class MessageController extends Controller
     public function loadMessageMeeting(Request $request)
     {
         $otherUserId  = $request->idUser;
+
+
         $otherUser = User::where('id', $otherUserId)->first();
         $presentUserId = Auth::user()->id;
 
@@ -78,6 +101,7 @@ class MessageController extends Controller
             })
             ->get();
 
+
         $html = view('blocos_html/meeting', compact('mensagens', 'otherUser'))->render();
 
         return response()->json([
@@ -88,12 +112,12 @@ class MessageController extends Controller
     public function sendMessage(Request $request)
     {
 
-        
+
         $mensagem = $request->mensagem;
-        $destinatario= $request->codeUser;
+        $destinatario = $request->codeUser;
+        $remetente = Auth::user()->id;
 
-
-        $remetente = Auth::user()->id; 
+        $userDestinatario = User::where('id', $destinatario)->first();
 
         $mensagemEnviada = Mensagens::create([
             'fk_remetente' => $remetente,
@@ -102,12 +126,52 @@ class MessageController extends Controller
         ]);
 
 
+        $messages = Mensagens::where([
+
+            ['fk_destinatario', $destinatario],
+            ['vista', 'nao']
+        ])
+            ->get();
+
+        $qtdMessageUnview = (int) count($messages);
 
 
         event(new SendMessage($destinatario, $mensagemEnviada->id));
 
+        $userDestinatario->notify(new Message($qtdMessageUnview));
+
         return response()->json([
             'messageId' => $mensagemEnviada->id
+        ]);
+    }
+
+    public function setMessageStatus(Request $request)
+    {
+        $otherUser = $request->idOtherUser;
+        $presentUser = Auth::user()->id;
+        $userDestinatario = User::where('id', $presentUser)->first();
+
+        Mensagens::where([
+            ['fk_remetente', $otherUser],
+            ['fk_destinatario', $presentUser]
+        ])
+            ->update([
+                'vista' => 'sim'
+            ]);
+
+        $messages = Mensagens::where([
+
+            ['fk_destinatario', $presentUser],
+            ['vista', 'nao']
+        ])
+            ->get();
+
+        $qtdMessageUnview = (int) count($messages);
+
+        $userDestinatario->notify(new Message($qtdMessageUnview));
+
+        return response()->json([
+            'status' => 200
         ]);
     }
 }

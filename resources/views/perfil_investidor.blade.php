@@ -84,7 +84,7 @@
     getIntroducaoInvestidor();
     getExperienciaInvestidor();
     getFormacaoInvestidor();
-     
+
     //----------------------------FORMULARIO DE CADASTRO EXPERIENCIA INVESTIDOR
 
 
@@ -470,6 +470,16 @@
         success: function(response) {
           $("#textarea").val('');
           getNewMessage(response['messageId']);
+          //ATENÇÃO!
+          /*
+           Deve ser posto uma especie de wait. 
+           a funcao loadScrollBarToBottom 
+           somente deve executar apos o termino 
+           da funcao getNewMessage
+           */
+        
+          loadScrollBarToBottom();
+          
         },
         error: function(error) {
           console.log("Erro ao enviar mensagem investidor");
@@ -483,6 +493,8 @@
       popupChatOpen = false;
 
     });
+
+  
 
     $(document).click(function(elemento) {
       $(".my-select-input").hide(100);
@@ -563,6 +575,7 @@
 
     function openMeetingChat() {
       var codeinvestor = "{{$codigoInvestidor}}";
+      var idUser = "{{$idUser}}";
 
       if (popupChatOpen == true) {
         $("#popup-chat-container-investor").empty();
@@ -579,6 +592,8 @@
         success: function(response) {
           $("#popup-chat-container-investor").append(response['html']);
           popupChatOpen = true;
+          loadScrollBarToBottom();
+          setStatusMessage(idUser);
         },
         error: function(error) {
           console.log("Erro ao carregar popup-chat");
@@ -588,6 +603,7 @@
 
     function getNewMessage(idMessage) {
       $.ajax({
+        async:false,
         url: "/get_new_message",
         type: "get",
         data: {
@@ -595,10 +611,34 @@
         },
         success: function(response) {
           $("#chat").append(response['html']);
-
+          
         },
         error: function(error) {
           console.log("erro ao carregar nova mensagem investidor");
+          console.log(error);
+        }
+      });
+    }
+
+
+    function loadScrollBarToBottom() {
+  
+      $("#chat").scrollTop($("#chat").prop('scrollHeight'));
+    }
+
+    function setStatusMessage(idOtherUser) {
+      
+      $.ajax({
+        url: "/set_status_message",
+        type: "get",
+        data: {
+          "idOtherUser": idOtherUser
+        },
+        success: function(response) {
+
+        },
+        error: function(error) {
+          console.log("Erro ao carregar ao alterar status das mensagens");
           console.log(error);
         }
       });

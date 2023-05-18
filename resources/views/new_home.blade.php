@@ -47,42 +47,64 @@
     </div>
 </div>
 
-<div id="why-crowdfunding-content">
+<div id="why-crowdfunding-content" class="mb-4">
     <div class="container-fluid">
-        <h1 class="mb-5 text-center">ecoStartup oferece</h1>
-        <div class="row">
-            <div class="col-md-4 align-self-center">
-                <figure>
-                    <img class="img-fluid" src="{{asset('assets/img/startup-svgrepo-com.svg')}}">
-                </figure>
-                <p>Empresas angolanas inovadoras e com alto potencial de crescimento</p>
-            </div>
-            <div class="col-md-4 align-self-center">
-                <figure>
-                    <img class="img-fluid" src="{{asset('assets/img/hand-holding-money-bills-svgrepo-com.svg')}}">
-                </figure>
-                <p>Potencias investidores com experiência em empreendedorismo e investimento</p>
+        <h1 class="mb-5 text-center">startupInveste oferece</h1>
+        <div class="row mb-md-4">
+
+            <div class="col-md-4 ">
+                <div class="h-100 card">
+                    <figure>
+                        <img class="img-fluid" src="{{asset('assets/img/startup-svgrepo-com.svg')}}">
+                    </figure>
+                    <p>Empresas angolanas inovadoras e com alto potencial de crescimento</p>
+                </div>
             </div>
 
-            <div class="col-md-4 align-self-center">
-                <figure>
-                    <img class="img-fluid" src="{{asset('assets/img/investment-model-svgrepo-com.svg')}}">
-                </figure>
-                <p>Redução do risco de investimento através da colaboração com outros investidores</p>
+            <div class="col-md-4 ">
+                <div class="h-100 card">
+                    <figure>
+                        <img class="img-fluid" src="{{asset('assets/img/hand-holding-money-bills-svgrepo-com.svg')}}">
+                    </figure>
+                    <p>Potencias investidores com experiência em empreendedorismo e investimento</p>
+                </div>
             </div>
-            <div class="col-md-4 align-self-center">
-                <figure>
-                    <img class="img-fluid" src="{{asset('assets/img/team-svgrepo-com.svg')}}">
-                </figure>
-                <p>Possibilidade de ser accionista de empresas com potencial de tranformar seus mercados</p>
+
+            <div class="col-md-4 ">
+                <div class="h-100 card">
+                    <figure>
+                        <img class="img-fluid" src="{{asset('assets/img/investment-model-svgrepo-com.svg')}}">
+                    </figure>
+                    <p>Redução do risco de investimento através da colaboração com outros investidores</p>
+                </div>
             </div>
-            <div class="col-md-4 align-self-center">
-                <figure>
-                    <img class="img-fluid" src="{{asset('assets/img/money-svgrepo-com.svg')}}">
-                </figure>
-                <p>Captação de investimento</p>
-            </div>
+
+
+
         </div>
+
+        <div class="row">
+            <div class="col-md-4 ">
+                <div class="h-100 card">
+                    <figure>
+                        <img class="img-fluid" src="{{asset('assets/img/team-svgrepo-com.svg')}}">
+                    </figure>
+                    <p>Possibilidade de ser accionista de empresas com potencial de tranformar seus mercados</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 ">
+                <div class="h-100 card">
+                    <figure>
+                        <img class="img-fluid" src="{{asset('assets/img/money-svgrepo-com.svg')}}">
+                    </figure>
+                    <p>Captação de investimento</p>
+                </div>
+            </div>
+
+
+        </div>
+
     </div>
 </div>
 

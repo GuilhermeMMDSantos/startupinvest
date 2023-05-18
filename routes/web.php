@@ -36,15 +36,15 @@ Route::post('loginuser', 'AuthController@loginuser')->name('user.login');
 
 Route::get('userout', 'AuthController@logoutUser');
 
-Route::get('stackholder_startup', 'HomeController@loadHomePag')->name('startup.menu');
+Route::get('stackholder_startup', 'HomeController@loadHomePag')->name('startup.menu')->middleware('auth');;
 
-Route::get('stackholder_investidor', 'HomeController@loadInvestidoresPage')->name('investidor.menu');
+Route::get('stackholder_investidor', 'HomeController@loadInvestidoresPage')->name('investidor.menu')->middleware('auth');;
 
 Route::get('notificacoes', 'NotificationController@loadNotifications')->name('notificacao.menu')->middleware('auth');
 
-Route::get('mensagens','MessageController@index')->name('mensagens.menu');
+Route::get('mensagens','MessageController@index')->name('mensagens.menu')->middleware('auth');;
 
-Route::get('/shownotification/{notificationId}','NotificationController@showOwnerNotification')->name('showownernotification');
+Route::get('/shownotification/{notificationId}','NotificationController@showOwnerNotification')->name('showownernotification')->middleware('auth');;
 
 Route::group(['prefix' => '/startup', 'middleware' => 'auth'], function () {
     Route::get('/load', 'UserController@loadStartups');
@@ -153,3 +153,5 @@ Route::get('/load_meetings','MessageController@loadMeetings');
 Route::get('/load_messages_meeting','MessageController@loadMessageMeeting');
 
 Route::post('/send_message_page','MessageController@sendMessage');
+
+Route::get('/set_status_message','MessageController@setMessageStatus');

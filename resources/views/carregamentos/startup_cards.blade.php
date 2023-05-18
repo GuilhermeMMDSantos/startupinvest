@@ -37,12 +37,14 @@
                 <span style="font-size:12px;color:#adb5bdd6;">Conseguido</span>
                 @php
                 $porcentagem =($startupCard->rodadaAtual->valor_obtido*100)/$startupCard->rodadaAtual->valor_objetivo;
+                
                 @endphp
                 <p style="font-size:14px;">{{$porcentagem}}% - {{$startupCard->rodadaAtual->tempo_restante}} Dias Restantes</p>
 
                 <div class="progress" style="margin-top:-13px;">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width:25%"></div>
+                    <div class="progress-bar bg-warning" role="progressbar" style="width:{{$porcentagem}}%"></div>
                 </div>
+
                 <div class="row" style="margin-top:5px;">
                     <div class="col-4">
                         <span style="font-size:13px;color:#adb5bdd6;">Objectivo</span>

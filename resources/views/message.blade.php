@@ -31,10 +31,14 @@
         }
     });
 
+    var userIdClicked = undefined;
+
     $(function() {
 
-        var userIdClicked = undefined;
+
         loadMeetings();
+
+
 
 
 
@@ -42,10 +46,12 @@
             var idUser = $(this).attr("guito");
             userIdClicked = idUser;
             loadMessagesMeeting(idUser);
+
         });
 
         $("#message-contaner").on("click", "#btn-enviar-message", function() {
             var message = $("#textarea").val().trim();
+
 
             $.ajax({
                 url: '/send_message_page',
@@ -59,6 +65,8 @@
                     $("#textarea").val('');
 
                     getNewMessage(response['messageId']);
+
+                    loadScrollBarToBottom();
                 },
                 error: function(error) {
                     console.log("Erro ao enviar mensagem");
@@ -70,12 +78,17 @@
         });
 
 
+
         //------------------------OUVINTES
         Echo.private('send-message-channel.' + '{{$code}}')
             .listen('SendMessage', function(e) {
                 getNewMessage(e.messageId);
             });
         //----------------------------------------------
+
+
+
+
         function loadMeetings() {
             $.ajax({
                 url: 'load_meetings',
@@ -84,17 +97,21 @@
                 success: function(response) {
                     $("#tolkeed-to").empty();
                     $("#tolkeed-to").append(response['html']);
+                    if (userIdClicked == undefined)
+                        userIdClicked = $("#first_meeting").html();
+                    loadMessagesMeeting(userIdClicked);
 
-                    loadMessagesMeeting ( $("#first_meeting").html() );
                 },
                 error: function(error) {
                     console.log("Erro ao carregar meetings");
+                    console.log(error);
                 }
 
             });
         }
 
         function loadMessagesMeeting(idUser) {
+
 
             $.ajax({
                 url: 'load_messages_meeting',
@@ -103,8 +120,13 @@
                     'idUser': idUser
                 },
                 success: function(response) {
+
                     $("#message-contaner").empty();
                     $("#message-contaner").append(response['html']);
+                    loadScrollBarToBottom();
+
+
+                    setStatusMessage(idUser);
                 },
                 error: function(error) {
                     console.log("Erro ao carregar meeting");
@@ -133,6 +155,33 @@
                 }
             });
         }
+
+
+        function loadScrollBarToBottom() {
+            $("#chat").scrollTop($("#chat").prop('scrollHeight'));
+        }
+
+
+
+        function setStatusMessage(idOtherUser) {
+
+            $.ajax({
+                url: "/set_status_message",
+                type: "get",
+                data: {
+                    "idOtherUser": idOtherUser
+                },
+                success: function(response) {
+                    $("#marcador_" + idOtherUser).hide();
+                },
+                error: function(error) {
+                    console.log("Erro ao carregar ao alterar status das mensagens");
+                    console.log(error);
+                }
+            });
+        }
+
+
     });
 </script>
 @endsection

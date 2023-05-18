@@ -37,6 +37,7 @@ use App\Events\PermitirVerPitch;
 use App\Notifications\Notificao;
 use App\Mensagens;
 use App\Events\SendMessage;
+use App\Notifications\Message;
 
 class UserController extends Controller
 {
@@ -130,17 +131,28 @@ class UserController extends Controller
 
         $user = User::where('code_user', $codeUser)->first();
 
+        $idUser = $user->id;
+
         $code = Auth::user()->id;
+        $presentUser =  $code;
+        $myProfile = ($user->id ==  $presentUser);
 
-        $myProfile = ($user->id == Auth::user()->id);
 
-         
 
-        $notifications = Notifications::where('fk_user_distination', Auth::user()->id)
+        $notifications = Notifications::where('fk_user_distination',  $presentUser)
             ->where('status', 'nao_visto')
             ->get();
 
         $qtdnotifications = (int)count($notifications);
+
+        $messages = Mensagens::where([
+
+            ['fk_destinatario', $presentUser],
+            ['vista', 'nao']
+        ])
+            ->get();
+
+        $qtdMessageUnview = (int) count($messages);
 
         if ($user->tipo == 'startup') {
 
@@ -159,14 +171,14 @@ class UserController extends Controller
 
             $codigoStartup = $codeUser;
 
-            $returnHtml = view('perfil_startup', compact('code', 'startup', 'qtdnotifications', 'rodada', 'myProfile', 'codigoStartup'));
+            $returnHtml = view('perfil_startup', compact('idUser','code', 'startup', 'qtdnotifications','qtdMessageUnview', 'rodada', 'myProfile', 'codigoStartup'));
         } else if ($user->tipo == 'investidor') {
 
             $investidor = Investidores::with(['formacoes', 'experiencias'])
                 ->where('fk_user', $user->id)
                 ->first();
             $codigoInvestidor = $codeUser;
-            $returnHtml = view('perfil_investidor', compact('code', 'investidor', 'qtdnotifications', 'myProfile', 'codeUser', 'codigoInvestidor'));
+            $returnHtml = view('perfil_investidor', compact('idUser','code', 'investidor', 'qtdnotifications','qtdMessageUnview', 'myProfile', 'codeUser', 'codigoInvestidor'));
         }
 
         return $returnHtml;
@@ -996,7 +1008,7 @@ class UserController extends Controller
             ->delete();
     }
 
-    
+
 
     public function testeAPI()
     {
@@ -1044,6 +1056,7 @@ class UserController extends Controller
 
         $remetente = Auth::user()->id;
         $destinatario = User::where('code_user', $codeUser)->first()->id;
+        $userDestinatario = User::where('id',$destinatario)->first();
 
         $mensagemEnviada = Mensagens::create([
             'fk_remetente' => $remetente,
@@ -1052,9 +1065,18 @@ class UserController extends Controller
         ]);
 
 
-         
+        $messages = Mensagens::where([
+
+            ['fk_destinatario', $destinatario],
+            ['vista', 'nao']
+        ])
+            ->get();
+
+        $qtdMessageUnview = (int) count($messages);
 
         event(new SendMessage($destinatario, $mensagemEnviada->id));
+
+        $userDestinatario->notify(new Message($qtdMessageUnview));
 
         return response()->json([
             'messageId' => $mensagemEnviada->id
@@ -1065,10 +1087,10 @@ class UserController extends Controller
     {
         $idMessage = $request->idMessage;
 
-        
+
 
         $message = Mensagens::where('id', $idMessage)->first();
-        
+
 
         $html = view('blocos_html/nova_mensagem_chat', compact('message'))->render();
 
@@ -1077,7 +1099,4 @@ class UserController extends Controller
             'html' => $html
         ]);
     }
-
-
-
 }
