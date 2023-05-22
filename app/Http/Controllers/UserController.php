@@ -171,14 +171,14 @@ class UserController extends Controller
 
             $codigoStartup = $codeUser;
 
-            $returnHtml = view('perfil_startup', compact('idUser','code', 'startup', 'qtdnotifications','qtdMessageUnview', 'rodada', 'myProfile', 'codigoStartup'));
+            $returnHtml = view('perfil_startup', compact('idUser', 'code', 'startup', 'qtdnotifications', 'qtdMessageUnview', 'rodada', 'myProfile', 'codigoStartup'));
         } else if ($user->tipo == 'investidor') {
 
             $investidor = Investidores::with(['formacoes', 'experiencias'])
                 ->where('fk_user', $user->id)
                 ->first();
             $codigoInvestidor = $codeUser;
-            $returnHtml = view('perfil_investidor', compact('idUser','code', 'investidor', 'qtdnotifications','qtdMessageUnview', 'myProfile', 'codeUser', 'codigoInvestidor'));
+            $returnHtml = view('perfil_investidor', compact('idUser', 'code', 'investidor', 'qtdnotifications', 'qtdMessageUnview', 'myProfile', 'codeUser', 'codigoInvestidor'));
         }
 
         return $returnHtml;
@@ -1010,10 +1010,30 @@ class UserController extends Controller
 
 
 
-    public function testeAPI()
+    public function createReferenceThroughProxypay()
     {
-        $response = Http::get('https://996d966e-6983-4853-8ec3-eac267dc463d.mock.pstmn.io/ping');
-        dd($response->headers());
+
+        
+
+  /*          $idToReference = Http::withHeaders([
+                'x-api-key' => 'PMAK-645fc7cf7042182af5051b75-b7a3f39e8ea2dac5bfb2b49e9364171193'
+            ])
+                ->post('https://5c6e8919-e959-445d-aabc-bea30da6b580.mock.pstmn.io/reference_ids')['id'];
+
+*/
+            $response = Http::withUrlParameters([
+                'endpoint' => 'https://laravel.com',
+                'page' => 'docs',
+                'version' => '9.x',
+                'topic' => 'validation',
+            ])
+            ->withHeaders([
+                'x-api-key' => 'PMAK-645fc7cf7042182af5051b75-b7a3f39e8ea2dac5bfb2b49e9364171193'
+            ])
+                ->put('https://5c6e8919-e959-445d-aabc-bea30da6b580.mock.pstmn.io/references/');
+
+            dd($response->noContent());
+        
     }
 
     public function loadPopUpChat(Request $request)
@@ -1056,7 +1076,7 @@ class UserController extends Controller
 
         $remetente = Auth::user()->id;
         $destinatario = User::where('code_user', $codeUser)->first()->id;
-        $userDestinatario = User::where('id',$destinatario)->first();
+        $userDestinatario = User::where('id', $destinatario)->first();
 
         $mensagemEnviada = Mensagens::create([
             'fk_remetente' => $remetente,

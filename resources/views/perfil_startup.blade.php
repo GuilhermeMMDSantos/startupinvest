@@ -847,30 +847,11 @@
 
 
 
-        $("#content-oferta").on('click', '#btn-conversa', function() {
-            let myprofile = '{{$myProfile}}';
-
-            if (!showChat) {
-                showChat = true;
-                if (myprofile == 1) {
-                    $("#container-list-conversas").show();
-                    getConversas();
-                } else {
-                    $("#container-chat").show();
-                    getInfoDestinatario();
-                    getMessages();
-                }
-            } else {
-                showChat = false;
-                $("#container-list-conversas").hide();
-                $("#container-chat").hide();
-            }
-
-        });
+       
 
         $("#content-oferta").on('click', '.btn-item-conversa', function() {
-            $("#container-list-conversas").hide();
-            $("#container-chat").show();
+            
+           
 
             destinatarioMessageChat = $(this).attr("investidor");
             getInfoDestinatario();
@@ -1166,25 +1147,7 @@
             });
         }
 
-        function getConversas() {
-            $.ajax({
-                url: '/get_conversas',
-                type: 'get',
-                data: {
-
-                },
-                success: function(response) {
-                    $("#content-list-conversas").empty();
-                    $("#content-list-conversas").append(response['html']);
-
-                },
-                error: function(error) {
-                    console.log("Erro ao carregar conversas");
-                    console.log(error);
-                }
-
-            });
-        }
+        
 
         function getMessages() {
 

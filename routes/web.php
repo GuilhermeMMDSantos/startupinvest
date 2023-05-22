@@ -134,7 +134,7 @@ Route::get('/delete_membros_equipa','UserController@deleteMembrosEquipa');
 Route::get('/get_startups_investidas','UserController@getStartupsInvestidas');
 
 
-Route::get('/teste_api','UserController@testeAPI');
+Route::get('/teste_api','UserController@createReferenceThroughProxypay');
 Route::get('/','HomeController@showNewHome')->name('new_home_page');
 
 Route::get('/new_cadastro_page','HomeController@showNewCadastroPage')->name('new_cadastro_page');
