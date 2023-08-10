@@ -44,6 +44,18 @@ $(function () {
     $("#tipo-negocio-filter").change(loadStartupCards);
     $("#nome-startup-filter").keyup(loadStartupCards);
 
+
+    Echo.private('abrir-rodada-channel')
+        .listen('AbrirRodada', function (e) {
+            loadStartupCards();
+        });
+
+    Echo.private('anular-rodada-channel')
+        .listen('AnularRodada', function (e) {
+            loadStartupCards();
+        });
+
+
     function alterCheckboxStatus1(nomeFiltro, contador, limite) {
         $("#" + nomeFiltro + "all").prop('checked', true);
         $("." + nomeFiltro).prop('checked', true);

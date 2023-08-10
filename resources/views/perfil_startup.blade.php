@@ -51,6 +51,7 @@
 @include('modais/adicionar_membro_equipa')
 @include('modais/eliminar_membro_startup')
 @include('modais/adicionar_oferta');
+@include('modais/gerar_referencia_pagamento');
 
 
 @endsection
@@ -262,6 +263,46 @@
             });
         });
 
+        $("#montante-da-referencia").keypress(function() {
+            $("#empty-label-alert-message").hide(400);
+        });
+
+        $("#btn-confirmar-montante-referencia").click(function() {
+
+            var valirMontante = $("#montante-da-referencia").val().trim();
+
+            if (valirMontante.length == 0) {
+                $("#empty-label-alert-message").show(400);
+                return false;
+            }
+
+            $("#btn-gerar-ref").hide();
+            $("#my-spinner").show();
+            $("#modal-gerar-referencia-pagamento").modal('hide');
+
+            var user = "{{$idUser}}";
+            var rodada = "{{$rodadaId}}";
+
+            $.ajax({
+                url: "/gerar_referencia_pagamento",
+                type: "get",
+                data: {
+                    "montante": valirMontante,
+                    "user":user,
+                    "rodada":rodada
+                },
+                success: function(response) {
+                    $("#my-spinner").hide();
+                    $("#container-btn-gerar-ref").html(response['html']);
+                },
+                error: function(error) {
+                    console.log("Erro ao gerar referencia");
+                    console.log(error);
+                }
+            });
+
+
+        });
 
         //SOBRE ADICIONAR MEMBRO
 
@@ -847,11 +888,11 @@
 
 
 
-       
+
 
         $("#content-oferta").on('click', '.btn-item-conversa', function() {
-            
-           
+
+
 
             destinatarioMessageChat = $(this).attr("investidor");
             getInfoDestinatario();
@@ -939,7 +980,7 @@
 
             var codeStartup = "{{$codigoStartup}}";
 
-           
+
 
             $.ajax({
                 url: '/send_message',
@@ -1147,7 +1188,7 @@
             });
         }
 
-        
+
 
         function getMessages() {
 
@@ -1269,7 +1310,7 @@
 
         function getNewMessage(idMessage) {
             $.ajax({
-                async:false,
+                async: false,
                 url: "/get_new_message",
                 type: "get",
                 data: {
@@ -1289,7 +1330,7 @@
 
         function loadScrollBarToBottom() {
             $("#chat").scrollTop($("#chat").prop('scrollHeight'));
-            
+
         }
 
         function setStatusMessage(idOtherUser) {

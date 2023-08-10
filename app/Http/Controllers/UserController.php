@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Fases;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
@@ -16,8 +15,6 @@ use App\User;
 use App\RodadasInvestimento;
 use App\Setores;
 use App\TipoBusness;
-use Exception;
-use SebastianBergmann\Environment\Console;
 use App\CertificadosFormacao;
 use App\AreasFormacao;
 use App\CargosExecutivo;
@@ -31,13 +28,14 @@ use App\InstituicaoExperiencia;
 use App\MembrosEquipaCargosExecutivos;
 use App\PermissoesVerPitch;
 use App\Notifications;
-use NunoMaduro\Collision\Adapters\Phpunit\State;
-use Illuminate\Support\Facades\Http;
 use App\Events\PermitirVerPitch;
 use App\Notifications\Notificao;
 use App\Mensagens;
 use App\Events\SendMessage;
 use App\Notifications\Message;
+use App\ReferenciasPagamento;
+use App\Events\AbrirRodada;
+use App\Events\AnularRodada;
 
 class UserController extends Controller
 {
@@ -156,6 +154,8 @@ class UserController extends Controller
 
         if ($user->tipo == 'startup') {
 
+            $rodadaId = null;
+
             $startup =  Startups::with(['setor', 'fase', 'tipobusnessfunc', 'user'])
                 ->where('fk_user', $user->id)
                 ->first();
@@ -166,12 +166,13 @@ class UserController extends Controller
                 ->where('estado', 'aberta')
                 ->first();
 
-
-
+if(!empty($rodada))
+$rodadaId = $rodada->id;
+            
 
             $codigoStartup = $codeUser;
 
-            $returnHtml = view('perfil_startup', compact('idUser', 'code', 'startup', 'qtdnotifications', 'qtdMessageUnview', 'rodada', 'myProfile', 'codigoStartup'));
+            $returnHtml = view('perfil_startup', compact('idUser', 'code', 'startup', 'qtdnotifications', 'qtdMessageUnview', 'rodadaId', 'myProfile', 'codigoStartup'));
         } else if ($user->tipo == 'investidor') {
 
             $investidor = Investidores::with(['formacoes', 'experiencias'])
@@ -306,6 +307,7 @@ class UserController extends Controller
 
         $codeUser = $request->codeStartup;
         $havePermissionToWatchPitch = false;
+        $referencaPagamento = [];
 
         $startup = Startups::whereHas('user', function ($query) use ($codeUser) {
             $query->where('code_user', $codeUser);
@@ -334,11 +336,22 @@ class UserController extends Controller
                 ]);
             } else if (!empty($permissao) && $permissao->tempo_restante < 1)
                 $havePermissionToWatchPitch = true;
+
+            $referencaPagamento = ReferenciasPagamento::where(
+                [
+                    ['fk_investidor', Auth::user()->id],
+                    ['fk_rodada_investimento', $rodada->id]
+                ]
+            )
+                ->first();
+
+            if (!empty($referencaPagamento))
+                $referencaPagamento = $referencaPagamento->referencia;
         }
 
 
 
-        $returnHtml = view('blocos_html/content_oferta', compact('rodada', 'startup', 'havePermissionToWatchPitch', 'myprofile'))->render();
+        $returnHtml = view('blocos_html/content_oferta', compact('rodada', 'startup', 'havePermissionToWatchPitch', 'myprofile', 'referencaPagamento'))->render();
 
         return response()->json([
             'html' =>    $returnHtml
@@ -702,6 +715,9 @@ class UserController extends Controller
                 'estado_busca_invest' => 'sim',
                 'pitch_deck' => $uploadFicheiro
             ]);
+
+
+            event(new AbrirRodada());
     }
 
     public function anularOferta()
@@ -723,6 +739,8 @@ class UserController extends Controller
             ->update([
                 'estado' => 'vencido'
             ]);
+
+            event(new AnularRodada());
     }
 
     public function getIntroducaoInvestidor(Request $request)
@@ -1009,32 +1027,6 @@ class UserController extends Controller
     }
 
 
-
-    public function createReferenceThroughProxypay()
-    {
-
-        
-
-  /*          $idToReference = Http::withHeaders([
-                'x-api-key' => 'PMAK-645fc7cf7042182af5051b75-b7a3f39e8ea2dac5bfb2b49e9364171193'
-            ])
-                ->post('https://5c6e8919-e959-445d-aabc-bea30da6b580.mock.pstmn.io/reference_ids')['id'];
-
-*/
-            $response = Http::withUrlParameters([
-                'endpoint' => 'https://laravel.com',
-                'page' => 'docs',
-                'version' => '9.x',
-                'topic' => 'validation',
-            ])
-            ->withHeaders([
-                'x-api-key' => 'PMAK-645fc7cf7042182af5051b75-b7a3f39e8ea2dac5bfb2b49e9364171193'
-            ])
-                ->put('https://5c6e8919-e959-445d-aabc-bea30da6b580.mock.pstmn.io/references/');
-
-            dd($response->noContent());
-        
-    }
 
     public function loadPopUpChat(Request $request)
     {
