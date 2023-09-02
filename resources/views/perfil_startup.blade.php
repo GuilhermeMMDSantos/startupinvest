@@ -288,14 +288,25 @@
                 type: "get",
                 data: {
                     "montante": valirMontante,
-                    "user":user,
-                    "rodada":rodada
+                    "user": user,
+                    "rodada": rodada
                 },
                 success: function(response) {
+
+                    console.log("success");
+                    console.log(response);
+
                     $("#my-spinner").hide();
-                    $("#container-btn-gerar-ref").html(response['html']);
+
+                    if (response['status'] == 200) {
+                        $("#container-btn-gerar-ref").html(response['html']);
+                    }else{
+                        $("#btn-gerar-ref").show();
+                    }
+
                 },
                 error: function(error) {
+                    $("#btn-gerar-ref").show();
                     console.log("Erro ao gerar referencia");
                     console.log(error);
                 }

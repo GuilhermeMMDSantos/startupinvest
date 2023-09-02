@@ -15,7 +15,7 @@
     <button type="button" id="btn-meeting-investor" class="btn btn-outline-secondary " style="height:33px;font-size:14px;">Meeting</button>
 
     @if(isset($permissoesVerPitch) && $permissoesVerPitch->estado == 'espera')
-    <button type="button" id="btn-pode-assistir-pitch" class="btn btn-outline-secondary" style="height:33px;font-size:14px;">Pode assistir pitch</button>
+    <button type="button" id="btn-pode-assistir-pitch" class="btn btn-outline-secondary" style="height:33px;font-size:14px;">Permitir ver pitch</button>
 
     @elseif(isset($permissoesVerPitch) && $permissoesVerPitch->estado == 'ativo')
 

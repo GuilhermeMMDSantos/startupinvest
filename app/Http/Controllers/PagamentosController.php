@@ -17,10 +17,10 @@ class PagamentosController extends Controller
     {
         try {
             $idReference = Http::withHeaders([
-                'x-api-key' => 'PMAK-645fc7cf7042182af5051b75-b7a3f39e8ea2dac5bfb2b49e9364171193',
+                'autorization' => '93894af8880e140e80ebab7f839fc4aac6f5bdbc1ea8885787ef6c82f4174af7',
                 'Accept' => 'application/vnd.proxypay.v2+json'
             ])
-                ->post('https://426846f5-cae0-4cd3-8bdb-41052424dc76.mock.pstmn.io/reference_ids')['id'];
+                ->post('http://127.0.0.1:3030/reference_ids')['id'];
 
             return  $idReference;
         } catch (Exception $e) {
@@ -44,24 +44,30 @@ class PagamentosController extends Controller
         );
         $idReference = $this->createIdReference();
 
-        $statusCode = 200;
+
+        $statusCode = 500;
 
 
 
         if ($idReference != null) {
             try {
                 $referencia = Http::withHeaders([
-                    'x-api-key' => 'PMAK-645fc7cf7042182af5051b75-b7a3f39e8ea2dac5bfb2b49e9364171193',
+                    'autorization' => '93894af8880e140e80ebab7f839fc4aac6f5bdbc1ea8885787ef6c82f4174af7',
                     'Accept' => 'application/vnd.proxypay.v2+json',
                     'Content-Type' => 'application/json'
                 ])
-                    ->put('https://426846f5-cae0-4cd3-8bdb-41052424dc76.mock.pstmn.io/references/' . $idReference, [
+                    ->put('http://127.0.0.1:3030/references/' . $idReference, [
                         'amount' => $valorMontante,
                         'end_datetime' => $endDate,
                         'custom_fields' => $map
 
                     ]);
+
+                    return response()->json(["response" => $referencia]);
+
+                $statusCode = 200;
             } catch (Exception $e) {
+                $statusCode = 500;
             }
         }
 
