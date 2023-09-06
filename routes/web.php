@@ -38,7 +38,7 @@ Route::get('userout', 'AuthController@logoutUser');
 
 Route::get('stackholder_startup', 'HomeController@loadHomePag')->name('startup.menu')->middleware('auth');;
 
-Route::get('stackholder_investidor', 'HomeController@loadInvestidoresPage')->name('investidor.menu')->middleware('auth');;
+Route::get('stackholder_investidor', 'HomeController@loadInvestidoresPage')->name('investidor.menu')->middleware('auth');
 
 Route::get('notificacoes', 'NotificationController@loadNotifications')->name('notificacao.menu')->middleware('auth');
 

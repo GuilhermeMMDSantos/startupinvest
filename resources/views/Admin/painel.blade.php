@@ -22,14 +22,14 @@
 
     <div class="row">
 
-        <aside class="col-sm-2" style="border:1px solid #ccc;">
+        <aside class="col-sm-2" >
             <ul style="list-style:none;text-decoration:underline;">
                 <li><a href="#" style="color:#d39e00;">Usuários</a></li>
-                <li><a href="#" style="color:#d39e00;">Denuncias</a></li>
+                <li><a href="#" style="color:#d39e00;">Pagamentos</a></li>
             </ul>
         </aside>
 
-        <section class="container-fluid col-sm-10" style="border:1px solid #ccc;">
+        <section class="container-fluid col-sm-10" >
 
             <div class="row" style="background:#7472611c;">
                 <div class="col-sm-12">

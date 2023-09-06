@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
-
+use Illuminate\Http\Response;
 
 class PagamentosController extends Controller
 {
@@ -90,5 +90,14 @@ class PagamentosController extends Controller
             'fk_investidor' => $idInvestidor,
             'valor_monetario' => $valorMontante,
         ]);
+    }
+
+    public function getPaymentEvent(Request $req){
+
+        return response()->json([
+            'html' => "success",
+            'status' => 200
+        ]);
+
     }
 }

@@ -86,7 +86,7 @@ class UserController extends Controller
             ->get();
 
 
-        $returnHtml = view('carregamentos.startup_cards', compact('startupsCards', 'dataAtual'))->render();
+        $returnHtml = view('blocos_html.startup_cards', compact('startupsCards', 'dataAtual'))->render();
         return response()->json($returnHtml);
     }
 
@@ -117,7 +117,7 @@ class UserController extends Controller
             ->where('estado_busca_invest', 'sim')
             ->get();
 
-        $returnHtml = view('carregamentos.startup_cards', compact('startupsCards'))->render();
+        $returnHtml = view('blocos_html.startup_cards', compact('startupsCards'))->render();
         return response()->json($returnHtml);
     }
 
@@ -166,9 +166,9 @@ class UserController extends Controller
                 ->where('estado', 'aberta')
                 ->first();
 
-if(!empty($rodada))
-$rodadaId = $rodada->id;
-            
+            if (!empty($rodada))
+                $rodadaId = $rodada->id;
+
 
             $codigoStartup = $codeUser;
 
@@ -717,7 +717,7 @@ $rodadaId = $rodada->id;
             ]);
 
 
-            event(new AbrirRodada());
+        event(new AbrirRodada());
     }
 
     public function anularOferta()
@@ -740,7 +740,7 @@ $rodadaId = $rodada->id;
                 'estado' => 'vencido'
             ]);
 
-            event(new AnularRodada());
+        event(new AnularRodada());
     }
 
     public function getIntroducaoInvestidor(Request $request)
