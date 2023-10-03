@@ -42,9 +42,7 @@
                     <div class="col-12">
                         <div id="label-password">
                             <label>Password</label>
-                            <a href="#">
-                                Esqueci a senha!
-                            </a>
+                             
                         </div>
                         <input type="password" class="form-control" name="password_login" placeholder="Senha" autocomplete="off" required>
                     </div>

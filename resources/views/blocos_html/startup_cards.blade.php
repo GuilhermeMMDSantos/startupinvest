@@ -48,13 +48,13 @@
                 <div class="row" style="margin-top:5px;">
                     <div class="col-4">
                         <span style="font-size:13px;color:#adb5bdd6;">Objectivo</span>
-                        <p>{{number_format($startupCard->rodadaAtual->valor_objetivo,2,',','.')}}Kz</p>
+                        <p>{{number_format($startupCard->rodadaAtual->valor_objetivo,2,',','.')}} AOA</p>
                     </div>
                     <div class="col-4" style="border-left:1px solid #ccc;border-right:1px solid #ccc;">
                         <span style="font-size:13px;color:#adb5bdd6;">
                             Atingido
                         </span>
-                        <p>{{number_format($startupCard->rodadaAtual->valor_obtido,2,',','.')}}Kz</p>
+                        <p>{{number_format($startupCard->rodadaAtual->valor_obtido,2,',','.')}} AOA</p>
                     </div>
                     <div class="col-4">
                         <span style="font-size:13px;color:#adb5bdd6;">Investidores</span>

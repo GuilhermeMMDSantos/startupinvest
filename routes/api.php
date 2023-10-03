@@ -16,4 +16,4 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('/payment_event','PagamentosController@getPaymentEvent');
+Route::post('/payment_event','PagamentosController@getPaymentEvent');

@@ -14,9 +14,9 @@
                         <div class="col-12">
                             <label>Montante</label>
                             <input type="number" id="montante-da-referencia" class="form-control" placeholder="00,00">
-                        <div style=" min-height:27px;">    
-                            <small id="empty-label-alert-message" class="" style="color:red !important; display:none;">Informe o montante!</small>
-                        </div>
+                            <div style=" min-height:27px;">
+                                <small id="empty-label-alert-message" class="" style="color:red !important; display:none;">Informe o montante!</small>
+                            </div>
                         </div>
 
                     </div>

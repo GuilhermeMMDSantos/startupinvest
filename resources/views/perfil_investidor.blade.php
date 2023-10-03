@@ -438,15 +438,7 @@
     $("#container-introducao-investidor").on('click', '#btn-meeting-investor', openMeetingChat)
     //----------------------------------------------------
 
-    //--------------------------------------OUVINTES
-    Echo.private('send-message-channel.' + '{{$code}}')
-      .listen('SendMessage', function(e) {
-
-        getNewMessage(e.messageId);
-
-      });
-
-    //---------------------------------------------------
+   
 
     $("#popup-chat-container-investor").on('click', '#btn-enviar-popup-chat-investor', function() {
 
@@ -499,6 +491,16 @@
     $(document).click(function(elemento) {
       $(".my-select-input").hide(100);
     });
+
+     //--------------------------------------OUVINTES
+     Echo.private('send-message-channel.' + '{{$code}}')
+      .listen('SendMessage', function(e) {
+
+        getNewMessage(e.messageId);
+
+      });
+
+    //---------------------------------------------------
 
     function getExperienciaInvestidor() {
       $.ajax({

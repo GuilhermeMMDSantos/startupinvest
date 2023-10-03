@@ -3,21 +3,42 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\ReferenciasPagamento;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
 use Illuminate\Http\Response;
+use App\ReferenciasPagamento;
+use App\RodadasInvestidores;
+use App\RodadasInvestimento;
+use App\Events\ConfirmarPagamento;
 
 class PagamentosController extends Controller
 {
+
+    public function index()
+    {
+
+        return view('Admin.pagamentos');
+    }
+
+    public function getPagamentos()
+    {
+        $pagamentos = ReferenciasPagamento::get();
+        $html = view('blocos_html/referencias_pagamentos', compact('pagamentos'))->render();
+
+        return response()->json([
+            "html" => $html
+        ], 200);
+    }
+
+
     public function createIdReference()
     {
         try {
             $idReference = Http::withHeaders([
-                'autorization' => '93894af8880e140e80ebab7f839fc4aac6f5bdbc1ea8885787ef6c82f4174af7',
+                'autorization' => env('PROXYPAY_ACCESS_KEY'),
                 'Accept' => 'application/vnd.proxypay.v2+json'
             ])
                 ->post('http://127.0.0.1:3030/reference_ids')['id'];
@@ -48,11 +69,10 @@ class PagamentosController extends Controller
         $statusCode = 500;
 
 
-
         if ($idReference != null) {
             try {
                 $referencia = Http::withHeaders([
-                    'autorization' => '93894af8880e140e80ebab7f839fc4aac6f5bdbc1ea8885787ef6c82f4174af7',
+                    'autorization' => env('PROXYPAY_ACCESS_KEY'),
                     'Accept' => 'application/vnd.proxypay.v2+json',
                     'Content-Type' => 'application/json'
                 ])
@@ -63,7 +83,7 @@ class PagamentosController extends Controller
 
                     ]);
 
-                    return response()->json(["response" => $referencia]);
+                return response()->json(["response" => $referencia]);
 
                 $statusCode = 200;
             } catch (Exception $e) {
@@ -92,12 +112,72 @@ class PagamentosController extends Controller
         ]);
     }
 
-    public function getPaymentEvent(Request $req){
+    public function getPaymentEvent(Request $req)
+    {
+        $x_signature = $req->header('X-Signature');
+        $body = $req->all();
+        $bodyJson = json_encode($body);
+        $token = env('PROXYPAY_ACCESS_KEY');
+        $signature = hash_hmac('sha256', $token, $bodyJson);
 
-        return response()->json([
-            'html' => "success",
-            'status' => 200
+        $referenciaId = $body['reference_id'];
+        $paymentId = $body['id'];
+
+        ReferenciasPagamento::where('referencia', $referenciaId)
+            ->update([
+                'paymentId' => $paymentId,
+                'status' => 'confirme'
+            ]);
+
+
+        if ($x_signature == $signature)
+            return response()->json(["message" => "Erro no destinatário"], 401);
+
+        return response()->json([], 200);
+    }
+
+    public function confirmPayment(Request $req)
+    {
+
+        $paymentId = $req->paymentId;
+
+        $response = Http::withHeaders([
+            'autorization' => env('PROXYPAY_ACCESS_KEY'),
+            'Accept' => 'application/vnd.proxypay.v2+json'
+        ])
+            ->delete('http://127.0.0.1:3030/payments/' . $paymentId);
+
+        if ($response->status() != 200)
+            return response()->json(['status' => 500], 500);
+
+        ReferenciasPagamento::where('paymentId', $paymentId)
+            ->update([
+                'status' => 'pago'
+            ]);
+
+        $referencia = ReferenciasPagamento::where('paymentId', $paymentId)->first();
+
+        RodadasInvestidores::create([
+            'fk_rodada' => $referencia->fk_rodada_investimento,
+            'fk_investidor' => $referencia->fk_investidor,
+            'valor_investido' => $referencia->valor_investido
         ]);
 
+        $rodadaInvestimento =  RodadasInvestimento::where('id', $referencia->fk_rodada_investimento)->first();
+
+        $novoValorObtido = $rodadaInvestimento->valor_obtido + $referencia->valor_investido;
+
+        $atributosAtualizar = [];
+        $atributosAtualizar['valor_obtido'] = $novoValorObtido;
+
+        if ($novoValorObtido >= $rodadaInvestimento->valor_objetivo)
+            $atributosAtualizar['estado'] = 'fechada';
+
+        RodadasInvestimento::where('id', $referencia->fk_rodada_investimento)
+            ->update($atributosAtualizar);
+
+        event(new ConfirmarPagamento());
+        
+        return response()->json(['status' => 200], 200);
     }
 }

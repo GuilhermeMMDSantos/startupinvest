@@ -45,6 +45,10 @@ Broadcast::channel('abrir-rodada-channel',function(){
   return true;
 });
 
+Broadcast::channel('confirmar-pagamento-channel',function(){
+  return true;
+});
+
 Broadcast::channel('anular-rodada-channel',function(){
   return true;
 });

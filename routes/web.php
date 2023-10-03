@@ -15,7 +15,7 @@ use App\Mail\EmailSenha;
 |
 */
 
-Route::get('paineladmin', 'AdminController@index');
+Route::get('paineladmin', 'AdminController@index')->name('admin.stackholders');
 
 
 Route::post('atualizar_stado', 'AdminController@atualizarEstadoUser');
@@ -136,7 +136,9 @@ Route::get('/get_startups_investidas','UserController@getStartupsInvestidas');
 
 
 Route::get('/gerar_referencia_pagamento','PagamentosController@createReference');
-
+Route::get('/get_pagamentos','PagamentosController@getPagamentos')->middleware('auth');
+Route::get('/show_pagamento_page','PagamentosController@index')->name('admin.pagamento.page')->middleware('auth');
+Route::get('/confirmar_pagamento','PagamentosController@confirmPayment')->middleware('auth');
 
 
 

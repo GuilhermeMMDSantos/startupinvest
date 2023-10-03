@@ -135,10 +135,9 @@ class MessageController extends Controller
 
         $qtdMessageUnview = (int) count($messages);
 
+        $userDestinatario->notify(new Message($qtdMessageUnview));
 
         event(new SendMessage($destinatario, $mensagemEnviada->id));
-
-        $userDestinatario->notify(new Message($qtdMessageUnview));
 
         return response()->json([
             'messageId' => $mensagemEnviada->id

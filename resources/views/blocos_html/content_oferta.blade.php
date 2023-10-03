@@ -25,7 +25,7 @@
             <hr>
             <div>
                 <span style="font-weight: bold;text-align:center;display:inline-block;width:100%;">Busco</span>
-                <h5 style="color:green;text-align:center;">{{$rodada->valor_objetivo}}Kz</h5>
+                <h5 style="color:green;text-align:center;">{{$rodada->valor_objetivo}} AOA</h5>
             </div>
             <div>
                 <span style="font-weight: bold;text-align:center;display:inline-block;width:100%;">Por</span>
@@ -33,7 +33,7 @@
             </div>
             <div>
                 <span style="font-weight: bold;text-align:center;display:inline-block;width:100%;">Já Consegui</span>
-                <h5 style="color:green;text-align:center;">{{$rodada->valor_obtido}}Kz</h5>
+                <h5 style="color:green;text-align:center;">{{$rodada->valor_obtido}} AOA</h5>
             </div>
             <div>
                 <span style="font-weight: bold;text-align:center;display:inline-block;width:100%;">Investidores Na Rodada</span>

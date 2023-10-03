@@ -14,4 +14,8 @@ class ReferenciasPagamento extends Model
         'valor_monetario',
         'status'
     ];
+
+    public function investidor(){
+        return $this->belongsTo('App\Investidores','fk_investidor','fk_user');
+    }
 }
