@@ -7,21 +7,20 @@
 @section('contentBody')
 <div id="header" class="w-100">
     <div class="container-fluid">
-    <h1 id="logo"><a href="{{route('new_home_page')}}">startup<strong style="color:white !important;">Investe</strong></a></h1>
+        <h1 id="logo"><a href="{{route('new_home_page')}}">startup<strong style="color:white !important;">Investe</strong></a></h1>
 
     </div>
 </div>
-<div id="form-container" class="w-100">
+<div id="form-container" class="w-100" style="padding-top:40px;">
 
+    <h2 id="header-card">Entrar</h2>
     <div class="card">
-        <div class="card-header">
-            <h4>Entrar</h4>
-        </div>
+
         <div class="card-body">
             @if(!empty(Session::get('error')))
 
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                
+
                 {{Session::get('error')}}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -42,7 +41,7 @@
                     <div class="col-12">
                         <div id="label-password">
                             <label>Password</label>
-                             
+
                         </div>
                         <input type="password" class="form-control" name="password_login" placeholder="Senha" autocomplete="off" required>
                     </div>
@@ -60,7 +59,9 @@
 
             </form>
         </div>
-    </div>
+
+</div>
+
 </div>
 @endsection
 

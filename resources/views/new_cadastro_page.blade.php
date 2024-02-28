@@ -12,29 +12,22 @@
 
     </div>
 </div>
-<div id="form-container" class="w-100">
+<div id="form-container" class="w-100" style="padding-top:40px;">
 
-    <div class="card">
-        <div class="card-header">
-            <h4>Cadastro</h4>
-            <div style="font-size:20px;">
-                
-                <input class="input-type-entity" type="radio" name="entity_register" id="entity-startup" value="option1" checked>
-                <label class="" for="entity-startup">
-                    Startup
-                </label>
-              
-                <input class="input-type-entity ml-3" type="radio" name="entity_register" id="entity-investor" value="option1">
-                <label class="" for="entity-investor">
-                    Investidor
-                </label>
-            </div>
-        </div>
-        <div class="card-body">
-            @include('form_startup')
-            @include('form_investidor')
-        </div>
+
+    <div id="header-card" class="mb-3">
+        <h4>Cadastro</h4>
+        <a role="button" class="input-type-entity @if(session('tipo') == false ||  session('tipo') == 'startup') input-type-entity-ativo @endif" id="entity-startup">Startup</a>&nbsp;&nbsp;
+        <a role="button" class="input-type-entity @if(session('tipo') == 'investidor') input-type-entity-ativo  @endif" id="entity-investor">Investidor</a>
+        @if (session('tipo'))
+        <input id="type-entity" value="{{ session('tipo') }}" hidden>
+        @endif
     </div>
+
+
+    @include('form_startup')
+    @include('form_investidor')
+
 
 </div>
 @endsection

@@ -32,7 +32,7 @@ class HomeController extends Controller
 
         if (Auth::check()) {
 
-            // listar apartir das startups menos vistas  , as que o seus perfis foram visitados livam +2 os outros +1
+           
 
             $presentUser = Auth::user()->id;
 
@@ -44,9 +44,7 @@ class HomeController extends Controller
                 ->select('id', 'nome')
                 ->get();
 
-            $tiposBusness = DB::table('tipos_negocio')
-                ->select('id', 'nome')
-                ->get();
+            
 
             $notifications = Notifications::where('fk_user_distination', $presentUser)
                 ->where('status', 'nao_visto')
@@ -64,24 +62,13 @@ class HomeController extends Controller
             $qtdnotifications = (int)count($notifications);
 
 
-            return view('inicio', compact('setores', 'tiposBusness', 'fases', 'qtdnotifications','qtdMessageUnview'));
+            return view('inicio', compact('setores', 'fases', 'qtdnotifications','qtdMessageUnview'));
         }
 
         return Redirect::to("new_home_page")->with('error', 'Faça Login');
     }
 
-    public function buscarIncubadoraAceleradora(Request $request)
-    {
-
-        $palavras = $request->valorNome;
-
-        $incubadorasAceleradoras = IncubadorasAceleradoras::where('nome', 'like', $palavras . '%')
-            ->get();
-
-        $returnHtml = view('blocos_html/lista_resultado_busca_incubadora_aceleradora', compact('incubadorasAceleradoras'))->render();
-
-        return response()->json($returnHtml);
-    }
+ 
 
     public function loadInvestidoresPage()
     {

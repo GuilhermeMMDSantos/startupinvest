@@ -24,8 +24,7 @@
                 <p style="font-size:11px;">
                     <span style="background:#ccc;display:inline-block;padding:2px;border-radius:5px;">{{$startupCard->fase->nome}}</span>
                     <span style="background:#ccc;display:inline-block;padding:2px;border-radius:5px;">{{$startupCard->setor->nome}}</span>
-                    <span style="background:#ccc;display:inline-block;padding:2px;border-radius:5px;">{{$startupCard->tipobusnessfunc->nome}}</span>
-                </p>
+                    </p>
                 <p class="card-text">
                     {{ str_replace('##',' ',$startupCard->pitch_elevator) }}
                 </p>
@@ -37,7 +36,7 @@
                 <span style="font-size:12px;color:#adb5bdd6;">Conseguido</span>
                 @php
                 $porcentagem =($startupCard->rodadaAtual->valor_obtido*100)/$startupCard->rodadaAtual->valor_objetivo;
-                
+
                 @endphp
                 <p style="font-size:14px;">{{$porcentagem}}% - {{$startupCard->rodadaAtual->tempo_restante}} Dias Restantes</p>
 
@@ -69,8 +68,8 @@
 </div>
 
 @empty
-<div style="padding-left:20px;padding-top:20px;" class="col-12">
-    <h4 style="font-size: 15px;
-    color: #545b62;">Sem startups registradas</h4>
+<div  class="d-flex justify-content-center align-items-center col-12">
+    <h4 style="font-size: 25px; 
+    color: #545b62;">Nenhuma Startup Buscando Financiamento</h4>
 </div>
 @endforelse

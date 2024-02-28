@@ -46,17 +46,17 @@ class UserController extends Controller
     public function loadStartups(Request $request)
     {
 
+       
+
         $dataAtual = Carbon::now()->format('Y-m-d H:m:s');
         $faseDesenvolvimento = $request->faseDesenvolvimento;
         $setorEconomico = $request->setorEconomico;
-        $tipoNegocio = $request->tipoNegocio;
         $nomeStartup = $request->nomeStartup;
 
 
 
-        $haveFaseDesenvolvimento = $faseDesenvolvimento != 0;
-        $haveSetorEconomico = $setorEconomico != 0;
-        $haveTipoNegocio = $tipoNegocio != 0;
+        $haveFaseDesenvolvimento = !empty($faseDesenvolvimento);
+        $haveSetorEconomico = !empty($setorEconomico);
         $haveNomeStartup = !empty($nomeStartup);
 
 
@@ -72,19 +72,17 @@ class UserController extends Controller
             })
             ->where('fk_user', '!=', Auth::user()->id)
             ->when($haveFaseDesenvolvimento, function ($query) use ($faseDesenvolvimento) {
-                return $query->where('fk_fase_desenvolvimento', $faseDesenvolvimento);
+                return $query->whereIn('fk_fase_desenvolvimento', $faseDesenvolvimento);
             })
             ->when($haveSetorEconomico, function ($query) use ($setorEconomico) {
-                return $query->where('fk_setor_economico', $setorEconomico);
-            })
-            ->when($haveTipoNegocio, function ($query) use ($tipoNegocio) {
-                return $query->where('fk_tipo_negocio', $tipoNegocio);
+                return $query->whereIn('fk_setor_economico', $setorEconomico);
             })
             ->when($haveNomeStartup, function ($query2) use ($nomeStartup) {
                 return $query2->where('nome', 'like', $nomeStartup . '%');
             })
             ->get();
 
+         
 
         $returnHtml = view('blocos_html.startup_cards', compact('startupsCards', 'dataAtual'))->render();
         return response()->json($returnHtml);

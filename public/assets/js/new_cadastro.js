@@ -1,40 +1,72 @@
 $(function () {
 
-    $("#entity-startup").change(function () {
-        $("#form_startup").show(300);
-        $("#formInvestidor").hide(300);
-        resetarFormularios();
-       
-    });
-
-    $("#entity-investor").change(function () {
-        $("#form_startup").hide(300);
-        $("#formInvestidor").show(300);
-        resetarFormularios();
-    });
-    
-    $(".input-type-entity").click(function(){
-        $("#container-alert-form-startup").hide();
-        $("#container-alert-form-investidor").hide();
-    });
     
 
-    $("#tipo-investidor-juridico").change(function(){
-        $("#container-input-nif-investor").show(300);
-        $("#container-input-nif-investor input").prop('required',true);
+    $("#entity-startup").click(function () {
+        showFormStartup();  
+    });
+
+    $("#entity-investor").click(function () {
+        showFormInvestidor();
+    });
+
+    $(".input-type-entity").click(function () {
+        hideAllAlert();
+        resetForms();
+    });
+
+    $("input[name='tipo_investidor']").click(function () {
+        hideAllAlert();
+         
+    });
+
+    $("#tipo-investidor-juridico").change(function () {
+        $(".field-for-pessoa-juridica").show();
+        $(".field-for-pessoa-juridica input").prop('required', true);
+        $(".field-for-pessoa-fisica").hide();
+        $(".field-for-pessoa-fisica input").prop('required', false);
+
+        $("#nome-completo-id").hide();
+        $("#nome-legal-id").show();
+         
+    });
+
+    $("#tipo-investidor-fisico").change(function () {
+        $(".field-for-pessoa-juridica").hide();
+        $(".field-for-pessoa-juridica input").prop('required', false);
+        $(".field-for-pessoa-fisica").show();
+        $(".field-for-pessoa-fisica input").prop('required', true);
         
+        $("#nome-completo-id").show();
+        $("#nome-legal-id").hide();
     });
+    
+  
 
-    $("#tipo-investidor-fisico").change(function(){
-        $("#container-input-nif-investor").hide(300);
-        $("#container-input-nif-investor input").prop('required',false);
-       
-    });
-
-
-    function resetarFormularios(){
-        $("#form_startup").get(0).reset();
-        $("#formInvestidor").get(0).reset();
+    function shoeEntityAtivo(node) {
+        $(".input-type-entity-ativo").removeClass("input-type-entity-ativo");
+        node.addClass("input-type-entity-ativo");
     }
 
+    function showFormStartup(){
+        $("#card-form-startup").show(300);
+        $("#card-form-investidor").hide(300);
+        shoeEntityAtivo($("#entity-startup"));
+    }
+
+    function showFormInvestidor(){
+        $("#card-form-startup").hide(300);
+        $("#card-form-investidor").show(300);
+        shoeEntityAtivo($("#entity-investor"));
+    }
+
+    function hideAllAlert(){
+        $("#container-alert-form-startup").hide();
+        $("#container-alert-form-investidor").hide();
+    }
+
+    function resetForms(){
+        $("#form-startup").get(0).reset();
+        $("#form-investidor").get(0).reset();
+    }
 });

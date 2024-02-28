@@ -4,7 +4,7 @@
   box-sizing: border-box; 
   font-family: 'Roboto', sans-serif;
 }
-#formInvestidor{
+#card-form-investidor,#card-form-startup,.field-for-pessoa-juridica,.field-for-pessoa-fisica{
   display:none;
 }
 #header {
@@ -23,10 +23,26 @@
 #header .container-fluid {
   padding: 2px 80px;
 }
-
+#header-card{
+  width: 60%;
+  margin-left:auto;
+  margin-right:auto;
+}
+.input-type-entity{
+  text-decoration: none;
+  color:rgb(90 97 105);
+}
+.input-type-entity:hover{
+  text-decoration: none;
+  color:rgb(90 97 105);
+}
+.input-type-entity-ativo{
+border-bottom: 3px solid var(--primary);
+}
 .card {
   width: 60%;
-  margin: 50px auto;
+  margin-left:auto;
+  margin-right:auto;
   box-shadow: 0 0.46875rem 2.1875rem rgb(90 97 105 / 10%),
     0 0.9375rem 1.40625rem rgb(90 97 105 / 10%),
     0 0.25rem 0.53125rem rgb(90 97 105 / 12%),
@@ -41,9 +57,7 @@
   color: #6c757db5;
 }
 
-#nome-incubadora-aceleradora{
-  text-transform:uppercase;
-}
+ 
 
 #form_startup input, 
 #form_startup select,
@@ -52,7 +66,7 @@
   background-color: #007bff05;
 }
 
-#container-input-nif-investor{
+#container-input-nif-investor,#nome-completo-id,#nome-legal-id{
   display:none;
 }
 

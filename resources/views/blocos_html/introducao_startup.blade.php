@@ -13,8 +13,7 @@
         <input type="text" id="codigo-startup" value="{{Auth::user()->code_user}}" style="display:none;">
         <span style="margin-right:10px;color:#767d84;"><i style="font-size:20px;margin-right:2px;">•</i>{{$startup->setor->nome}}</span>
         <span style="margin-right:10px;color:#767d84;"><i style="font-size:20px;margin-right:2px;">•</i>{{$startup->fase->nome}}</span>
-        <span style="margin-right:10px;color:#767d84;"><i style="font-size:20px;margin-right:2px;">•</i>{{$startup->tipobusnessfunc->nome}}</span>
-    </p>
+      </p>
     <p style="margin-top:-15px;">
         {{ str_replace('##',' ',$startup->pitch_elevator) }}
     </p>

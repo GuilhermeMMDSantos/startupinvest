@@ -300,7 +300,7 @@
 
                     if (response['status'] == 200) {
                         $("#container-btn-gerar-ref").html(response['html']);
-                    }else{
+                    } else {
                         $("#btn-gerar-ref").show();
                     }
 
@@ -895,8 +895,26 @@
         });
 
 
-        //----------------------CHAT--------------------------
+        $(".my-mask-money").keyup(function(e) {
 
+
+            var elemento = $(this);
+            var valorInput = elemento.val();
+
+
+            var valorInputSoAlgarismo = valorInput.replace(/[\D]+/g, '');
+
+            var valorInputComVirgula = valorInputSoAlgarismo.replace(/([0-9]{2})$/g, ",$1");
+
+    
+
+
+
+
+        });
+
+
+        //----------------------CHAT--------------------------
 
 
 
@@ -1359,6 +1377,20 @@
                     console.log(error);
                 }
             });
+        }
+
+        function convertStringInArray(caracterSequence) {
+            let sequenceArray = new Array();
+            for (let i = 0; i < caracterSequence.length; i++) {
+                sequenceArray.push(caracterSequence[i]);
+            }
+
+            return sequenceArray;
+        }
+
+        function convertArrayInString(sequenceArray) {
+            let caracterSequence = sequenceArray.toString();
+            return caracterSequence.replace(/\,/g, "");
         }
 
     });

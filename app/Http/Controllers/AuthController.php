@@ -25,20 +25,22 @@ class AuthController extends Controller
 
         $validador = Validator::make($request->all(), [
             'nome' => 'required|unique:startups',
+            'nif' => 'required|unique:startups',
             'email' => 'required|unique:users',
             'sector' => 'required',
             'fase' => 'required',
+            'mvp' => 'required',
             'pitch_line1' => 'required',
             'pitch_line2' => 'required',
             'pitch_line3' => 'required',
             'pitch_line4' => 'required',
-            'nome_incubadora_aceleradora' => 'required',
-            'nif_incubadora_aceleradora' => 'required',
-            'contrato_aceleracao_incubacao' => 'required',
 
         ], [
             'nome.required' => 'Nome da Startup em falta',
             'nome.unique' => 'Nome da Startup já existe',
+            'nif.required' => 'NIF da Startup em falta',
+            'nif.unique' => 'NIF da Startup já existe',
+            'mvp' => 'MVP em falta',
             'email.required' => 'Email da Startup em falta',
             'email.unique' => 'Email da Startup já existe',
             'sector.required' => 'Sector econômico em falta',
@@ -47,9 +49,6 @@ class AuthController extends Controller
             'pitch_line2' => 'Descrição do publico alvo em falta',
             'pitch_line3' => 'Descrição da solução em falta',
             'pitch_line4' => 'Descrição do diferencial em falta',
-            'nome_incubadora_aceleradora.required' => 'Nome Incubadora/Aceleradora em falta',
-            'nif_incubadora_aceleradora.required' => 'NIF  Incubadora/Aceleradora em falta',
-            'contrato_aceleracao_incubacao.required' => 'Contrato de registro em falta',
 
         ]);
 
@@ -57,9 +56,12 @@ class AuthController extends Controller
         if ($validador->fails()) {
             return redirect()
                 ->back()
+                ->with('tipo','startup')
                 ->withErrors($validador)
                 ->withInput($request->all());
         }
+
+
 
         $codeUser = "";
         $dados = $request->all();
@@ -72,36 +74,18 @@ class AuthController extends Controller
         $pitch = "A##{$dados['nome']}##está construindo##{$dados['pitch_line1']}##para ajudar##{$dados['pitch_line2']}##
         a##{$dados['pitch_line3']}##com##{$dados['pitch_line4']}";
 
-        $extensaoArquivo = $request->file('contrato_aceleracao_incubacao')->extension();
-        $nomeArquivo = "contrato{$user->id}.{$extensaoArquivo}";
-
-        $uploadFicheiro = $request->file('contrato_aceleracao_incubacao')->storeAs('armazenamento/startups/contrato_com_incubadora_aceleradora', $nomeArquivo);
-
-
-        $incubadoraAceleradora = IncubadorasAceleradoras::where([
-            ['nome','like',$dados['nome_incubadora_aceleradora']],
-            ['nif',$dados['nif_incubadora_aceleradora']]
-        ])
-        ->first();
-
-        if (empty($incubadoraAceleradora)) {
-
-            $incubadoraAceleradora = IncubadorasAceleradoras::create([
-                'nome' => $dados['nome_incubadora_aceleradora'],
-                'nif' => $dados['nif_incubadora_aceleradora'],
-                'outro' => 'yes'
-            ]);
-        }
+        $nifUploaded = $this->saveFile($request, 'nif', 'armazenamento/startups/nif');
+        $mvpUploaded = $this->saveFile($request, 'mvp', 'armazenamento/startups/mvp');
 
         Startups::create([
             'fk_user' => $user->id,
             'nome' => $dados['nome'],
+            'nif' =>  $nifUploaded,
             'fk_setor_economico' => $dados['sector'],
             'fk_fase_desenvolvimento' => $dados['fase'],
-            'contrato_incubadora_aceleradora' => $uploadFicheiro,
+            'mvp' => $mvpUploaded,
             'pitch_elevator' => $pitch,
-            'logotipo' => "armazenamento/startups/img/img_standard_startup.png",
-            'fk_incubadora_aceleradora' => $incubadoraAceleradora->id
+            'logotipo' => "armazenamento/startups/img/img_standard_startup.png"
         ]);
 
         return redirect()->intended("processamento_cadastro");
@@ -113,21 +97,24 @@ class AuthController extends Controller
 
 
         $parametrosValidacao = [
-            'tipo_investidor' => 'required',
             'nome_legal_investidor' => 'required',
+            'tipo_investidor' => 'required',
             'email_investidor' => 'required|unique:users,email',
-            'contrato_sociedade' => 'required'
+            'video_investor' => 'required'
         ];
 
         $mensagensValidacao = [
-            'nome_legal_investidor.required' => 'Nome do investidor em falta',
+            'nome_legal_investidor.required' => 'Nome do Investidor em falta',
+            'tipo_investidor.required' => ' Tipo de investidore em falta',
             'email_investidor.required' => 'Email do investidor em falta',
             'email_investidor.unique' => 'Email do investidor já existe',
-            'contrato_sociedade.required' => 'Contrato de sociedade em falta'
+            'video_investor.required' => 'Video do investidor em falta'
         ];
 
-       
-        if ($request->tipo_investidor == 2) {
+        if ($request->tipo_investidor == 1) {
+            $parametrosValidacao['bi_investidor'] = 'required';
+            $mensagensValidacao['bi_investidor.required'] = 'Bilhete de identidade do investidor em falta';
+        } else if ($request->tipo_investidor == 2) {
             $parametrosValidacao['nif_investidor_juridico'] = 'required';
             $mensagensValidacao['nif_investidor_juridico.required'] = 'NIF do investidor em falta';
         }
@@ -142,6 +129,7 @@ class AuthController extends Controller
         if ($validador->fails()) {
             return redirect()
                 ->back()
+                ->with('tipo','investidor')
                 ->withErrors($validador)
                 ->withInput($request->all());
         }
@@ -149,46 +137,36 @@ class AuthController extends Controller
 
         $codeUser = "";
         $dados = $request->all();
-        $codeUser = $codeUser . '' . strtolower($dados['primeiro_nome']);
+        $nomeLegal = $dados['nome_legal_investidor'];
+        $tipo = null;
+        $nifUploaded = null;
+        $videoUploaded = null;
+        $biUploaded = null;
 
-        $nif = null;
-        $sobrenome = null;
-
-        if (isset($dados['nif']))
-            $nif = $dados['nif'];
-
-        if (isset($dados['segundo_nome'])) {
-            $sobrenome = $dados['segundo_nome'];
-            $codeUser = $codeUser . '' . strtolower($sobrenome);
+        if ($dados['tipo_investidor'] == 1) {
+            $tipo = 'Física';
+            $biUploaded = $this->saveFile($request, 'bi_investidor', 'armazenamento/investidor/bilhete_identidade');
+            $videoUploaded = $this->saveFile($request, 'video_investor', 'armazenamento/investidor/videos');
+            
+        } else if ($dados['tipo_investidor'] == 2) {
+            
+            $tipo = 'Jurídica';
+            $nifUploaded = $this->saveFile($request, 'nif_investidor_juridico', 'armazenamento/investidor/nif');
+            $videoUploaded = $this->saveFile($request, 'video_investor', 'armazenamento/investidor/videos');
+             
         }
 
-        $codeUser = $codeUser . '' . Carbon::now()->format('mYdhsm');
+        $codeUser = "{$codeUser}{Carbon::now()->format('mYdhsm')}";
         $user = $this->create($dados, 'investidor', $codeUser);
-
-
-
-
-        $extensaoContratoSociedade = $request->file('contrato_sociedade')->extension();
-        $nomeContratoSociedade = "contrato_sociedade{$user->id}.{$extensaoContratoSociedade}";
-        $uploadContratoSociedade = $request->file('contrato_sociedade')->storeAs('armazenamento/investidor/contrato_sociedade', $nomeContratoSociedade);
-        $uploadBilheteIdentidade = null;
-
-        if ($request->tipo_investidor == 1) {
-
-            $extensaoBilheteIdentidade = $request->file('bilhete_identidade_investidor')->extension();
-            $nomeBilheteIdentidade = "bilhete_identidade{$user->id}.{$extensaoBilheteIdentidade}";
-            $uploadBilheteIdentidade = $request->file('bilhete_identidade_investidor')->storeAs('armazenamento/investidor/bilhete_identidade', $nomeBilheteIdentidade);
-        }
 
 
         Investidores::create([
             'fk_user' => $user->id,
-            'nome' => $dados['primeiro_nome'],
-            'sobrenome' => $sobrenome,
-            'nif' => $nif,
-            'tipo_entidade' => $dados['tipo_investidor'],
-            'bilhete_identidade' => $uploadBilheteIdentidade,
-            'contrato_sociedade' => $uploadContratoSociedade,
+            'nome_legal' => $nomeLegal,
+            'nif' => $nifUploaded,
+            'tipo_entidade' => $tipo,
+            'bilhete_identidade' => $biUploaded,
+            'video_investidor' => $videoUploaded,
             'foto' => 'armazenamento/investidor/img/img_standard_investidor.png'
         ]);
 
@@ -212,7 +190,7 @@ class AuthController extends Controller
         ]);
     }
 
-    
+
 
     public function loginuser(Request $request)
     {
@@ -255,5 +233,18 @@ class AuthController extends Controller
         Session::flush();
         Auth::logout();
         return Redirect("/");
+    }
+
+    public function saveFile(Request $request, $name, $caminho)
+    {
+
+        $data = Carbon::now()->format('ddmmYYhis');
+
+        $extensaoArquivo = $request->file("{$name}")->extension();
+        $nomeArquivo = "{$name}{$data}.{$extensaoArquivo}";
+
+        $uploadFicheiro = $request->file("{$name}")->storeAs("{$caminho}", $nomeArquivo);
+
+        return $uploadFicheiro;
     }
 }

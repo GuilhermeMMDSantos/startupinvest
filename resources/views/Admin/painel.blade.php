@@ -20,17 +20,21 @@
                     @forelse($startups as $startup)
                     <div class="col-sm-6" style="padding-top:20px;" id="colum-card{{$startup->fk_user}}">
                         <div class="card h-100 cartao card_emp " id="cartao_user{{$startup->fk_user}}">
-                            <div class="card-header">
-                                <p><strong>Nome:</strong> <span>{{$startup->nome}}</span><br><strong>Setor de atividade:</strong> <span>{{$startup->setor->nome}}</span><br><strong>Fase de desenvolvimento:</strong> <span>{{$startup->fase->nome}}</span></p>
-                            </div>
+
                             <div class="card-body">
 
-                                <div style="width:100%; height:200; border:1px solid #ccc;margin-bottom:10px;">
-                                    <p>Nome da Incubadora/Aceleradora: {{$startup->incubadorAceleradora->nome}}</p>
-                                    <p>NIF da Incubadora/Aceleradora: {{$startup->incubadorAceleradora->nif}}</p>
-                                    <a href="{{asset('storage/'.$startup->contrato_incubadora_aceleradora)}}" target="_blank">Contrato com a incubadora/aceleradora</a>
+                                <div>
+                                    <p><strong>Nome:</strong> <span>{{$startup->nome}}</span><br><strong>Setor de atividade:</strong> <span>{{$startup->setor->nome}}</span><br><strong>Fase de desenvolvimento:</strong> <span>{{$startup->fase->nome}}</span></p>
                                 </div>
 
+                                <div style="width:100%; height:200; border:1px solid #ccc;margin-bottom:10px;">
+                                    <a href="{{asset('storage/'.$startup->nif)}}" target="_blank">Número de identificação Fiscal (PDF)</a>
+                                </div>
+
+                                <div style="border:1px solid #ccc;margin-bottom:10px;">
+                                    <video src="{{asset('storage/'.$startup->mvp)}}" width="100%" height="80%" controls="true">
+                                    </video>
+                                </div>
 
                                 <p><strong>Pitch Elevator:</strong> <span class="pitch">{{ str_replace('##',' ',$startup->pitch_elevator) }}</span></p>
 
@@ -66,20 +70,33 @@
 
                 <div class="row" style="padding-bottom:15px;">
                     @forelse($investidores as $investidor)
-                    <div class="col-sm-4" style="padding-top:20px;" id="colum-card{{$investidor->fk_user}}">
+                    <div class="col-sm-6" style="padding-top:20px;" id="colum-card{{$investidor->fk_user}}">
                         <div class="card h-100" id="cartao_user{{$investidor->fk_user}}">
-                            <div class="card-header">
-                                <p><strong>Nome: </strong><span>{{$investidor->nome}} @if(isset($investidor->sobrenome)){{$investidor->sobrenome}}@endif</span><br>
-                                    @if(isset($investidor->nif))
-                                    <span><strong>NIF: </strong>{{$investidor->nif}}</span>
-                                    @endif
-                                </p>
-                            </div>
+
                             <div class="card-body">
-                                @if($investidor->tipo_entidade == 'Física')
-                                <a href="{{asset('storage/'.$investidor->bilhete_identidade)}}" target="_blank">Bilhete de Identidade</a><br>
-                                @endif
-                                <a href="{{asset('storage/'.$investidor->contrato_sociedade)}}" target="_blank">Contrato de Sociedade</a>
+
+                                <div>
+                                    <p>
+                                       
+                                        <span><strong>Nome: </strong>{{$investidor->nome_legal}}</span><br>
+                                        
+                                        <span><strong>Tipo Entidade: </strong> {{$investidor->tipo_entidade}}</span>
+                                    </p>
+                                </div>
+
+                                <div style="width:100%; height:200; border:1px solid #ccc;margin-bottom:10px;">
+                                    @if($investidor->tipo_entidade == 'Física')
+                                    <a href="{{asset('storage/'.$investidor->bilhete_identidade)}}" target="_blank">Bilhete de Identidade (PDF)</a>
+                                    @elseif($investidor->tipo_entidade == 'Jurídica')
+                                    <a href="{{asset('storage/'.$investidor->nif)}}" target="_blank">Número de identificação Fiscal (PDF)</a>
+                                    @endif
+                                    
+                                </div>
+
+                                <div style=" border:1px solid #ccc;margin-bottom:10px;">
+                                    <video src="{{asset('storage/'.$investidor->video_investidor)}}" width="100%" height="80%"controls="true">
+                                    </video>
+                                </div>
 
                             </div>
                             <div class="card-footer">

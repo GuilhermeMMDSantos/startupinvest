@@ -3,16 +3,6 @@
         <div class="card-body" style="padding-bottom:30px;">
             <video style="border:2px solid #e9ecef9c;" src="@if($havePermissionToWatchPitch || $myprofile){{asset('storage/'.$startup->pitch_deck)}}@endif" controls="true" width="100%" height="500" />
 
-
-
-
-
-
-
-
-
-
-
         </div>
     </div>
 </div>
@@ -47,7 +37,7 @@
                 <p style="font-size:20px; font-weight:bold; background:#febd69;color:white; height:100%;padding-top:10px; padding-bottom:10px;">Ref. {{$referencaPagamento}}</p>
                 @else
 
-                <button data-toggle="modal" data-target="#modal-gerar-referencia-pagamento" id="btn-gerar-ref" class="btn btn-lg btn-block" style="background:#379f4f;color:white;">Gerar Referência</button>
+                <button data-toggle="modal" data-target="#modal-gerar-referencia-pagamento" id="btn-gerar-ref" class="btn btn-lg btn-block" style="background:#379f4f;color:white;">Participar na rodada</button>
                 <div class="text-center " id="my-spinner" style="display:none;">
                     <div class="spinner-border  text-warning" role="status">
                     </div>

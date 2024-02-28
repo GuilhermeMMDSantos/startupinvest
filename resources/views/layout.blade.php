@@ -9,19 +9,24 @@
     <title>ecoStartup</title>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <!--<link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">-->
+    <!--<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">-->
 
 
     <!--Scripts-->
     <script src="{{asset('assets/js/jquery.js')}}"></script>
     <script src="{{asset('assets/js/popper.min.js')}}"></script>
     <script src="{{asset('assets/js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('assets/js/bootstrap-select.min.js')}}"></script>
+   
 
 
     <!-- Styles -->
     <link href="{{asset('assets/fontawesome/css/all.css')}}" type="text/css" rel="stylesheet">
-    <link href="{{asset('assets/css/main.css')}}" type="text/css" rel="stylesheet">
+    <link href="{{asset('assets/css/bootstrap.min.css')}}" type="text/css" rel="stylesheet">
+    <link href="{{asset('assets/css/bootstrap-select.min.css')}}" type="text/css" rel="stylesheet">
+    <link href="{{asset('assets/css/config.css')}}" type="text/css" rel="stylesheet">
+    <link href="{{asset('assets/css/custom.css')}}" type="text/css" rel="stylesheet">
     @yield('stylesheets')
 
 </head>

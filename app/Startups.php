@@ -10,15 +10,14 @@ class Startups extends Model
     protected $fillable = [
         'fk_user',
         'nome',
+        'nif',
         'fk_setor_economico',
         'fk_fase_desenvolvimento',
-        'contrato_incubadora_aceleradora',
+        'mvp',
         'pitch_elevator',
         'pitch_deck',
         'logotipo',
-        'estado_busca_invest',
-        'fk_tipo_negocio',
-        'fk_incubadora_aceleradora'
+        'estado_busca_invest'
     ];
 
 

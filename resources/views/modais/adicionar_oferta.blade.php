@@ -13,39 +13,59 @@
 
                     <div class="row">
                         <div class="col-sm-6">
-                            <label>Meta em Kwanzas</label>
-                            <input type="text" class="form-control" name="meta" id="meta-oferta" style="background: #fdfdff;">
-                            <span style="font-size:10px;color:red;" id="content-alert-unset-meta"></span>
+                            <label for="meta-oferta">Meta à captar</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="meta-oferta">Kz</label>
+                                </div>
+
+
+                                <input type="text" class="form-control my-mask-money" name="meta" id="meta-oferta" style="background: #fdfdff;">
+                                <span style="font-size:10px;color:red;" id="content-alert-unset-meta"></span>
+
+                            </div>
+
                         </div>
                         <div class="col-sm-6">
-                            <label>Porcentagem em acções à oferecer</label>
-                            <input type="text" class="form-control" name="porcentagem" id="porcentagem-oferta" style="background: #fdfdff;">
-                            <span style="font-size:10px;color:red;" id="content-alert-unset-porcentagem"></span>
+                            <label for="porcentagem-oferta">Acções à oferecer</label>
+
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <label for="porcentagem-oferta" class="input-group-text">%</label>
+                                </div>
+
+                                <input type="text" class="form-control" name="porcentagem" id="porcentagem-oferta" style="background: #fdfdff;">
+                                <span style="font-size:10px;color:red;" id="content-alert-unset-porcentagem"></span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-sm-6" style="padding-top:10px;">
-                            <label>Conta Bancária</label>
-                            <input type="text" class="form-control" disabled>
-                            <span style="font-size:10px;color:red;" id="content-alert-unset-conta-bancaria"></span>
+
+                            <label for="input-pitch-video">Pitch</label>
+
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="input-pitch-video" role="button">Carregar Video</label>
+                                </div>
+
+                                <input type="text" class="form-control" id="input-aux-pitch-video" placeholder="Nenhum video carregado" style="background: #fdfdff;" disabled>
+                                <input type="file" id="input-pitch-video" name="pitch_video" style="display:none;">
+                                <span style="font-size:10px;color:red;" id="content-alert-unset-pitch-video"></span>
+                            </div>
+
+
                         </div>
+
                         <div class="col-sm-6" style="padding-top:10px;">
-                            <label>Término da Angariação</label>
+                            <label for="termino-oferta">Término da Angariação</label>
                             <input type="date" class="form-control" name="termino" id="termino-oferta" style="background: #fdfdff;">
                             <span style="font-size:10px;color:red;" id="content-alert-unset-termino-angariacao"></span>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-sm-12" style="padding-top:10px;">
-                            <label>Pitch</label>
-                            <input type="text" class="form-control" id="input-aux-pitch-video" placeholder="Nenhum video carregado" style="background: #fdfdff;" disabled>
-                            <label class="btn btn-primary btn-lg btn-block"  for="input-pitch-video" role="button" style="height:30px;font-size:11px;border-radius:0px;">Carregar Video</label>
-                            <input type="file" id="input-pitch-video" name="pitch_video" style="display:none;">
-                            <span style="font-size:10px;color:red;" id="content-alert-unset-pitch-video"></span>
-                        </div>
-                    </div>
+
 
                 </form>
             </div>

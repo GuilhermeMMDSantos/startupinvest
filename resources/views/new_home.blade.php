@@ -40,8 +40,8 @@
                 </h1>
                 <p style="font-size:20px;">Plataforma de equity-crowdfunding</p>
             </div>
-            <div class="col-md-8 align-self-center text-center">
-                <img src="{{asset('assets/img/3081627.jpg')}}" class="img-fluid">
+            <div class="col-md-8 align-self-center text-center" style="height:480px;">
+                <img src="{{asset('assets/img/3081627.jpg')}}" class="img-fluid h-100 w-100">
             </div>
         </div>
     </div>

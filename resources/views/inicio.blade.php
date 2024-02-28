@@ -16,31 +16,23 @@
                              <div class="form-row" style="font-size:13px;">
                                  <div class="form-group col-md-4">
                                      <label for="fase-desenvolvimento-filter">Fase Desenvolvimento</label>
-                                     <select id="fase-desenvolvimento-filter" class="form-control">
-                                         <option value="0">Todos</option>
+                                     <select id="fase-desenvolvimento-filter" class="form-control selectpicker" title="Todos" multiple data-selected-text-format="count>1" data-count-selected-text= "+{0} Filtros"  multiple>
+                                        
                                          @foreach($fases as $fase)
                                          <option value="{{$fase->id}}">{{$fase->nome}}</option>
                                          @endforeach
                                      </select>
                                  </div>
                                  <div class="form-group col-md-4">
-                                     <label for="sector-economico-filter">Sector Economico</label>
-                                     <select id="sector-economico-filter" class="form-control">
-                                         <option value="0">Todos</option>
+                                     <label for="sector-economico-filter">Sector Económico</label>
+                                     <select id="sector-economico-filter" class="form-control selectpicker"  data-live-search="true" title="Todos" multiple data-selected-text-format="count>2" data-count-selected-text= "+{0} Filtros" multiple>
+                                       
                                          @foreach($setores as $setor)
                                          <option value="{{$setor->id}}">{{$setor->nome}}</option>
                                          @endforeach
                                      </select>
                                  </div>
-                                 <div class="form-group col-md-4">
-                                     <label for="tipo-negocio-filter">Tipo de Negocio</label>
-                                     <select id="tipo-negocio-filter" class="form-control">
-                                         <option value="0">Todos</option>
-                                         @foreach($tiposBusness as $tb)
-                                         <option value="{{$tb->id}}">{{$tb->nome}}</option>
-                                         @endforeach
-                                     </select>
-                                 </div>
+                                
 
                              </div>
                          </div>
