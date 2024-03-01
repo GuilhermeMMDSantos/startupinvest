@@ -91,7 +91,7 @@ Route::get('buscar_funcao_experiencia','UserController@buscarFuncaoExperiencia')
 
 Route::get('buscar_intituicao_experiencia','UserController@buscarIntituicaoExperiencia');
 
-Route::get('/email','AuthController@sendMail');
+
 
 
 Route::post('load_tmp_img_membro_equipa','UserController@loadTmpImgMembroEquipa');
@@ -162,3 +162,5 @@ Route::get('/load_messages_meeting','MessageController@loadMessageMeeting');
 Route::post('/send_message_page','MessageController@sendMessage');
 
 Route::get('/set_status_message','MessageController@setMessageStatus');
+
+Route::get('/email','EmailController@send');
