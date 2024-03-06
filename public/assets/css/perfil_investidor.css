@@ -66,23 +66,19 @@ body {
   transition: all 0.2s;
 }
 /*-----------------------------------------*/
-#content-form-adicionar-experiencia > div {
-  min-height: 92px;
 
+
+#dashboard-investidor i {
+  font-size: 18px;
+  transition: all 0.3s;
 }
 
-#content-form-adicionar-experiencia > div:last-child{
-  min-height: 40px !important;
+#dashboard-investidor span {
+  display: block;
+  transition: all 0.3s;
+  font-size: 14px;
 }
-
-#content-form-adicionar-formacao > div {
-  min-height: 92px;
-
-}
-
-#content-form-adicionar-formacao > div:last-child{
-  min-height: 40px !important;
-}
+/*-----------------------------------------------------------------*/
 
 
 #btn-meeting {

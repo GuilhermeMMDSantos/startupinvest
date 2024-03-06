@@ -154,7 +154,7 @@ class UserController extends Controller
 
             $rodadaId = null;
 
-            $startup =  Startups::with(['setor', 'fase', 'tipobusnessfunc', 'user'])
+            $startup =  Startups::with(['setor', 'fase', 'user'])
                 ->where('fk_user', $user->id)
                 ->first();
 
@@ -173,8 +173,7 @@ class UserController extends Controller
             $returnHtml = view('perfil_startup', compact('idUser', 'code', 'startup', 'qtdnotifications', 'qtdMessageUnview', 'rodadaId', 'myProfile', 'codigoStartup'));
         } else if ($user->tipo == 'investidor') {
 
-            $investidor = Investidores::with(['formacoes', 'experiencias'])
-                ->where('fk_user', $user->id)
+            $investidor = Investidores::where('fk_user', $user->id)
                 ->first();
             $codigoInvestidor = $codeUser;
             $returnHtml = view('perfil_investidor', compact('idUser', 'code', 'investidor', 'qtdnotifications', 'qtdMessageUnview', 'myProfile', 'codeUser', 'codigoInvestidor'));
@@ -192,9 +191,8 @@ class UserController extends Controller
 
         $setores = Setores::get();
         $fases = Fases::get();
-        $tiposNegocio = TipoBusness::get();
 
-        $returnHtml = view('modais/forms/form_edit_intro_startup', compact('user', 'setores', 'fases', 'tiposNegocio'))->render();
+        $returnHtml = view('modais/forms/form_edit_intro_startup', compact('user', 'setores', 'fases'))->render();
 
         return response()->json($returnHtml);
     }
@@ -256,7 +254,6 @@ class UserController extends Controller
             'fk_fase_desenvolvimento' => $request->fase_startup_edit,
             'pitch_elevator' => $pitch,
             'logotipo' => $uploadFicheiro,
-            'fk_tipo_negocio' => $request->negocio_startup_edit
         ]);
     }
 
@@ -744,6 +741,7 @@ class UserController extends Controller
     public function getIntroducaoInvestidor(Request $request)
     {
         $codeUser = $request->codeUser;
+        $myProfile = $request->myProfile;
 
 
         $investidor = Investidores::whereHas('user', function ($query) use ($codeUser) {
@@ -765,7 +763,7 @@ class UserController extends Controller
 
 
 
-        $html = view('blocos_html/introducao_investidor', compact('investidor', 'permissoesVerPitch'))->render();
+        $html = view('blocos_html/introducao_investidor', compact('investidor', 'permissoesVerPitch','myProfile'))->render();
 
         return response()->json([
             'html' => $html

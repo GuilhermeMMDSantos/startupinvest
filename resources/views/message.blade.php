@@ -9,6 +9,18 @@
     <div class="card">
         <div class="card-body">
             <div id="tolkeed-to" style="width:400px;border:1px solid #ccc;">
+                <header style="border:1px solid #ccc;">
+                    <h5 style="padding:7px 16px;">
+                        Meetings
+                    </h5>
+                </header>
+                <div id="tolkeed-to-body">
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
 
 
             </div>
@@ -42,7 +54,7 @@
 
 
 
-        $("#tolkeed-to").on("click", ".meeting", function() {
+        $("#tolkeed-to-body").on("click", ".meeting", function() {
             var idUser = $(this).attr("guito");
             userIdClicked = idUser;
             loadMessagesMeeting(idUser);
@@ -95,11 +107,15 @@
                 type: 'get',
                 data: {},
                 success: function(response) {
-                    $("#tolkeed-to").empty();
-                    $("#tolkeed-to").append(response['html']);
+                    $("#tolkeed-to-body").empty();
+                    $("#tolkeed-to-body").append(response['html']);
                     if (userIdClicked == undefined)
                         userIdClicked = $("#first_meeting").html();
-                    loadMessagesMeeting(userIdClicked);
+
+                    if (response['count'] > 0)
+                        loadMessagesMeeting(userIdClicked);
+                    else
+                        showMeetingEmpty();
 
                 },
                 error: function(error) {
@@ -111,7 +127,6 @@
         }
 
         function loadMessagesMeeting(idUser) {
-
 
             $.ajax({
                 url: 'load_messages_meeting',
@@ -176,6 +191,21 @@
                 },
                 error: function(error) {
                     console.log("Erro ao carregar ao alterar status das mensagens");
+                    console.log(error);
+                }
+            });
+        }
+
+        function showMeetingEmpty() {
+            $.ajax({
+                url: "/show_meeting_empty",
+                type: "get",
+                success: function(response) {
+                    $("#tolkeed-to-body").empty();
+                    $("#tolkeed-to-body").append(response['html']);
+                },
+                error: function(error) {
+                    console.log("Erro ao carregar empty meeting");
                     console.log(error);
                 }
             });

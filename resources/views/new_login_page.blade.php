@@ -33,7 +33,7 @@
                 <div class="row mb-3">
                     <div class="col-12">
                         <label>Email</label>
-                        <input type="email" class="form-control" name="email_login" placeholder="Email" autocomplete="off" required>
+                        <input type="email" class="form-control" name="email_login" placeholder="Email" autocomplete="off">
                     </div>
                 </div>
 
@@ -43,14 +43,15 @@
                             <label>Password</label>
 
                         </div>
-                        <input type="password" class="form-control" name="password_login" placeholder="Senha" autocomplete="off" required>
+                        <input type="password" class="form-control" name="password_login" placeholder="Senha" autocomplete="off">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-12">
                         <button id="btn-entrar" type="submit" class="btn btn-lg btn-block">
-                            Entrar
+                            <span class="spinner-border spinner-border-sm" id="btn-spinner-user" role="status" aria-hidden="true"></span>
+                            <span> Entrar</span>
                         </button>
                     </div>
                 </div>
@@ -60,10 +61,22 @@
             </form>
         </div>
 
-</div>
+    </div>
 
 </div>
 @endsection
 
 @section('scripts')
+<script type="text/javascript">
+    $(function() {
+        $("#btn-entrar").click(function() {
+            $("#form-login").submit();
+            $(this).prop("disabled", true);
+            $("#btn-spinner-user").css({
+                'opacity': 1
+            });
+            true;
+        });
+    });
+</script>
 @endsection

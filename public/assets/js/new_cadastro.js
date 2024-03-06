@@ -1,9 +1,9 @@
 $(function () {
 
-    
+
 
     $("#entity-startup").click(function () {
-        showFormStartup();  
+        showFormStartup();
     });
 
     $("#entity-investor").click(function () {
@@ -17,55 +17,50 @@ $(function () {
 
     $("input[name='tipo_investidor']").click(function () {
         hideAllAlert();
-         
+
     });
 
-    $("#tipo-investidor-juridico").change(function () {
-        $(".field-for-pessoa-juridica").show();
-        $(".field-for-pessoa-juridica input").prop('required', true);
-        $(".field-for-pessoa-fisica").hide();
-        $(".field-for-pessoa-fisica input").prop('required', false);
-
-        $("#nome-completo-id").hide();
-        $("#nome-legal-id").show();
-         
+   $("#btn-cadastrar-investidor").click(function(){
+    $("#form-investidor").submit();
+    $(this).prop("disabled",true);
+    $("#btn-spinner-investidor").css({
+        'opacity':1 
     });
+    true;
+   });
 
-    $("#tipo-investidor-fisico").change(function () {
-        $(".field-for-pessoa-juridica").hide();
-        $(".field-for-pessoa-juridica input").prop('required', false);
-        $(".field-for-pessoa-fisica").show();
-        $(".field-for-pessoa-fisica input").prop('required', true);
-        
-        $("#nome-completo-id").show();
-        $("#nome-legal-id").hide();
+   $("#btn-cadastrar-startup").click(function(){
+    $("#form-startup").submit();
+    $(this).prop("disabled",true);
+    $("#btn-spinner-startup").css({
+        'opacity':1 
     });
-    
-  
+    true;
+   });
 
     function shoeEntityAtivo(node) {
         $(".input-type-entity-ativo").removeClass("input-type-entity-ativo");
         node.addClass("input-type-entity-ativo");
     }
 
-    function showFormStartup(){
+    function showFormStartup() {
         $("#card-form-startup").show(300);
         $("#card-form-investidor").hide(300);
         shoeEntityAtivo($("#entity-startup"));
     }
 
-    function showFormInvestidor(){
+    function showFormInvestidor() {
         $("#card-form-startup").hide(300);
         $("#card-form-investidor").show(300);
         shoeEntityAtivo($("#entity-investor"));
     }
 
-    function hideAllAlert(){
+    function hideAllAlert() {
         $("#container-alert-form-startup").hide();
         $("#container-alert-form-investidor").hide();
     }
 
-    function resetForms(){
+    function resetForms() {
         $("#form-startup").get(0).reset();
         $("#form-investidor").get(0).reset();
     }

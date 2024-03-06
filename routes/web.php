@@ -61,16 +61,9 @@ Route::post('load_tmp_img','UserController@loadTmpImg');
 
 Route::post('edit_intro_startup','UserController@editarIntroStartup');
 
-
-
-
 Route::get('/load_introducao_startup','UserController@loadIntroducaoStartup');
 
 Route::get('load_investors_table/{page?}','UserController@loadInvestorsTable');
-
-
-
-
 
 Route::get('adicionar_investidor','UserController@adicionarInvestidor');
 
@@ -90,9 +83,6 @@ Route::get('buscar_cargos_executvo','UserController@buscarCargosExecutvo');
 Route::get('buscar_funcao_experiencia','UserController@buscarFuncaoExperiencia');
 
 Route::get('buscar_intituicao_experiencia','UserController@buscarIntituicaoExperiencia');
-
-
-
 
 Route::post('load_tmp_img_membro_equipa','UserController@loadTmpImgMembroEquipa');
 
@@ -133,14 +123,10 @@ Route::get('/delete_membros_equipa','UserController@deleteMembrosEquipa');
 
 Route::get('/get_startups_investidas','UserController@getStartupsInvestidas');
 
-
-
 Route::get('/gerar_referencia_pagamento','PagamentosController@createReference');
 Route::get('/get_pagamentos','PagamentosController@getPagamentos')->middleware('auth');
 Route::get('/show_pagamento_page','PagamentosController@index')->name('admin.pagamento.page')->middleware('auth');
 Route::get('/confirmar_pagamento','PagamentosController@confirmPayment')->middleware('auth');
-
-
 
 Route::get('/','HomeController@showNewHome')->name('new_home_page');
 
@@ -163,4 +149,4 @@ Route::post('/send_message_page','MessageController@sendMessage');
 
 Route::get('/set_status_message','MessageController@setMessageStatus');
 
-Route::get('/email','EmailController@send');
+Route::get('/show_meeting_empty','MessageController@showMeetingEmpty');

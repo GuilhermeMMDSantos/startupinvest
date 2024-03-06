@@ -2,11 +2,6 @@
 use App\User;
 
 @endphp
-<header style="border:1px solid #ccc;">
-    <h5 style="padding:7px 16px;">
-        Meetings
-    </h5>
-</header>
 
 <div class="list-group">
     @forelse($dados as $dado)

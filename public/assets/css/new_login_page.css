@@ -61,6 +61,10 @@
   background: var(--primary-light) !important;
 }
 
+#btn-spinner-user{
+  opacity: 0;
+}
+
 @media (max-width: 580px) {
   #header .container-fluid {
     padding: 10px 25px;

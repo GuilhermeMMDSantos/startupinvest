@@ -16,9 +16,15 @@ class EmailCadastro extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    private $senhaUser;
+    private $nomeUser;
+    private $statusCadastro;
+
+    public function __construct($senha,$nome,$status)
     {
-        //
+        $this->senhaUser = $senha;
+        $this->nomeUser = $nome;
+        $this->statusCadastro = $status;
     }
 
     /**
@@ -28,6 +34,13 @@ class EmailCadastro extends Mailable
      */
     public function build()
     {
-        return $this->subject('Cadastro na StartupInvest')->view('emails.email_cadastro');
+        $senha = $this->senhaUser;
+        $nome = $this->nomeUser;
+        $status = $this->statusCadastro;
+
+        if ($status == 0)
+            return $this->subject('Cadastro na StartupInvest')->view('emails.email_regeitado');
+
+        return $this->subject('Cadastro na StartupInvest')->view('emails.email_aceite', compact('senha', 'nome'));
     }
 }

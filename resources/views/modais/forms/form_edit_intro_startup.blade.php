@@ -3,8 +3,11 @@
     <div style="width:120px;height:120px;border:1px solid #ccc;border-radius:50%;margin:auto;">
         <img id="img-startup-to-edit" src="{{asset('storage/'.$user->startup->logotipo)}}" accept=".jpg,.png" style="width:100%;height:100%;border-radius:50%;object-fit:contain !important;">
     </div>
-    <input type="file" name="img_startup_edit" id="load_logotipo_edit_intro" hidden>
+
+    <input type="file" name="img_startup_edit" accept=".png,.jpg" id="load_logotipo_edit_intro" hidden>
+    
     <label for="load_logotipo_edit_intro" style="background-color:#cccccc78; display:inline-block;width:30px;height:30px;font-size:12px;border:thin;padding:5px;border-radius:50%;position:relative;top:-20px;left:57%;padding-left:10px;padding-top:7px;"><i class="fa fa-bell"></i></label>
+    
     <div class="form-group">
         <label>Sector de actividade</label>
         <select class="form-control" name="setor_startup_edit">
@@ -18,14 +21,6 @@
         <select class="form-control" name="fase_startup_edit">
             @foreach($fases as $fase)
             <option value="{{$fase->id}}" @if($fase->id == $user->startup->fk_fase_desenvolvimento) selected @endif>{{$fase->nome}}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="form-group">
-        <label>Tipo de Negócio</label>
-        <select class="form-control" name="negocio_startup_edit">
-            @foreach($tiposNegocio as $tipo)
-            <option value="{{$tipo->id}}" @if($tipo->id == $user->startup->fk_tipo_negocio) selected @endif>{{$tipo->nome}}</option>
             @endforeach
         </select>
     </div>

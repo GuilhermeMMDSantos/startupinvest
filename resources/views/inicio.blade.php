@@ -7,17 +7,17 @@
 
  <section style="padding-left:6.5%;padding-right:6.5%;" class="container-fluid">
      <div class="row">
-         <div class="col-sm-12"  >
+         <div class="col-sm-12">
 
-             <div class="card" >
-                 <div class="card-body"  >
-                     <div class="row" >
-                         <div class="col-sm-8"  >
+             <div class="card">
+                 <div class="card-body">
+                     <div class="row">
+                         <div class="col-sm-8">
                              <div class="form-row" style="font-size:13px;">
                                  <div class="form-group col-md-4">
                                      <label for="fase-desenvolvimento-filter">Fase Desenvolvimento</label>
-                                     <select id="fase-desenvolvimento-filter" class="form-control selectpicker" title="Todos" multiple data-selected-text-format="count>1" data-count-selected-text= "+{0} Filtros"  multiple>
-                                        
+                                     <select id="fase-desenvolvimento-filter" class="form-control selectpicker" title="Todos" multiple data-selected-text-format="count>1" data-count-selected-text="+{0} Filtros" multiple>
+
                                          @foreach($fases as $fase)
                                          <option value="{{$fase->id}}">{{$fase->nome}}</option>
                                          @endforeach
@@ -25,14 +25,14 @@
                                  </div>
                                  <div class="form-group col-md-4">
                                      <label for="sector-economico-filter">Sector Económico</label>
-                                     <select id="sector-economico-filter" class="form-control selectpicker"  data-live-search="true" title="Todos" multiple data-selected-text-format="count>2" data-count-selected-text= "+{0} Filtros" multiple>
-                                       
+                                     <select id="sector-economico-filter" class="form-control selectpicker" data-live-search="true" title="Todos" multiple data-selected-text-format="count>2" data-count-selected-text="+{0} Filtros" multiple>
+
                                          @foreach($setores as $setor)
                                          <option value="{{$setor->id}}">{{$setor->nome}}</option>
                                          @endforeach
                                      </select>
                                  </div>
-                                
+
 
                              </div>
                          </div>
@@ -51,8 +51,11 @@
 
              <div class="container-fluid" style="padding-bottom:10px;">
                  <div class="row" id="startup_cards_container" style="min-height:500px;">
-
-
+                     <div class="d-flex justify-content-center " style="width:100%;height:100%;padding-top:70px;">
+                         <div class="spinner-border align-self-center" style="width: 7rem; height: 7rem;" role="status">
+                             <span class="sr-only">Loading...</span>
+                         </div>
+                     </div>
                  </div>
              </div>
 

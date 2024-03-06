@@ -68,11 +68,10 @@ class MessageController extends Controller
 
         $html =  view('blocos_html/meetings', compact('dados'))->render();
 
-        $user = new \app\User;
-
         return response()->json(
             [
-                'html' => $html
+                'html' => $html,
+                'count' => count($dados)
             ]
         );
     }
@@ -171,6 +170,15 @@ class MessageController extends Controller
 
         return response()->json([
             'status' => 200
+        ]);
+    }
+
+    public function showMeetingEmpty(){
+        
+        $html = view('blocos_html.meeting_empty')->render();
+
+        return response()->json([
+            'html' => $html
         ]);
     }
 }

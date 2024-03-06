@@ -17,7 +17,7 @@
                          <img src="{{asset('storage/'.$investidor->foto)}}" class="card-img-top" style="height:100%;width:100%;border-radius:100%;object-fit:contain !important;">
                      </div>
                      <h5 style="text-align:center;">{{$investidor->nome}} @if($investidor->sobrenome != null){{$investidor->sobrenome}}@endif</h5>
-                     <h6 style="text-align:center;">Entidade: <span>{{$investidor->tipo_entidade}}</span></h6>
+                     <span style="display:block;margin-top:-10px;color:#545b62b0;font-size:15px;text-align:center;" >Investidor<i style="font-size:20px;margin-right:4px;margin-left:4px;">•</i>Pessoa Física</span>
                      <h5 style="text-align:center;font-size:17px;">Startups investidas pela plataforma: <span style="color:green;">{{count($investidor->rodadas)}}</span></h5>
 
                  </div>

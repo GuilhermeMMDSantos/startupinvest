@@ -1,27 +1,31 @@
-<div style="width:110px;height:110px;border:1px solid #ccc;border-radius:50%;">
-  <img src="{{asset('storage/'.$investidor->foto)}}" style="width:100%;height:100%;border-radius:50%;object-fit:cover !important;">
-</div>
+<div class="col-12 col-sm-4" style=" text-align:center;">
 
+  <div style="width:110px;height:110px;border:1px solid #ccc;border-radius:50%;margin:auto;">
+    <img src="{{asset('storage/'.$investidor->foto)}}" style="width:100%;height:100%;border-radius:50%;object-fit:cover !important;">
+  </div>
 
-
-<div style="width:87%;padding-left:15px;padding-right:5px;">
   <p>
-    <span style="font-size:25px;margin-right:15px;">{{$investidor->nome}} @if($investidor->sobrenome!=null){{$investidor->sobrenome}}@endif</span>
+    <span style="font-size:25px;">{{$investidor->nome}} @if($investidor->sobrenome!=null){{$investidor->sobrenome}}@endif</span>
   </p>
-  <p style="margin-top:-15px;color:#0c141bb3;">
-    Entidade: {{$investidor->tipo_entidade}}
-  </p>
-  <div style="text-align:right;;margin-top:-13px;">
+  <span style="display:block;margin-top:-17px;color:#545b62b0;font-size:15px;" >Investidor<i style="font-size:20px;margin-right:4px;margin-left:4px;">•</i>Pessoa Física</span>
+  <div>
+    @if($myProfile != true)
     <button type="button" id="btn-meeting-investor" class="btn btn-outline-secondary " style="height:33px;font-size:14px;">Meeting</button>
+    @endif
 
-    @if(isset($permissoesVerPitch) && $permissoesVerPitch->estado == 'espera')
+    @if(isset($permissoesVerPitch) && $permissoesVerPitch->estado == 'espera' && $myProfile != true)
     <button type="button" id="btn-pode-assistir-pitch" class="btn btn-outline-secondary" style="height:33px;font-size:14px;">Permitir ver pitch</button>
 
-    @elseif(isset($permissoesVerPitch) && $permissoesVerPitch->estado == 'ativo')
+    @elseif(isset($permissoesVerPitch) && $permissoesVerPitch->estado == 'ativo' && $myProfile != true)
 
     <button type="button" class="btn btn-outline-secondary" style="height:33px;font-size:14px;">Solicitação atendida...</button>
 
     @endif
 
   </div>
+
+</div>
+<div class="col-12 col-sm-8">
+  <video src="{{asset('storage/'.$investidor->video_investidor)}}" width="100%" height="100%" controls="true">
+  </video>
 </div>

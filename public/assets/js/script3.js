@@ -174,9 +174,11 @@ $(function () {
                         },
                         success: function (retorno) {
                             console.log("sucesso");
+                            console.log(retorno);
                         },
                         error: function (retorno) {
                             console.log("erro");
+                            console.log(retorno);
                         }
                     });
 

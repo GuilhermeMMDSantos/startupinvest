@@ -61,11 +61,8 @@ class AuthController extends Controller
                 ->withInput($request->all());
         }
 
-
-
-        $codeUser = "";
         $dados = $request->all();
-        $codeUser = $codeUser . '' . strtolower($dados['nome']) . '' . Carbon::now()->format('mYdhsm');
+        $codeUser = strtolower($dados['nome']) . '' . Carbon::now()->format('mYdhsm');
 
         $user = $this->create($dados, 'startup', $codeUser);
 
@@ -93,78 +90,51 @@ class AuthController extends Controller
 
     public function cadastrarInvestidor(Request $request)
     {
-
-
-
-        $parametrosValidacao = [
-            'nome_legal_investidor' => 'required',
-            'tipo_investidor' => 'required',
-            'email_investidor' => 'required|unique:users,email',
-            'video_investor' => 'required'
-        ];
-
-        $mensagensValidacao = [
-            'nome_legal_investidor.required' => 'Nome do Investidor em falta',
-            'tipo_investidor.required' => ' Tipo de investidore em falta',
-            'email_investidor.required' => 'Email do investidor em falta',
-            'email_investidor.unique' => 'Email do investidor já existe',
-            'video_investor.required' => 'Video do investidor em falta'
-        ];
-
-        if ($request->tipo_investidor == 1) {
-            $parametrosValidacao['bi_investidor'] = 'required';
-            $mensagensValidacao['bi_investidor.required'] = 'Bilhete de identidade do investidor em falta';
-        } else if ($request->tipo_investidor == 2) {
-            $parametrosValidacao['nif_investidor_juridico'] = 'required';
-            $mensagensValidacao['nif_investidor_juridico.required'] = 'NIF do investidor em falta';
-        }
-
+        $dados = $request->all();
         $validador = Validator::make(
-            $request->all(),
-            $parametrosValidacao,
-            $mensagensValidacao
+            $dados,
+            [
+                'nome' => 'required',
+                'sobrenome' => 'required',
+                'bi_investidor' => 'required',
+                'email_investidor' => 'required|unique:users,email',
+                'video_investidor' => 'required'
+            ],
+            [
+                'nome.required' => 'Nome do Investidor em falta',
+                'sobrenome.required' => 'Sobrenome do Investidor em falta',
+                'bi_investidor.required' => ' BI em falta',
+                'email_investidor.required' => 'Email do investidor em falta',
+                'email_investidor.unique' => 'Email do investidor já existe',
+                'video_investidor.required' => 'Video em falta'
+            ]
         );
-
 
         if ($validador->fails()) {
             return redirect()
                 ->back()
                 ->with('tipo','investidor')
                 ->withErrors($validador)
-                ->withInput($request->all());
+                ->withInput($dados);
         }
 
-
-        $codeUser = "";
-        $dados = $request->all();
-        $nomeLegal = $dados['nome_legal_investidor'];
-        $tipo = null;
-        $nifUploaded = null;
+        
         $videoUploaded = null;
         $biUploaded = null;
 
-        if ($dados['tipo_investidor'] == 1) {
-            $tipo = 'Física';
-            $biUploaded = $this->saveFile($request, 'bi_investidor', 'armazenamento/investidor/bilhete_identidade');
-            $videoUploaded = $this->saveFile($request, 'video_investor', 'armazenamento/investidor/videos');
+           $biUploaded = $this->saveFile($request, 'bi_investidor', 'armazenamento/investidor/bilhete_identidade');
+            $videoUploaded = $this->saveFile($request, 'video_investidor', 'armazenamento/investidor/videos');
             
-        } else if ($dados['tipo_investidor'] == 2) {
-            
-            $tipo = 'Jurídica';
-            $nifUploaded = $this->saveFile($request, 'nif_investidor_juridico', 'armazenamento/investidor/nif');
-            $videoUploaded = $this->saveFile($request, 'video_investor', 'armazenamento/investidor/videos');
-             
-        }
+       
 
-        $codeUser = "{$codeUser}{Carbon::now()->format('mYdhsm')}";
+        $codeUser = strtolower($dados['nome']).''.Carbon::now()->format('ddmmYYhis');
         $user = $this->create($dados, 'investidor', $codeUser);
 
 
         Investidores::create([
             'fk_user' => $user->id,
-            'nome_legal' => $nomeLegal,
-            'nif' => $nifUploaded,
-            'tipo_entidade' => $tipo,
+            'nome' => $dados['nome'],
+            'sobrenome' => $dados['sobrenome'],
             'bilhete_identidade' => $biUploaded,
             'video_investidor' => $videoUploaded,
             'foto' => 'armazenamento/investidor/img/img_standard_investidor.png'
