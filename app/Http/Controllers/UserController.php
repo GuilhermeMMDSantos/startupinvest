@@ -242,11 +242,6 @@ class UserController extends Controller
             $uploadFicheiro = $request->file('img_startup_edit')->storeAs('armazenamento/startups/img', $nomeArquivo);
         }
 
-
-
-
-
-
         Startups::whereHas('user', function ($query) use ($userCode) {
             $query->where('code_user', $userCode);
         })->update([
@@ -294,6 +289,22 @@ class UserController extends Controller
                 'html' => $html
             ]
         );
+    }
+
+    public function resetarLogotipo(Request $request){
+
+        $codeStartup = $request->codigoStartup;
+        $logo = "armazenamento/startups/img/img_standard_startup.png";
+
+        $startup = Startups::whereHas('user',function($query) use ($codeStartup){
+            $query->where('code_user',$codeStartup);
+        })->update([
+            'logotipo' => $logo
+        ]);
+
+        return response()->json([
+            'logotipo' => $logo
+        ]);
     }
 
     public function loadOferta(Request $request)

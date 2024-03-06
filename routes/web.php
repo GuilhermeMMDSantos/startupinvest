@@ -61,6 +61,8 @@ Route::post('load_tmp_img','UserController@loadTmpImg');
 
 Route::post('edit_intro_startup','UserController@editarIntroStartup');
 
+Route::get('/resetar_logotipo','UserController@resetarLogotipo');
+
 Route::get('/load_introducao_startup','UserController@loadIntroducaoStartup');
 
 Route::get('load_investors_table/{page?}','UserController@loadInvestorsTable');

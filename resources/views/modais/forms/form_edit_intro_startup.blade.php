@@ -5,9 +5,16 @@
     </div>
 
     <input type="file" name="img_startup_edit" accept=".png,.jpg" id="load_logotipo_edit_intro" hidden>
-    
-    <label for="load_logotipo_edit_intro" style="background-color:#cccccc78; display:inline-block;width:30px;height:30px;font-size:12px;border:thin;padding:5px;border-radius:50%;position:relative;top:-20px;left:57%;padding-left:10px;padding-top:7px;"><i class="fa fa-bell"></i></label>
-    
+
+    <div style="text-align:center;margin-bottom:35px; margin-top:7px;">
+
+        <label type="button" class="btn btn-primary" for="load_logotipo_edit_intro">
+            Carregar logotipo
+        </label>
+
+        <button type="button" id="btn-reset-logotipo" class="btn btn-danger" style="margin-top:-7px;"><i class="fa fa-trash"></i></button>
+
+    </div>
     <div class="form-group">
         <label>Sector de actividade</label>
         <select class="form-control" name="setor_startup_edit">
@@ -115,10 +122,12 @@
 
         });
 
+        $("#btn-reset-logotipo").click(resetarLogotipo);
+
         function loadIntroducaoStartup() {
 
-            let codigoStartup= '{{$userStartupCode}}';
-            
+            let codigoStartup = '{{$userStartupCode}}';
+
             $.ajax({
                 url: "/load_introducao_startup",
                 type: "get",
@@ -135,6 +144,29 @@
                     console.log(error);
                 }
             });
+        }
+
+        function resetarLogotipo() {
+            let codigoStartup = '{{$userStartupCode}}';
+
+            $.ajax({
+                url: "/resetar_logotipo",
+                type: "get",
+                data: {
+                    "codigoStartup": codigoStartup
+                },
+                success: function(response) {
+                     
+                    let srcLogoAtual =  $("#img-startup-to-edit").attr('src');
+                    let novaSrc = srcLogoAtual.substring(0, srcLogoAtual.indexOf("armazenamento")) + '' + response['logotipo'];
+                    $("#img-startup-to-edit").attr('src', novaSrc)
+                },
+                error: function(error) {
+                    console.log("Erro ao resetar logotipo");
+                    console.log(error);
+                }
+            });
+
         }
 
     });
