@@ -67,8 +67,11 @@
                 type: 'get',
                 data: formSerialize,
                 success: function(response) {
-                    $("#body-table-investidores-da-startup").append(response);
+                    $("#container-table-investor-of-startup").empty();
+                    $("#container-table-investor-of-startup").append(response);
                     $("#modal-adicionar-investidores-startup").modal('hide');
+
+                    
                 },
                 error: function(error) {
                     console.log("ERRO AO ADICIONAR INVESTIDOR");

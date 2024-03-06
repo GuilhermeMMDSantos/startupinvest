@@ -1,5 +1,6 @@
+@if(count($investidoresDaStartup)>0)
 <table class="table table-striped">
-    @if(count($investidoresDaStartup)>0)
+
     <thead>
         <tr>
             <th scope="col">Nome</th>
@@ -10,9 +11,9 @@
             @if($isMyProfile) <th scope="col" style="text-align:center;width:15%;"></th>@endif
         </tr>
     </thead>
-    @endif
+
     <tbody id="body-table-investidores-da-startup">
-        @forelse($investidoresDaStartup as $investors)
+        @foreach($investidoresDaStartup as $investors)
         <tr id="tupla_{{$investors->id}}">
             <td>{{$investors->nome}} @if($investors->sobrenome != null) {{$investors->sobrenome}} @endif</td>
             <td style="text-align:center;">{{$investors->tipo_entidade}}</td>
@@ -27,25 +28,21 @@
             </td>
             @endif
         </tr>
-        @empty
-        <tr>
-            <td colspan="4" class="card">
-
-               
-                    <div class="card-body">
-                        <div style="width:60px;height:60px;margin:auto;">
-                            <img src="{{asset('assets/img/formacao1.png')}}" style="width:100%;height:100%;object-fit:contain !important;" />
-                        </div>
-
-                        <p class="card-text" style="padding:5px 15px;text-align:center;font-size:17px;">Startup sem investidor informado</p>
-                    </div>
-                 
-
-            </td>
-        </tr>
-        @endforelse
+        @endforeach
     </tbody>
 </table>
 <div id="pagination">
     {{ $investidoresDaStartup->links() }}
 </div>
+
+@else
+<div class="card mb-5" style="border:none;">
+    <div class="card-body">
+        <div style="width:60px;height:60px;margin:auto;">
+            <img src="{{asset('assets/img/formacao1.png')}}" style="width:100%;height:100%;object-fit:contain !important;" />
+        </div>
+
+        <p class="card-text" style="padding:5px 15px;text-align:center;font-size:17px;">Startup sem investidor informado</p>
+    </div>
+</div>
+@endif

@@ -156,7 +156,7 @@
                     'idInvestidorDaStartup': idInvestidorDaStartup
                 },
                 success: function(response) {
-                    $("#tupla_" + idInvestidorDaStartup).remove();
+                    loadInvestorsTable();
                     $("#modal-excluir-investidor-startup").modal('hide');
                 },
                 error: function(erro) {
@@ -861,9 +861,6 @@
                 processData: false,
                 data: form,
                 success: function(response) {
-
-                    //  $("#container-membros-equipa").empty();
-                    //  $("#container-membros-equipa").append(response);
                     loadMembrosEquipa();
                     $('#modal-adicionar-membro-equipa').modal('hide');
                 },
@@ -1163,8 +1160,6 @@
 
                 },
                 success: function(response) {
-
-
                     $("#container-table-investor-of-startup").empty();
                     $("#container-table-investor-of-startup").append(response['html']);
                 },

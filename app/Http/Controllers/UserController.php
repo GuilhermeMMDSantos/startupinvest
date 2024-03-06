@@ -46,7 +46,7 @@ class UserController extends Controller
     public function loadStartups(Request $request)
     {
 
-       
+
 
         $dataAtual = Carbon::now()->format('Y-m-d H:m:s');
         $faseDesenvolvimento = $request->faseDesenvolvimento;
@@ -82,7 +82,7 @@ class UserController extends Controller
             })
             ->get();
 
-         
+
 
         $returnHtml = view('blocos_html.startup_cards', compact('startupsCards', 'dataAtual'))->render();
         return response()->json($returnHtml);
@@ -291,13 +291,14 @@ class UserController extends Controller
         );
     }
 
-    public function resetarLogotipo(Request $request){
+    public function resetarLogotipo(Request $request)
+    {
 
         $codeStartup = $request->codigoStartup;
         $logo = "armazenamento/startups/img/img_standard_startup.png";
 
-        $startup = Startups::whereHas('user',function($query) use ($codeStartup){
-            $query->where('code_user',$codeStartup);
+        $startup = Startups::whereHas('user', function ($query) use ($codeStartup) {
+            $query->where('code_user', $codeStartup);
         })->update([
             'logotipo' => $logo
         ]);
@@ -365,7 +366,7 @@ class UserController extends Controller
     }
 
     public function loadInvestorsTable(Request $request)
-    {
+    { //naruto1
 
         $isMyProfile = $request->ismyprofile == 'true' ? true : false;
         $codeUser = $request->codigoStartup;
@@ -384,7 +385,8 @@ class UserController extends Controller
     }
 
     public function adicionarInvestidor(Request $request)
-    {
+    { //naruto2
+        $isMyProfile = true;
         $userCode = $request->codeUser;
         $startup = Startups::whereHas('user', function ($query) use ($userCode) {
             $query->where('code_user', $userCode);
@@ -408,10 +410,15 @@ class UserController extends Controller
         }
 
         $investidorDaStartup = InvestidoresDaStartup::create($values);
-        $tipoEntidadeToTupla = $investidorDaStartup->tipo_entidade == 1 ? 'Jurídica' : 'Física';
-        $returnHtm = view('blocos_html/tupla_novo_investidor_da_startup', compact('investidorDaStartup', 'tipoEntidadeToTupla'))->render();
 
-        return response()->json($returnHtm);
+        $investidoresDaStartup = DB::table('investidores_da_startup')
+            ->where('fk_startup',  $startup->fk_user)
+
+            ->simplePaginate(3);
+
+        $html = view('blocos_html/table_investors_startup', compact('investidoresDaStartup', 'isMyProfile'))->render();
+
+        return response()->json($html);
     }
 
     public function loadFormEditarInvestidorStartup(Request $request)
@@ -774,7 +781,7 @@ class UserController extends Controller
 
 
 
-        $html = view('blocos_html/introducao_investidor', compact('investidor', 'permissoesVerPitch','myProfile'))->render();
+        $html = view('blocos_html/introducao_investidor', compact('investidor', 'permissoesVerPitch', 'myProfile'))->render();
 
         return response()->json([
             'html' => $html
