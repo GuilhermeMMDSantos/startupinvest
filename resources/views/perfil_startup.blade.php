@@ -145,6 +145,36 @@
 
         });
 
+        $("#modal-excluir-membro-startup").on('show.bs.modal', function(event) {
+            let button = $(event.relatedTarget);
+            let codeOfClickedBtn = button.data('code');
+
+            $("#btn-aceitar-eliminar-membro").prop('info', codeOfClickedBtn);
+
+        });
+
+        $("#btn-aceitar-eliminar-membro").click(function() {
+            let idMembroDaStartup = $(this).prop('info');
+
+            $.ajax({
+                url: "/eliminar_membro_startup",
+                type: "get",
+                data: {
+                    '_token': '{{csrf_token()}}',
+                    'idMembroDaStartup': idMembroDaStartup
+                },
+                success: function(response) {
+                    loadMembrosEquipa();
+                    $("#modal-excluir-membro-startup").modal('hide');
+                },
+                error: function(erro) {
+                    console.log("ERRO");
+                    console.log(erro);
+                }
+            });
+
+        });
+
         $("#btn-aceitar-eliminar-investidor").click(function() {
             let idInvestidorDaStartup = $(this).prop('info');
 

@@ -19,18 +19,7 @@
 
   <div class="row">
     <div class="col-12" style="padding-top:10px;">
-      <div class="card">
-        <div class="card-header">
-          <h3>Startups Investidas</h3>
-        </div>
-        <div class="card-body" id="container-startups-investidas">
-          <div style="width:40px;height:40px;margin:auto;">
-            <img src="{{asset('assets/img/experiencia1.png')}}" style="width:100%;height:100%;object-fit:contain !important;" />
-          </div>
-
-          <p class="card-text" style="padding:5px 15px;text-align:center;font-size:17px;">Sem Startups no Portifólio</p>
-        </div>
-      </div>
+    
     </div>
   </div>
 

@@ -26,6 +26,6 @@
 
 </div>
 <div class="col-12 col-sm-8">
-  <video src="{{asset('storage/'.$investidor->video_investidor)}}" width="100%" height="100%" controls="true">
+  <video src="{{asset('storage/'.$investidor->video_investidor)}}" style="border:1px solid #ccc;" width="100%" height="100%" controls="true">
   </video>
 </div>

@@ -90,6 +90,8 @@ Route::post('load_tmp_img_membro_equipa','UserController@loadTmpImgMembroEquipa'
 
 Route::post('/add_membro_equipa','UserController@adicionarMembroEquipa');
 
+Route::get('/eliminar_membro_startup','UserController@eliminarMembroStartup');
+
 Route::post('/criar_oferta','UserController@cadastrarOferta');
 
 Route::get('/anular_oferta','UserController@anularOferta');

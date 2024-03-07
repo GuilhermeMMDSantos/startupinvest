@@ -582,7 +582,7 @@ class UserController extends Controller
         $cargosExecutivos = strlen($request->cargos) > 1 ? explode('|', $request->cargos) : array();
         $formacoes = empty($request->formacao) ? array() : explode(',', $request->formacao);
         $experiencias = empty($request->experiencia) ? array() : explode(',', $request->experiencia);
-
+        $myprofile = true;
 
 
 
@@ -692,7 +692,7 @@ class UserController extends Controller
             ->get();
 
 
-        $html = view('blocos_html/content_membros_equipa', compact('membrosEquipa'))->render();
+        $html = view('blocos_html/content_membros_equipa', compact('membrosEquipa', 'myprofile'))->render();
 
         return response()->json($html);
     }
@@ -1040,7 +1040,16 @@ class UserController extends Controller
             ->delete();
     }
 
+    public function eliminarMembroStartup(Request $request)
+    {
+        $idMembro = $request->idMembroDaStartup;
 
+        MembrosEquipaStartup::where('id', $idMembro)
+            ->delete();
+
+        MembrosEquipaCargosExecutivos::where('fk_membro_equipa', $idMembro)
+            ->delete();
+    }
 
     public function loadPopUpChat(Request $request)
     {

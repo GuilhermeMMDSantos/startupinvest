@@ -15,12 +15,10 @@
                     </div>
 
                     <div style="text-align:center;">
-                        <input type="file" name="img-membro-equipa-add" id="load_img-membro-equipa-add" hidden>
+                        <input type="file" accept=".png,.jpg" name="img-membro-equipa-add" id="load_img-membro-equipa-add" hidden>
                         <label for="load_img-membro-equipa-add" class="btn-add-img-membro-equipa" style="cursor:pointer;color:#007bff;">Adicionar foto</label>
 
                         <span class="content-btn-remove-img-membro-equipa" style="display:none;">| <a role="button" class="btn-remove-img-membro-equipa">Remover foto</a></span>
-
-
 
                     </div>
 

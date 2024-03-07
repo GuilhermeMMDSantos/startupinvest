@@ -1,7 +1,8 @@
 <div class="col-sm-8" style="padding-top:10px;">
     <div class="card">
         <div class="card-body" style="padding-bottom:30px;">
-            <video style="border:2px solid #e9ecef9c;" src="@if($havePermissionToWatchPitch || $myprofile){{asset('storage/'.$startup->pitch_deck)}}@endif" controls="true" width="100%" height="500" />
+            <video style="border:2px solid #e9ecef9c;" src="@if($havePermissionToWatchPitch || $myprofile){{asset('storage/'.$startup->pitch_deck)}}@endif" width="100%" height="80%" controls="true">
+            </video>
 
         </div>
     </div>

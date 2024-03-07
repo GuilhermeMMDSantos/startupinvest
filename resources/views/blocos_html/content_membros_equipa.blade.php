@@ -13,7 +13,7 @@
             </p>
             <p style="margin-top:-10px;"><span style="color:#adb5bd;">Formação:</span>
                 @foreach($membro->formacoes as $formacao)
-                <span>{{$formacao->certificado->nome}} em {{$formacao->areafuncao->nome}} {{$formacao->dataInicioFormatada}} - {{$formacao->dataFimFormatada}}</span><br>
+                <span>{{$formacao->certificado->nome}} em {{$formacao->areafuncao->nome}} {{$formacao->dataInicioFormatada}} até {{$formacao->dataFimFormatada}}</span><br>
                 @endforeach
             </p>
             <p style="margin-top:-10px;"><span style="color:#adb5bd;">Experiência</span>:
