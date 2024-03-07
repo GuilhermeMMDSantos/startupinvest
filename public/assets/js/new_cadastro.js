@@ -38,6 +38,8 @@ $(function () {
     true;
    });
 
+ 
+
     function shoeEntityAtivo(node) {
         $(".input-type-entity-ativo").removeClass("input-type-entity-ativo");
         node.addClass("input-type-entity-ativo");

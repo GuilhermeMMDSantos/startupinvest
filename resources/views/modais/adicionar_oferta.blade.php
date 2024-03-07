@@ -18,12 +18,9 @@
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" for="meta-oferta">Kz</label>
                                 </div>
-
-
                                 <input type="text" class="form-control my-mask-money" name="meta" id="meta-oferta" style="background: #fdfdff;">
-                                <span style="font-size:10px;color:red;" id="content-alert-unset-meta"></span>
-
                             </div>
+                            <span style="font-size:10px;color:red;margin-top:-4px;display:block;" id="content-alert-unset-meta"></span>
 
                         </div>
                         <div class="col-sm-6">
@@ -33,29 +30,17 @@
                                 <div class="input-group-prepend">
                                     <label for="porcentagem-oferta" class="input-group-text">%</label>
                                 </div>
-
                                 <input type="text" class="form-control" name="porcentagem" id="porcentagem-oferta" style="background: #fdfdff;">
-                                <span style="font-size:10px;color:red;" id="content-alert-unset-porcentagem"></span>
                             </div>
+                            <span style="font-size:10px;color:red;margin-top:-4px;display:block;" id="content-alert-unset-porcentagem"></span>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-sm-6" style="padding-top:10px;">
-
                             <label for="input-pitch-video">Pitch</label>
-
-                            <div class="input-group mb-2">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" for="input-pitch-video" role="button">Carregar Video</label>
-                                </div>
-
-                                <input type="text" class="form-control" id="input-aux-pitch-video" placeholder="Nenhum video carregado" style="background: #fdfdff;" disabled>
-                                <input type="file" id="input-pitch-video" name="pitch_video" style="display:none;">
-                                <span style="font-size:10px;color:red;" id="content-alert-unset-pitch-video"></span>
-                            </div>
-
-
+                            <input class="form-control" accept=".MP4,.MKV" type="file" id="input-pitch-video" name="pitch_video">
+                            <span style="font-size:10px;color:red;" id="content-alert-unset-pitch-video"></span>
                         </div>
 
                         <div class="col-sm-6" style="padding-top:10px;">

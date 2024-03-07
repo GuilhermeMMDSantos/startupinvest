@@ -223,6 +223,7 @@
 
         $("#btn-publicar-oferta").click(function() {
 
+            
             var metaOferta = $("#meta-oferta").val().trim();
             var porcetagemOferta = $("#porcentagem-oferta").val().trim();
             var terminoOferta = $("#termino-oferta").val().trim();
@@ -262,15 +263,7 @@
             if (haveError)
                 return false;
 
-            var myForm = new FormData();
-            let csrf_code = '{{csrf_token()}}';
-            let elementoPitchVideo = $("#input-pitch-video").prop("files")[0];
-            myForm.append('csrfmiddlewaretoken', csrf_code);
-            myForm.append('pitch_video', elementoPitchVideo);
-            myForm.append('meta', metaOferta);
-            myForm.append('porcentagem', porcetagemOferta);
-            myForm.append('termino', terminoOferta);
-
+            var myForm = new FormData($("#form-criar-oferta")[0]);
 
             $.ajax({
                 url: '/criar_oferta',
