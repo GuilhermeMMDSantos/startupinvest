@@ -14,25 +14,29 @@
                         <img src="{{asset('storage/armazenamento/startups/img/membros/img_standard_membro_equipa.png')}}" id="img-membro-equipa-add" accept=".jpg,.png" style="width:100%;height:100%;border-radius:50%;object-fit:contain !important;">
                     </div>
 
-                    <div style="text-align:center;">
-                        <input type="file" accept=".png,.jpg" name="img-membro-equipa-add" id="load_img-membro-equipa-add" hidden>
-                        <label for="load_img-membro-equipa-add" class="btn-add-img-membro-equipa" style="cursor:pointer;color:#007bff;">Adicionar foto</label>
+                    <div style="text-align:center;margin-bottom:35px; margin-top:7px;">
+                    <input type="file" accept=".png,.jpg" name="img-membro-equipa-add" id="load_img-membro-equipa-add" hidden>
+                        <label type="button" class="btn btn-primary" for="load_img-membro-equipa-add">
+                            Carregar logotipo
+                        </label>
 
-                        <span class="content-btn-remove-img-membro-equipa" style="display:none;">| <a role="button" class="btn-remove-img-membro-equipa">Remover foto</a></span>
+                        <button type="button" id="btn-reset-imagem" class="btn btn-danger btn-remove-img-membro-equipa" style="margin-top:-7px;"><i class="fa fa-trash"></i></button>
 
                     </div>
 
 
-                    <div class="form-group group-nome-sobrenome">
-                        <label>Nome</label>
-                        <input type="text" name="nome" id="nome-membro-equipa" class="form-control" placeholder="ex.: Dário" autocomplete="off">
-                        <span style="font-size:10px;color:red;" id="content-alert-unselected-nome-membro"></span>
-                    </div>
+                    <div class="row">
+                        <div class=" col-12 col-sm-6 form-group group-nome-sobrenome">
+                            <label>Nome</label>
+                            <input type="text" name="nome" id="nome-membro-equipa" class="form-control" placeholder="ex.: Dário" autocomplete="off">
+                            <span style="font-size:10px;color:red;" id="content-alert-unselected-nome-membro"></span>
+                        </div>
 
-                    <div class="form-group group-nome-sobrenome">
-                        <label>Sobrenome</label>
-                        <input type="text" name="sobrenome" id="sobrenome-membro-equipa" class="form-control" placeholder="ex.: Dário" autocomplete="off">
-                        <span style="font-size:10px;color:red;" id="content-alert-unselected-sobrenome-membro"></span>
+                        <div class=" col-12 col-sm-6 form-group group-nome-sobrenome">
+                            <label>Sobrenome</label>
+                            <input type="text" name="sobrenome" id="sobrenome-membro-equipa" class="form-control" placeholder="ex.: Dário" autocomplete="off">
+                            <span style="font-size:10px;color:red;" id="content-alert-unselected-sobrenome-membro"></span>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -52,7 +56,7 @@
 
                             <div>
                                 <label>Certificado</label>
-                                <input type="text" id="formacao-certificado-input" class="form-control" autocomplete="off">
+                                <input type="text" id="formacao-certificado-input" class="form-control" placeholder="Licenciatura, Doutoramento..." autocomplete="off">
                                 <input type="text" id="formacao-certificado-input-hide" hidden>
                                 <span style="font-size:10px;color:red;" id="content-alert-unselected-certificado"></span>
                                 <div style="position:relative;display:none;z-index:10;" id="lista-resultado-busca-certificado">
@@ -61,23 +65,11 @@
 
                             <div>
                                 <label>Área De Formação</label>
-                                <input type="text" id="formacao-area-formacao-input" class="form-control" autocomplete="off">
+                                <input type="text" id="formacao-area-formacao-input" class="form-control" placeholder="Finança, Economia..." autocomplete="off">
                                 <input type="text" id="formacao-area-formacao-input-hide" hidden>
                                 <span style="font-size:10px;color:red;" id="content-alert-unselected-area-formacao"></span>
                                 <div style="position:relative;display:none;z-index:10;" id="lista-resultado-busca-area-formacao">
                                 </div>
-                            </div>
-
-                            <div>
-                                <label>Data inico</label>
-                                <input type="Month" id="formacao-mes-ano-inicio" class="form-control">
-                                <span style="font-size:10px;color:red;" id="content-alert-unselected-data-formacao-inicio"></span>
-                            </div>
-
-                            <div>
-                                <label>Data Fim/Prevista</label>
-                                <input type="Month" id="formacao-mes-ano-fim" class="form-control">
-                                <span style="font-size:10px;color:red;" id="content-alert-unselected-data-formacao-fim"></span>
                             </div>
 
                             <div style="margin-top:5px;">
@@ -99,7 +91,7 @@
                         <div id="content-form-adicionar-experiencia" style="border:1px solid #ccc; padding:8px 7px; padding-bottom:10px; display:none;">
                             <div>
                                 <label>Função que exerce(u)</label>
-                                <input type="text" id="experiencia-funcao-input" name="experiencia-funcao-input" class="form-control" placeholder="Informe o Outro">
+                                <input type="text" id="experiencia-funcao-input" name="experiencia-funcao-input" class="form-control" placeholder="ex.: Gestor" autocomplete="off">
                                 <input type="text" id="experiencia-funcao-input-hide" value="0" hidden>
                                 <span style="font-size:10px;color:red;" id="content-alert-emptyfield-funcao-experiencia"></span>
                                 <div style="position:relative;display:none;z-index:10;" id="lista-resultado-busca-funcao-experiencia">
@@ -108,22 +100,11 @@
 
                             <div>
                                 <label>Instituição</label>
-                                <input type="text" id="experiencia-instituicao-input" name="experiencia-instituicao-input" class="form-control" placeholder="Informe o Outro">
+                                <input type="text" id="experiencia-instituicao-input" name="experiencia-instituicao-input" class="form-control" placeholder="ex.: StartupInveste" autocomplete="off">
                                 <input type="text" id="experiencia-instituicao-input-hide" value="0" hidden>
                                 <span style="font-size:10px;color:red;" id="content-alert-emptyfield-instituicao-experiencia"></span>
                                 <div style="position:relative;display:none;z-index:10;" id="lista-resultado-busca-instituicao-experiencia">
                                 </div>
-                            </div>
-
-                            <div>
-                                <label>Data inico</label>
-                                <input type="Month" id="experiencia-mes-ano-inicio" class="form-control">
-                                <span style="font-size:10px;color:red;" id="content-alert-emptyfield-datainico-experiencia"></span>
-                            </div>
-
-                            <div>
-                                <label>Data fim</label>
-                                <input type="Month" id="experiencia-mes-ano-fim" class="form-control">
                             </div>
 
                             <div style="margin-top:5px;">

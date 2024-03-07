@@ -10,9 +10,7 @@ class ExperienciaMembroEquipa extends Model
     protected $fillable = [
         'fk_membro_equipa',
         'fk_funcao',
-        'fk_instituicao',
-        'data_inicio',
-        'data_fim'
+        'fk_instituicao'
     ];
 
     public function funcao(){

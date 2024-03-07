@@ -7,11 +7,20 @@
 <section id="body-section" class="container-fluid" style="padding-left:6.5%;padding-right:6.5%; padding-bottom:10px;">
 
     <div id="content-intro-startup" style="display:flex;padding-bottom:15px;border-bottom:2px solid #e9ecef;background: #f8f9fa;padding-left:5px;padding-top:5px;">
-
+        <div class="d-flex justify-content-center " style="width:100%;height:120px;">
+            <div class="spinner-border align-self-center" style="width: 7rem; height: 7rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
     </div>
 
 
     <div class="row" id="content-oferta">
+        <div class="d-flex justify-content-center " style="width:100%;height:400px;">
+            <div class="spinner-border align-self-center" style="width: 7rem; height: 7rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
     </div>
 
 
@@ -22,6 +31,11 @@
             </h2>
 
             <div id="container-table-investor-of-startup">
+                <div class="d-flex justify-content-center " style="width:100%;height:320px;">
+                    <div class="spinner-border align-self-center" style="width: 7rem; height: 7rem;" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -34,7 +48,11 @@
         </div>
     </div>
     <div class="row" style="padding-bottom:30px;" id="container-membros-equipa">
-
+        <div class="d-flex justify-content-center " style="width:100%;height:320px;">
+            <div class="spinner-border align-self-center" style="width: 7rem; height: 7rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
     </div>
 
 
@@ -72,7 +90,7 @@
     var certificadoItemClicked = false;
     var areaFormacaoInputFocus = false;
     var areaFormacaoItemClicked = false;
-    var haveImgMembro = false;
+
     var showChat = false;
     var destinatarioMessageChat = '';
     var heightComponenteMessage = 0;
@@ -351,7 +369,7 @@
 
 
             resetarFormularioAdicionarMembro();
-            haveImgMembro = false;
+
             contadorFormacoes = 0;
             contadorExperiencias = 0;
 
@@ -578,33 +596,24 @@
 
         $("#btn-salvar-formacao").click(function() {
 
-
-            if ($("#formacao-mes-ano-inicio").val().trim().length == 0)
-                $("#content-alert-unselected-data-formacao-inicio").html('Não selecionou uma data');
-
-            if ($("#formacao-mes-ano-fim").val().trim().length == 0)
-                $("#content-alert-unselected-data-formacao-fim").html('Não selecionou uma data');
-
             if (!areaFormacaoItemClicked)
                 $("#content-alert-unselected-area-formacao").html('Não selecionou uma área de formação');
             if (!certificadoItemClicked)
                 $("#content-alert-unselected-certificado").html('Não selecionou um certificado');
 
-            if ($("#formacao-mes-ano-inicio").val().trim().length == 0 || $("#formacao-mes-ano-fim").val().trim().length == 0 || !areaFormacaoItemClicked || !certificadoItemClicked)
+            if (!areaFormacaoItemClicked || !certificadoItemClicked)
                 return false;
 
             let certificadoValue = $("#formacao-certificado-input").val();
             let certificadoId = $("#formacao-certificado-input-hide").val();
             let areaFormacaoValue = $("#formacao-area-formacao-input").val();
             let areaFormacaoId = $("#formacao-area-formacao-input-hide").val();
-            let dataInicioValue = $("#formacao-mes-ano-inicio").val();
-            let dataFimValue = $("#formacao-mes-ano-fim").val();
+
 
             let formacao = {
                 certificado: certificadoId,
                 areaformacao: areaFormacaoId,
-                datainicio: dataInicioValue,
-                datafim: dataFimValue
+
             };
 
 
@@ -613,7 +622,7 @@
 
             formacoes['line' + contadorFormacoes] = formacao;
 
-            let htmlElement = "<li id='line" + contadorFormacoes + "'>" + certificadoValue + " em " + areaFormacaoValue + " (" + dataInicioValue + "-" + dataFimValue + ")<i class='fa fa-bell dismiss-line' _id='line" + contadorFormacoes + "' style='float:right;' role='button'></i></li>";
+            let htmlElement = "<li id='line" + contadorFormacoes + "'>" + certificadoValue + " em " + areaFormacaoValue + "<i class='fa fa-bell dismiss-line' _id='line" + contadorFormacoes + "' style='float:right;' role='button'></i></li>";
 
             $("#lista-formacoes").append(htmlElement);
 
@@ -623,7 +632,7 @@
 
 
 
-            if (contadorFormacoes < 3)
+            if (contadorFormacoes < 2)
                 $("#btn-show-form-formacao").show();
             else
                 $("#btn-show-form-formacao").hide();
@@ -637,7 +646,7 @@
             $("#" + valor).remove();
             delete formacoes[valor];
             contadorFormacoes--;
-            if (contadorFormacoes < 3)
+            if (contadorFormacoes < 2)
                 $("#btn-show-form-formacao").show();
 
 
@@ -658,11 +667,6 @@
                 instituicaoIsEmpty = true;
             }
 
-            if ($("#experiencia-mes-ano-inicio").val().trim().length == 0) {
-                $("#content-alert-emptyfield-datainico-experiencia").html('Não informou a data');
-                dataIsEmpty = true;
-            }
-
             if (funcaoIsEmpty || instituicaoIsEmpty || dataIsEmpty)
                 return false;
 
@@ -671,19 +675,14 @@
             let idFuncao = $("#experiencia-funcao-input-hide").val();
             let instituicaoValue = $("#experiencia-instituicao-input").val();
             let idInstituicao = $("#experiencia-instituicao-input-hide").val();
-            let dataInicioValue = $("#experiencia-mes-ano-inicio").val();
-            let dataFimValue = $("#experiencia-mes-ano-fim").val();
 
-            if (dataFimValue.length == 0)
-                dataFimValue = "momento";
+
 
             let experiencia = {
                 funcao: funcaoValue,
                 idFuncao: idFuncao,
                 instituicao: instituicaoValue,
-                idInstituicao: idInstituicao,
-                datainicio: dataInicioValue,
-                datafim: dataFimValue
+                idInstituicao: idInstituicao
             };
 
 
@@ -692,13 +691,13 @@
 
             experiencias['line_experiencia' + contadorExperiencias] = experiencia;
 
-            let htmlElement = "<li id='line_experiencia" + contadorExperiencias + "'>" + funcaoValue + " no(a)  " + instituicaoValue + " desde " + dataInicioValue + "-" + dataFimValue + "<i class='fa fa-bell dismiss-line' _id='line_experiencia" + contadorExperiencias + "' style='float:right;' role='button'></i></li>";
+            let htmlElement = "<li id='line_experiencia" + contadorExperiencias + "'>" + funcaoValue + " no(a)  " + instituicaoValue + "<i class='fa fa-bell dismiss-line' _id='line_experiencia" + contadorExperiencias + "' style='float:right;' role='button'></i></li>";
 
             $("#lista-experiencias").append(htmlElement);
 
             $("#content-form-adicionar-experiencia").hide();
 
-            if (contadorExperiencias < 3)
+            if (contadorExperiencias < 2)
                 $("#btn-show-form-experiencia").show();
             else
                 $("#btn-show-form-experiencia").hide();
@@ -710,7 +709,7 @@
             $("#" + valor).remove();
             delete experiencias[valor];
             contadorExperiencias--;
-            if (contadorExperiencias < 3)
+            if (contadorExperiencias < 2)
                 $("#btn-show-form-experiencia").show();
         });
 
@@ -723,7 +722,7 @@
             $("#content-form-adicionar-formacao").show();
             $("#content-form-adicionar-experiencia").hide();
 
-            if (contadorExperiencias < 3)
+            if (contadorExperiencias < 2)
                 $("#btn-show-form-experiencia").show();
 
 
@@ -735,7 +734,7 @@
             $("#experiencia-instituicao-input").val('');
             $("#content-form-adicionar-experiencia").show();
             $("#content-form-adicionar-formacao").hide();
-            if (contadorFormacoes < 3)
+            if (contadorFormacoes < 2)
                 $("#btn-show-form-formacao").show();
 
             $(this).hide();
@@ -743,13 +742,13 @@
 
         $("#btn-cancelar-add-formacao").click(function() {
             $("#content-form-adicionar-formacao").hide();
-            if (contadorFormacoes < 3)
+            if (contadorFormacoes < 2)
                 $("#btn-show-form-formacao").show();
         });
 
         $("#btn-cancelar-add-experiencia").click(function() {
             $("#content-form-adicionar-experiencia").hide();
-            if (contadorExperiencias < 3)
+            if (contadorExperiencias < 2)
                 $("#btn-show-form-experiencia").show();
         });
 
@@ -762,7 +761,7 @@
             myForm.append('img_tmp', elementoInput);
             myForm.append('code', userCode)
             myForm.append('csrfmiddlewaretoken', csrf_code);
-            haveImgMembro = true;
+
 
             $.ajax({
                 url: '/load_tmp_img_membro_equipa',
@@ -782,7 +781,7 @@
                 }
             });
 
-            $(".content-btn-remove-img-membro-equipa").show();
+
         });
 
         $(".btn-remove-img-membro-equipa").click(function() {
@@ -791,9 +790,7 @@
             let srcDaImg = $("#img-membro-equipa-add").attr('src');
             let novaSrc = srcDaImg.substring(0, srcDaImg.indexOf("armazenamento")) + 'armazenamento/startups/img/membros/img_standard_membro_equipa.png';
             $("#img-membro-equipa-add").attr('src', novaSrc);
-
-            $(".content-btn-remove-img-membro-equipa").hide();
-            haveImgMembro = false;
+            $("#load_img-membro-equipa-add").val('');
         });
 
         $(".item-cargos-executivo").click(function() {
@@ -835,7 +832,7 @@
             let form = new FormData();
             form.append('csrfmiddlewaretoken', csrf_code);
             form.append('imagem', img);
-            form.append('haveImg', haveImgMembro);
+            form.append('haveImg', true);
             form.append('nome', nomeMembroEquipa);
             form.append('sobrenome', sobrenome);
             form.append('cargo', cargoExecutivo);
@@ -851,7 +848,7 @@
 
                 if (formacoes['line' + iterador] != undefined) {
 
-                    formacaoString = formacoes['line' + iterador]['certificado'] + '|' + formacoes['line' + iterador]['areaformacao'] + '|' + formacoes['line' + iterador]['datainicio'] + '|' + formacoes['line' + iterador]['datafim'];
+                    formacaoString = formacoes['line' + iterador]['certificado'] + '|' + formacoes['line' + iterador]['areaformacao'];
                     formacoesVetor.push(formacaoString);
                 }
             }
@@ -859,7 +856,7 @@
 
             for (let iterador = 0; iterador <= contadorExperiencias; iterador++) {
                 if (experiencias['line_experiencia' + iterador] != undefined) {
-                    experienciaString = experiencias['line_experiencia' + iterador]['funcao'] + '|' + experiencias['line_experiencia' + iterador]['idFuncao'] + '|' + experiencias['line_experiencia' + iterador]['instituicao'] + '|' + experiencias['line_experiencia' + iterador]['idInstituicao'] + '|' + experiencias['line_experiencia' + iterador]['datainicio'] + '|' + experiencias['line_experiencia' + iterador]['datafim'];
+                    experienciaString = experiencias['line_experiencia' + iterador]['funcao'] + '|' + experiencias['line_experiencia' + iterador]['idFuncao'] + '|' + experiencias['line_experiencia' + iterador]['instituicao'] + '|' + experiencias['line_experiencia' + iterador]['idInstituicao'];
                     experienciasVetor.push(experienciaString);
                 }
             }
@@ -933,7 +930,7 @@
 
             var valorInputComVirgula = valorInputSoAlgarismo.replace(/([0-9]{2})$/g, ",$1");
 
-    
+
 
 
 
@@ -1126,7 +1123,6 @@
             $("#img-membro-equipa-add").attr('src', novoValorAtributoSrcDaImagemMembro);
 
             $("#load_img-membro-equipa-add").val('');
-            $(".content-btn-remove-img-membro-equipa").hide();
             $("#nome-membro-equipa").val('');
             $("#sobrenome-membro-equipa").val('');
 

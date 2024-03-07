@@ -231,7 +231,7 @@ class UserController extends Controller
 
         $dataAtual = Carbon::now()->format('mYdhsm');
 
-        if (!empty($request->file('img_startup_edit'))) {
+        if (!empty($request->file('img_startup_edit'))) { //naruto3
             $extensao = $request->file('img_startup_edit')->extension();
 
             $nomeArquivo = "logotipo_{$startup->fk_user}_{$dataAtual}.{$extensao}";
@@ -576,7 +576,6 @@ class UserController extends Controller
 
     public function adicionarMembroEquipa(Request $request)
     {
-        $haveNewImage = $request->haveImg;
         $nome = $request->nome;
         $sobrenome = $request->sobrenome;
         $cargosExecutivos = strlen($request->cargos) > 1 ? explode('|', $request->cargos) : array();
@@ -594,7 +593,7 @@ class UserController extends Controller
 
         $uploadFicheiro = 'armazenamento/startups/img/membros/img_standard_membro_equipa.png';
 
-        if ($haveNewImage == 'true') {
+        if (!empty($request->file('imagem'))) { //naruto3
             $extensao = $request->file('imagem')->extension();
             $nomeArquivo = "imagem_membro{$membro->id}.{$extensao}";
             $filesForDelete = public_path() . '/storage/armazenamento/startups/img/membros/imagem_membro' . $membro->id . '*';
@@ -613,15 +612,11 @@ class UserController extends Controller
         foreach ($formacoes as $formacao) {
 
             $formacaoSplit = explode('|', $formacao);
-            $dataInicioFormacao = $formacaoSplit[2] . '-01';
-            $dataFimFormacao = $formacaoSplit[3] . '-01';
 
             FormacaoMembroEquipa::create([
                 'fk_membro_equipa' => $membro->id,
                 'fk_area_formacao' => $formacaoSplit[1],
-                'fk_certificado_formacao' => $formacaoSplit[0],
-                'data_inicio' => $dataInicioFormacao,
-                'data_fim' => $dataFimFormacao
+                'fk_certificado_formacao' => $formacaoSplit[0]
             ]);
         }
 
@@ -651,15 +646,11 @@ class UserController extends Controller
             } else
                 $idInstituicao = $experienciaSplit[3];
 
-            $dataInicio = $experienciaSplit[4] . '-01';
-            $dataFimExperiencia = $experienciaSplit[5] == "momento" ? NULL : $experienciaSplit[5] . '-01';
 
             ExperienciaMembroEquipa::create([
                 'fk_membro_equipa' => $membro->id,
                 'fk_funcao' => $idFuncao,
-                'fk_instituicao' => $idInstituicao,
-                'data_inicio' => $dataInicio,
-                'data_fim' => $dataFimExperiencia
+                'fk_instituicao' => $idInstituicao
             ]);
         }
 
@@ -672,19 +663,9 @@ class UserController extends Controller
 
         $membrosEquipa = MembrosEquipaStartup::with(['cargosExecutivos', 'formacoes' => function ($query) {
             $query->with(['areafuncao', 'certificado'])
-                ->select(
-                    '*',
-                    DB::raw('DATE_FORMAT(data_inicio, "%Y-%m") AS dataInicioFormatada'),
-                    DB::raw('DATE_FORMAT(data_fim, "%Y-%m") AS dataFimFormatada')
-                )
                 ->get();
         }, 'experiencias' => function ($query2) {
             $query2->with(['funcao', 'instituicao'])
-                ->select(
-                    '*',
-                    DB::raw('DATE_FORMAT(data_inicio, "%Y-%m") AS dataInicioFormatada'),
-                    DB::raw('DATE_FORMAT(data_fim, "%Y-%m") AS dataFimFormatada')
-                )
                 ->get();
         }])
 
@@ -794,12 +775,7 @@ class UserController extends Controller
         $user = User::where('code_user', $codeUser)->first();
         $myProfile = Auth::user()->id == $user->id ? true : false;
 
-        $experiencias = ExperienciaInvestidor::select(
-            '*',
-            DB::raw('DATE_FORMAT(data_inicio, "%Y-%m") AS dataInicioFormatada'),
-            DB::raw('DATE_FORMAT(data_fim, "%Y-%m") AS dataFimFormatada')
-        )
-            ->where('fk_investidor', $user->id)->get();
+        $experiencias = ExperienciaInvestidor::where('fk_investidor', $user->id)->get();
         $html = view('blocos_html/lista_experiencia_investidor', compact('experiencias', 'myProfile'))->render();
 
         return response()->json([
@@ -847,12 +823,7 @@ class UserController extends Controller
         $codeUser = $request->codeUser;
         $user = User::where('code_user', $codeUser)->first();
         $myProfile = Auth::user()->id == $user->id ? true : false;
-        $formacoes = FormacaoInvestidor::select(
-            '*',
-            DB::raw('DATE_FORMAT(data_inicio, "%Y-%m") AS dataInicioFormatada'),
-            DB::raw('DATE_FORMAT(data_fim, "%Y-%m") AS dataFimFormatada')
-        )
-            ->where('fk_investidor', $user->id)
+        $formacoes = FormacaoInvestidor::where('fk_investidor', $user->id)
             ->get();
 
         $html = view('blocos_html/lista_formacao_investidor', compact('formacoes', 'myProfile'))->render();
@@ -1002,19 +973,9 @@ class UserController extends Controller
 
         $membrosEquipa = MembrosEquipaStartup::with(['cargosExecutivos', 'formacoes' => function ($query) {
             $query->with(['areafuncao', 'certificado'])
-                ->select(
-                    '*',
-                    DB::raw('DATE_FORMAT(data_inicio, "%Y-%m") AS dataInicioFormatada'),
-                    DB::raw('DATE_FORMAT(data_fim, "%Y-%m") AS dataFimFormatada')
-                )
                 ->get();
         }, 'experiencias' => function ($query2) {
             $query2->with(['funcao', 'instituicao'])
-                ->select(
-                    '*',
-                    DB::raw('DATE_FORMAT(data_inicio, "%Y-%m") AS dataInicioFormatada'),
-                    DB::raw('DATE_FORMAT(data_fim, "%Y-%m") AS dataFimFormatada')
-                )
                 ->get();
         }])
 
