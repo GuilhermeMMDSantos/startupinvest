@@ -1,19 +1,7 @@
 <div class="card formEmpreendedor formShow" id="card-form-startup" @if(session("tipo")==false || session("tipo")=='startup' ) style="display:block;" @endif>
     <div class="card-body">
 
-        @if($errors->any())
-
-        <div class="alert alert-danger alert-dismissible fade show" id="container-alert-form-startup" role="alert">
-            @foreach ($errors->all() as $error)
-            <p>{{ $error }}</p>
-            @endforeach
-            <p>Volte a informar o 'NIF da Startup(.PDF)' e a 'Apresentação do MVP(.MP4, .MKV)', por favor!</p>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-
-        @endif
+    
 
         <form method="POST" action="{{route('cadastro.startup')}}" enctype="multipart/form-data" id="form-startup">
             @csrf

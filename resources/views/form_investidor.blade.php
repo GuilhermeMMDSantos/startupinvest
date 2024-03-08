@@ -1,23 +1,7 @@
 <div class="card formInvestidor" id="card-form-investidor" @if(session("tipo")=='investidor' ) style="display:block;" @endif>
     <div class="card-body">
-        @if($errors->any())
+       
 
-        <div class="alert alert-danger alert-dismissible fade show" id="container-alert-form-investidor" role="alert">
-            @foreach ($errors->all() as $error)
-            <p>{{ $error }}</p>
-            @endforeach
-            @if(old('tipo_investidor') == 1)
-            <p>Volte a informar o 'Bilhete de Identidade(.PDF)' e o 'Porquê quero investir(.MP4, .MKV)', por favor!</p>
-            @elseif(old('tipo_investidor') == 2)
-            <p>Volte a informar o 'NIF da entidade jurídica(.PDF)' e o 'Porquê quero investir(.MP4, .MKV)', por favor!</p>
-            @endif
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-
-        @endif
-        
 
         <form method="POST" action="{{route('cadastro.investidor')}}" enctype="multipart/form-data" id="form-investidor">
             @csrf
@@ -33,11 +17,11 @@
 
                 <div class="col-6">
                     <label for="nome-investidor" class="label_inv"><span id="nome-investidor-label"> Nome</span> </label>
-                    <input type="text" name="nome" class=" form-control" value="{{old('nome')}}" id="nome-investidor" autocomplete="off" placeholder="Joel"/>
+                    <input type="text" name="nome" class=" form-control" value="{{old('nome')}}" id="nome-investidor" autocomplete="off" placeholder="Joel" />
                 </div>
                 <div class="col-6">
                     <label for="sobrenome-investidor" class="label_inv"><span id="sobrenome-investidor-label"> Sobrenome</span> </label>
-                    <input type="text" name="sobrenome" class=" form-control" value="{{old('sobrenome')}}" id="sobrenome-investidor" placeholder="Martins" autocomplete="off"/>
+                    <input type="text" name="sobrenome" class=" form-control" value="{{old('sobrenome')}}" id="sobrenome-investidor" placeholder="Martins" autocomplete="off" />
                 </div>
 
             </div>
@@ -59,23 +43,23 @@
             <div class="row mb-3">
                 <div class="col-12">
                     <label for="video-investor">Experiência e ciência sobre equity crowdfunding(.MP4, .MKV)</label>
-                    <input class="form-control" type="file" accept=".MP4,.MKV" id="video-investor" name="video_investidor">
-                    <div class="jumbotron jumbotron-fluid">
-                        <div class="container">
-                            <p class="lead">Submeta um vídeo onde respondes as seguintes questões:</p>
+                    <input class="form-control" type="file" accept=".MP4,.MKV" id="video-investor" name="video_investidor" >
+                    
+                    <div class="jumbotron" style="margin-top:10px;padding-top:10px !important;padding-bottom:5px !important;">
+                            <p class="font-weight-bold">Submeta um vídeo onde respondes as seguintes questões:</p>
                             <p>Qual a Data de gravação do vídeo</p>
                             <p>Já administrou alguma empresa(nome e durante quanto tempo administrou)</p>
                             <p>Já fundou alguma empresa(nome e tempo de operação da empresa)</p>
                             <p>Já investiu alguma empresa</p>
                             <p>Como funciona o envestimento coletivo</p>
-                        </div>
                     </div>
+
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-12 text-right">
-                    <button id="btn-cadastrar-investidor"  class="btn btn-lg btn-block">
+                    <button id="btn-cadastrar-investidor" class="btn btn-lg btn-block">
                         <span class="spinner-border spinner-border-sm" id="btn-spinner-investidor" role="status" aria-hidden="true"></span>
                         <span> Cadastrar</span>
                     </button>

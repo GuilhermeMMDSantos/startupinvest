@@ -11,23 +11,51 @@
 
     </div>
 </div>
-<div id="form-container" class="w-100" style="padding-top:40px;">
+<div id="form-container" class="w-100" style="padding-top:40px;position:relative;">
+
+    @if($errors->any())
+    <div style="position:absolute;right:10px;top:10px;z-index:10;">
+        @foreach ($errors->all() as $error)
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay=5000 data-animation=true style="z-index:10;background:#dc354554;width:250px;">
+            <div class="toast-header">
+                <i class="fa fa-bell rounded mr-2"></i>
+                <strong class="mr-auto">Validação</strong>
+                <small>...</small>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                {{ $error }}
+            </div>
+        </div>
+        @endforeach
+
+    </div>
+    @elseif(!empty(Session::get('error')))
+    <div style="position:absolute;right:10px;top:10px;z-index:10;">
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay=5000 data-animation=true style="z-index:10;background:#dc354554;width:250px;">
+            <div class="toast-header">
+                <i class="fa fa-bell rounded mr-2"></i>
+                <strong class="mr-auto">Validação</strong>
+                <small>...</small>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                {{Session::get('error')}}
+            </div>
+        </div>
+    </div>
+    @endif
+
 
     <h2 id="header-card">Entrar</h2>
     <div class="card">
 
         <div class="card-body">
-            @if(!empty(Session::get('error')))
 
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-
-                {{Session::get('error')}}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            @endif
             <form method="POST" action="{{route('user.login')}}" id="form-login">
                 @csrf
                 <div class="row mb-3">
@@ -69,6 +97,7 @@
 @section('scripts')
 <script type="text/javascript">
     $(function() {
+        $('.toast').toast('show');
         $("#btn-entrar").click(function() {
             $("#form-login").submit();
             $(this).prop("disabled", true);

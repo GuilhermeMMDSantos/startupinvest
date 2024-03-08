@@ -38,7 +38,7 @@ $(function () {
     true;
    });
 
- 
+   $('.toast').toast('show');
 
     function shoeEntityAtivo(node) {
         $(".input-type-entity-ativo").removeClass("input-type-entity-ativo");

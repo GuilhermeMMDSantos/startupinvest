@@ -72,7 +72,8 @@
   display: none;
 }
 
-#btn-cadastrar-startup,#btn-cadastrar-investidor{
+#btn-cadastrar-startup,
+#btn-cadastrar-investidor {
   transition: all 0.5s !important;
   color: var(--secundary-button) !important;
   box-shadow: none !important;
@@ -83,18 +84,24 @@
   transition: all 0.5s !important;
   background: var(--primary-light) !important;
 }
-#btn-cadastrar-investidor:hover{
+#btn-cadastrar-investidor:hover {
   transition: all 0.5s !important;
   background: var(--primary-light) !important;
 }
 
-#btn-spinner-investidor,#btn-spinner-startup{
+#btn-spinner-investidor,
+#btn-spinner-startup {
   opacity: 0;
+}
+
+.jumbotron p{
+  margin-bottom:1px;
 }
 
 @media (max-width: 580px) {
   #header .container-fluid {
     padding: 10px 25px;
+    border: 1px solid red;
   }
   #header h1 {
     font-size: 25px;
@@ -102,7 +109,9 @@
   .card {
     width: 95%;
   }
-  .card-header {
-    display: block;
+  #header-card {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
   }
 }

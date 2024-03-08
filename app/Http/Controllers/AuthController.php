@@ -56,7 +56,7 @@ class AuthController extends Controller
         if ($validador->fails()) {
             return redirect()
                 ->back()
-                ->with('tipo','startup')
+                ->with('tipo', 'startup')
                 ->withErrors($validador)
                 ->withInput($request->all());
         }
@@ -113,21 +113,21 @@ class AuthController extends Controller
         if ($validador->fails()) {
             return redirect()
                 ->back()
-                ->with('tipo','investidor')
+                ->with('tipo', 'investidor')
                 ->withErrors($validador)
                 ->withInput($dados);
         }
 
-        
+
         $videoUploaded = null;
         $biUploaded = null;
 
-           $biUploaded = $this->saveFile($request, 'bi_investidor', 'armazenamento/investidor/bilhete_identidade');
-            $videoUploaded = $this->saveFile($request, 'video_investidor', 'armazenamento/investidor/videos');
-            
-       
+        $biUploaded = $this->saveFile($request, 'bi_investidor', 'armazenamento/investidor/bilhete_identidade');
+        $videoUploaded = $this->saveFile($request, 'video_investidor', 'armazenamento/investidor/videos');
 
-        $codeUser = strtolower($dados['nome']).''.Carbon::now()->format('ddmmYYhis');
+
+
+        $codeUser = strtolower($dados['nome']) . '' . Carbon::now()->format('ddmmYYhis');
         $user = $this->create($dados, 'investidor', $codeUser);
 
 
@@ -164,11 +164,23 @@ class AuthController extends Controller
 
     public function loginuser(Request $request)
     {
+        $validador = Validator::make(
+            $request->all(),
+            [
+                'email_login' => 'required',
+                'password_login' => 'required'
+            ],
+            [
+                'email_login.required' => 'Email em falta',
+                'password_login.required' => 'Senha em falta'
+            ]
+        );
 
-        request()->validate([
-            'email_login' => 'required',
-            'password_login' => 'required'
-        ]);
+        if ($validador->fails()) {
+            return redirect()
+                ->back()
+                ->withErrors($validador);
+        }
 
         $dados = $request->only('email_login', 'password_login');
         $status = Auth::attempt(['email' => $dados['email_login'], 'password' => $dados['password_login'], 'estado' => 'aceite']);
@@ -182,7 +194,7 @@ class AuthController extends Controller
             return redirect()->intended("stackholder_startup");
         }
 
-        return Redirect::to("new_login_page")->with('error', 'Dados incorrectos, tente novamente');
+        return Redirect::to("new_login_page")->with('error', 'Credenciais erradas');
     }
 
 
