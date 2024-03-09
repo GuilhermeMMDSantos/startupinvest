@@ -680,7 +680,7 @@ class UserController extends Controller
 
     public function cadastrarOferta(Request $request)
     {
-        
+    return response()->json("TESTANDO");
         $meta = $request->meta;
         $porcentagem = $request->porcentagem;
         $dataTermino = $request->termino;

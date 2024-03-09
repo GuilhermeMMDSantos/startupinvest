@@ -223,55 +223,17 @@
 
         $("#btn-publicar-oferta").click(function() {
 
-            
-            var metaOferta = $("#meta-oferta").val().trim();
-            var porcetagemOferta = $("#porcentagem-oferta").val().trim();
-            var terminoOferta = $("#termino-oferta").val().trim();
-            var pitchVideo = $("#input-pitch-video").val().trim();
-            var haveError = false;
-            // var regexJustNumber = "/^[1-9]+$/";
-
-            if (metaOferta.length == 0) {
-                $("#content-alert-unset-meta").html('Meta em falta');
-                haveError = true;
-            } else
-                $("#content-alert-unset-meta").html('');
-
-            if (porcetagemOferta.length == 0) {
-                $("#content-alert-unset-porcentagem").html('Porcentagem em falta ');
-                haveError = true;
-
-            } else if (isNaN(porcetagemOferta)) {
-                $("#content-alert-unset-porcentagem").html('Informe somente número ');
-                haveError = true;
-            } else
-                $("#content-alert-unset-porcentagem").html('');
-
-            if (terminoOferta.length == 0) {
-                $("#content-alert-unset-termino-angariacao").html('Data em falta ');
-                haveError = true;
-            } else
-                $("#content-alert-unset-termino-angariacao").html('');
-
-
-            if (pitchVideo.length == 0) {
-                $("#content-alert-unset-pitch-video").html('Pitch em falta');
-                haveError = true;
-            } else
-                $("#content-alert-unset-pitch-video").html('');
-
-            if (haveError)
-                return false;
-
-            var myForm = new FormData($("#form-criar-oferta")[0]);
+            let myForm = new FormData($("#form-criar-oferta")[0]);
 
             $.ajax({
                 url: '/criar_oferta',
                 type: 'POST',
                 contentType: false,
                 processData: false,
-                data: myForm,
+              //  data: myForm,
                 success: function(response) {
+                    console.log(response);
+                    return false;
                     loadOferta();
                     $("#btn-buscar-investimento").hide();
                     $("#btn-anular-ivestimento").show();
