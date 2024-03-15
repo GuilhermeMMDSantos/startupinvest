@@ -14,15 +14,8 @@
                 </li>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <li>
-                    <a href="{{route('admin.pagamento.page')}}">
-                        <i class="fa fa-envelope"></i><span>Pagamentos</span>
-                    </a>
-
-                </li>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <li>
                     <a href="#">
-                        <i class="fa fa-envelope"></i><span>Comprovativos</span>
+                        <i class="fa fa-envelope"></i><span>Rodadas</span>
                     </a>
 
                 </li>

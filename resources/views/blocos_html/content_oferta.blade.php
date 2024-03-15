@@ -20,7 +20,11 @@
             </div>
             <div>
                 <span style="font-weight: bold;text-align:center;display:inline-block;width:100%;">Por</span>
-                <h5 style="color:green;text-align:center;">{{$rodada->oferta}}% Participação Societária</h5>
+                <h5 style="color:green;text-align:center;">{{$rodada->oferta_acoes}}% Participação Societária</h5>
+            </div>
+            <div>
+                <span style="font-weight: bold;text-align:center;display:inline-block;width:100%;">Valor mínimo a investir</span>
+                <h5 style="color:green;text-align:center;">{{$rodada->valor_minimo_investimento}}% AOA</h5>
             </div>
             <div>
                 <span style="font-weight: bold;text-align:center;display:inline-block;width:100%;">Já Consegui</span>
@@ -34,18 +38,11 @@
 
             @if($havePermissionToWatchPitch)
             <div style=" border-radius:5px;height:47px;text-align:center;" id="container-btn-gerar-ref">
-                @if(!empty($referencaPagamento))
-                <p style="font-size:20px; font-weight:bold; background:#febd69;color:white; height:100%;padding-top:10px; padding-bottom:10px;">Ref. {{$referencaPagamento}}</p>
-                @else
-
                 <button data-toggle="modal" data-target="#modal-gerar-referencia-pagamento" id="btn-gerar-ref" class="btn btn-lg btn-block" style="background:#379f4f;color:white;">Participar na rodada</button>
                 <div class="text-center " id="my-spinner" style="display:none;">
                     <div class="spinner-border  text-warning" role="status">
                     </div>
                 </div>
-
-                @endif
-
             </div>
             @endif
 

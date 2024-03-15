@@ -14,6 +14,7 @@ $(function () {
     $("#sector-economico-filter").change(loadStartupCards);
     $("#nome-startup-filter").keyup(loadStartupCards);
 
+//----------------------------------------OUVINTES
 
     Echo.private('abrir-rodada-channel')
         .listen('AbrirRodada', function (e) {
@@ -25,7 +26,7 @@ $(function () {
             loadStartupCards();
         });
 
-
+//-----------------------------------------------
 
 
     function loadStartupCards() {

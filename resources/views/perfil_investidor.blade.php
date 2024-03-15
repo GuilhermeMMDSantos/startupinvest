@@ -23,8 +23,18 @@
     </div>
   </div>
 
+  <div>
+    <header><h1>Portifólio</h1></header>
+  </div>
+
+  <div>
+    <header><h1>Transações</h1></header>
+  </div>
+
   <div id="popup-chat-container-investor">
   </div>
+
+
 
 </section>
 

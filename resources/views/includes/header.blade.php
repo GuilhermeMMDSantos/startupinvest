@@ -30,7 +30,7 @@
 
                 @if(Auth::user()->tipo == 'investidor')
                 <li class="liMenu"><a href="{{route('investidor.menu')}}" class="anchorMenu"><i class="fa fa-envelope"></i><span>Investidores</span></a></li>
-                @endif
+                 @endif
                 <li class="liMenu"><a href="{{route('startup.menu')}}" class="anchorMenu"><i class="fa fa-users"></i><span>Startups</span></a></li>
 
             </ul>

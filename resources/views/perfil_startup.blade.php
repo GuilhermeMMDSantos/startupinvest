@@ -230,10 +230,8 @@
                 type: 'POST',
                 contentType: false,
                 processData: false,
-              //  data: myForm,
+                data: myForm,
                 success: function(response) {
-                    console.log(response);
-                    return false;
                     loadOferta();
                     $("#btn-buscar-investimento").hide();
                     $("#btn-anular-ivestimento").show();

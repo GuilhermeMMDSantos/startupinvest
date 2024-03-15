@@ -10,7 +10,9 @@ class RodadasInvestimento extends Model
     protected $fillable = [
         'fk_startup',
         'valor_objetivo',
-        'oferta',
+        'oferta_acoes',
+        'max_investidores',
+        'valor_minimo_investimento',
         'data_limite',
         'estado'
     ];

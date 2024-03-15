@@ -104,6 +104,11 @@ class HomeController extends Controller
         return view('stackholder_investidores', compact('investidores', 'qtdnotifications','qtdMessageUnview'));
     }
 
+    public function loadPortifolioPage()
+    {
+        return view('portifolio_investidor');
+    }
+
     public function loadWaitValidationPag()
     {
         return view('processamentocadastro');

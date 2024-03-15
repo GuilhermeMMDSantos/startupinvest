@@ -61,7 +61,7 @@ class UserController extends Controller
 
 
 
-        $startupsCards =  Startups::with(['setor', 'fase', 'tipobusnessfunc', 'user', 'rodadaAtual' => function ($query1) {
+        $startupsCards =  Startups::with(['setor', 'fase', 'user', 'rodadaAtual' => function ($query1) {
             $query1->with('investidores')
                 ->select('*', DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_limite) AS tempo_restante'))
                 ->get();
@@ -343,22 +343,11 @@ class UserController extends Controller
                 ]);
             } else if (!empty($permissao) && $permissao->tempo_restante < 1)
                 $havePermissionToWatchPitch = true;
-
-            $referencaPagamento = ReferenciasPagamento::where(
-                [
-                    ['fk_investidor', Auth::user()->id],
-                    ['fk_rodada_investimento', $rodada->id]
-                ]
-            )
-                ->first();
-
-            if (!empty($referencaPagamento))
-                $referencaPagamento = $referencaPagamento->referencia;
         }
 
 
 
-        $returnHtml = view('blocos_html/content_oferta', compact('rodada', 'startup', 'havePermissionToWatchPitch', 'myprofile', 'referencaPagamento'))->render();
+        $returnHtml = view('blocos_html/content_oferta', compact('rodada', 'startup', 'havePermissionToWatchPitch', 'myprofile'))->render();
 
         return response()->json([
             'html' =>    $returnHtml
@@ -680,10 +669,10 @@ class UserController extends Controller
 
     public function cadastrarOferta(Request $request)
     {
-    return response()->json("TESTANDO");
         $meta = $request->meta;
         $porcentagem = $request->porcentagem;
         $dataTermino = $request->termino;
+        $maxInvestidores = $request->max_investidores;
 
         $extensaoPitch = $request->file('pitch_video')->extension();
         $userId = Auth::user()->id;
@@ -698,7 +687,9 @@ class UserController extends Controller
         $rodadaInvestimento = RodadasInvestimento::create([
             'fk_startup' => $userId,
             'valor_objetivo' => $meta,
-            'oferta' => $porcentagem,
+            'oferta_acoes' => $porcentagem,
+            'max_investidores' => $maxInvestidores,
+            'valor_minimo_investimento' => ($meta/$maxInvestidores),
             'data_limite' => $dataTermino,
             'estado' => 'aberta'
         ]);;
