@@ -94,15 +94,13 @@ class AuthController extends Controller
         $validador = Validator::make(
             $dados,
             [
-                'nome' => 'required',
-                'sobrenome' => 'required',
+                'nome_completo' => 'required',
                 'bi_investidor' => 'required',
                 'email_investidor' => 'required|unique:users,email',
                 'video_investidor' => 'required'
             ],
             [
-                'nome.required' => 'Nome do Investidor em falta',
-                'sobrenome.required' => 'Sobrenome do Investidor em falta',
+                'nome_completo.required' => 'Nome completo do Investidor em falta',
                 'bi_investidor.required' => ' BI em falta',
                 'email_investidor.required' => 'Email do investidor em falta',
                 'email_investidor.unique' => 'Email do investidor já existe',
@@ -133,7 +131,7 @@ class AuthController extends Controller
 
         Investidores::create([
             'fk_user' => $user->id,
-            'nome' => $dados['nome'],
+            'nome_completo' => $dados['nome'],
             'sobrenome' => $dados['sobrenome'],
             'bilhete_identidade' => $biUploaded,
             'video_investidor' => $videoUploaded,

@@ -78,7 +78,7 @@
                                 <div>
                                     <p>
                                        
-                                        <span><strong>Nome: </strong>{{$investidor->nome}} {{$investidor->sobrenome}}</span><br>
+                                        <span><strong>Nome: </strong>{{$investidor->nome_completo}}</span><br>
                                     </p>
                                 </div>
 

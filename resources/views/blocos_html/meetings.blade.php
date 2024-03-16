@@ -14,7 +14,7 @@ use App\User;
 
     <a href="#" class="list-group-item list-group-item-action meeting" guito="{{$dado->id}}">
         <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">@if($user->tipo == 'startup') {{$user->startup->nome}} @else {{$user->investidor->nome.' '.$user->investidor->sobrenome}} @endif</h5>
+            <h5 class="mb-1">@if($user->tipo == 'startup') {{$user->startup->nome}} @else {{$user->investidor->nome_completo}} @endif</h5>
             <small>{{ \Carbon\Carbon::parse($dado->date_)->format('d/m/Y')}}</small>
         </div>
         <div style="display:flex;justify-content:space-between;">

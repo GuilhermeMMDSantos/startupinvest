@@ -128,10 +128,12 @@ Route::get('/delete_membros_equipa','UserController@deleteMembrosEquipa');
 
 Route::get('/get_startups_investidas','UserController@getStartupsInvestidas');
 
+/*
 Route::get('/gerar_referencia_pagamento','PagamentosController@createReference');
 Route::get('/get_pagamentos','PagamentosController@getPagamentos')->middleware('auth');
 Route::get('/show_pagamento_page','PagamentosController@index')->name('admin.pagamento.page')->middleware('auth');
 Route::get('/confirmar_pagamento','PagamentosController@confirmPayment')->middleware('auth');
+*/
 
 Route::get('/','HomeController@showNewHome')->name('new_home_page');
 
@@ -155,3 +157,4 @@ Route::post('/send_message_page','MessageController@sendMessage');
 Route::get('/set_status_message','MessageController@setMessageStatus');
 
 Route::get('/show_meeting_empty','MessageController@showMeetingEmpty');
+

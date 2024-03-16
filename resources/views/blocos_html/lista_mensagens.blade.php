@@ -5,10 +5,8 @@ $imagem = '';
 $nome = '';
 if($mensagem->remetente->tipo == 'investidor'){
 $imagem = $mensagem->remetente->investidor->foto;
-$nome = $mensagem->remetente->investidor->nome;
-if($mensagem->remetente->investidor->sobrenome != null){
-$nome = $nome .' '.$mensagem->remetente->investidor->sobrenome;
-}
+$nome = $mensagem->remetente->investidor->nome_completo;
+
 }
 else{
 $imagem = $mensagem->remetente->startup->logotipo;

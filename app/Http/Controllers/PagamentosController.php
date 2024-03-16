@@ -23,18 +23,29 @@ class PagamentosController extends Controller
         return view('Admin.pagamentos');
     }
 
-    public function getPagamentos()
+    public function testeAPI()
     {
-        $pagamentos = ReferenciasPagamento::get();
-        $html = view('blocos_html/referencias_pagamentos', compact('pagamentos'))->render();
 
-        return response()->json([
-            "html" => $html
-        ], 200);
+        try {
+            $referencia = Http::withHeaders([
+                'Accept' => 'application/pay.v1+json',
+                'Content-Type' => 'application/json',
+                'Autorization' => env('PAGAMENTO_ONLINE_ACCESS_KEY'),
+                'Origin' => env('APP_URL')
+            ])
+                ->get('http://127.0.0.1:2024/teste', [
+                    'nomeLegal' => "Startup-Investe.LTDA",
+                    'dominio' => "http://localhost"
+
+                ]);
+            dd($referencia->body());
+        } catch (Exception $erro) {
+            dd($erro);
+        }
     }
 
 
-    public function createIdReference()
+    /*  public function createIdReference()
     {
         try {
             $idReference = Http::withHeaders([
@@ -102,39 +113,7 @@ class PagamentosController extends Controller
         ]);
     }
 
-    public function storeReferenceLocaly($idReference, $idRodada, $idInvestidor, $valorMontante)
-    {
-        ReferenciasPagamento::create([
-            'referencia' => $idReference,
-            'fk_rodada_investimento' => $idRodada,
-            'fk_investidor' => $idInvestidor,
-            'valor_monetario' => $valorMontante,
-        ]);
-    }
-
-    public function getPaymentEvent(Request $req)
-    {
-        $x_signature = $req->header('X-Signature');
-        $body = $req->all();
-        $bodyJson = json_encode($body);
-        $token = env('PROXYPAY_ACCESS_KEY');
-        $signature = hash_hmac('sha256', $token, $bodyJson);
-
-        $referenciaId = $body['reference_id'];
-        $paymentId = $body['id'];
-
-        ReferenciasPagamento::where('referencia', $referenciaId)
-            ->update([
-                'paymentId' => $paymentId,
-                'status' => 'confirme'
-            ]);
-
-
-        if ($x_signature == $signature)
-            return response()->json(["message" => "Erro no destinatário"], 401);
-
-        return response()->json([], 200);
-    }
+ 
 
     public function confirmPayment(Request $req)
     {
@@ -179,5 +158,5 @@ class PagamentosController extends Controller
         event(new ConfirmarPagamento());
         
         return response()->json(['status' => 200], 200);
-    }
+    }*/
 }

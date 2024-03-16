@@ -37,12 +37,8 @@
 
 
             @if($havePermissionToWatchPitch)
-            <div style=" border-radius:5px;height:47px;text-align:center;" id="container-btn-gerar-ref">
-                <button data-toggle="modal" data-target="#modal-gerar-referencia-pagamento" id="btn-gerar-ref" class="btn btn-lg btn-block" style="background:#379f4f;color:white;">Participar na rodada</button>
-                <div class="text-center " id="my-spinner" style="display:none;">
-                    <div class="spinner-border  text-warning" role="status">
-                    </div>
-                </div>
+            <div style=" border-radius:5px;height:47px;text-align:center;" id="container-btn-participar-rodada">
+                <button data-toggle="modal" data-target="#modal-participar-rodada" id="btn-participar-rodada" class="btn btn-lg btn-block" style="background:#379f4f;color:white;">Participar na rodada</button>
             </div>
             @endif
 

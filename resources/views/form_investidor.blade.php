@@ -6,24 +6,12 @@
         <form method="POST" action="{{route('cadastro.investidor')}}" enctype="multipart/form-data" id="form-investidor">
             @csrf
 
-            <!--<div class="row  mb-3">
-                <div class="col-12">
-                    <label for="tipo-investidor-fisico">Pessoa física</label> <input type="radio" value="1" name="tipo_investidor" id="tipo-investidor-fisico" @if(old('tipo_investidor')==false || old('tipo_investidor')==1 ) checked @endif>
-                    <label for="tipo-investidor-juridico" class="ml-4">Pessoa Jurídica</label> <input type="radio" value="2" name="tipo_investidor" id="tipo-investidor-juridico" @if(old('tipo_investidor')==2 ) checked @endif>
-                </div>
-            </div>-->
-
             <div class="row mb-3">
 
-                <div class="col-6">
-                    <label for="nome-investidor" class="label_inv"><span id="nome-investidor-label"> Nome</span> </label>
-                    <input type="text" name="nome" class=" form-control" value="{{old('nome')}}" id="nome-investidor" autocomplete="off" placeholder="Joel" />
+                <div class="col-12">
+                    <label for="nome-completo-investidor" class="label_inv"><span id="nome-completo-investidor-label"> Nome</span> </label>
+                    <input type="text" name="nome_completo" class=" form-control" value="{{old('nome_completo')}}" id="nome-completo-investidor" autocomplete="off" placeholder="Joel" />
                 </div>
-                <div class="col-6">
-                    <label for="sobrenome-investidor" class="label_inv"><span id="sobrenome-investidor-label"> Sobrenome</span> </label>
-                    <input type="text" name="sobrenome" class=" form-control" value="{{old('sobrenome')}}" id="sobrenome-investidor" placeholder="Martins" autocomplete="off" />
-                </div>
-
             </div>
 
 

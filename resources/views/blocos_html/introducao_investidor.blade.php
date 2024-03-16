@@ -5,7 +5,7 @@
   </div>
 
   <p>
-    <span style="font-size:25px;">{{$investidor->nome}} @if($investidor->sobrenome!=null){{$investidor->sobrenome}}@endif</span>
+    <span style="font-size:25px;">{{$investidor->nome_completo}}</span>
   </p>
   <span style="display:block;margin-top:-17px;color:#545b62b0;font-size:15px;" >Investidor<i style="font-size:20px;margin-right:4px;margin-left:4px;">•</i>Pessoa Física</span>
   <div>

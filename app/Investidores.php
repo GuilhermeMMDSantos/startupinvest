@@ -11,8 +11,7 @@ class Investidores extends Model
 
     protected $fillable = [
         'fk_user',
-        'nome',
-        'sobrenome',
+        'nome_completo',
         'bilhete_identidade',
         'foto',
         'video_investidor'
