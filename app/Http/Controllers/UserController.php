@@ -355,7 +355,7 @@ class UserController extends Controller
     }
 
     public function loadInvestorsTable(Request $request)
-    { //naruto1
+    { 
 
         $isMyProfile = $request->ismyprofile == 'true' ? true : false;
         $codeUser = $request->codigoStartup;
@@ -374,7 +374,7 @@ class UserController extends Controller
     }
 
     public function adicionarInvestidor(Request $request)
-    { //naruto2
+    { 
         $isMyProfile = true;
         $userCode = $request->codeUser;
         $startup = Startups::whereHas('user', function ($query) use ($userCode) {
@@ -1086,5 +1086,28 @@ class UserController extends Controller
         return response()->json([
             'html' => $html
         ]);
+    }
+
+    public function showMenuMobile(){
+
+        $presentUser = Auth::user()->id;
+        $notifications = Notifications::where('fk_user_distination', $presentUser)
+            ->where('status', 'nao_visto')
+            ->get();
+
+        $qtdnotifications = (int)count($notifications);
+
+        $code = Auth::user()->id;
+
+        $messages = Mensagens::where([
+
+            ['fk_destinatario', $presentUser],
+            ['vista', 'nao']
+        ])
+            ->get();
+
+        $qtdMessageUnview = (int) count($messages);
+
+        return view('menuMobile', compact('qtdnotifications', 'qtdMessageUnview', 'code'));
     }
 }

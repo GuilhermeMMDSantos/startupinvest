@@ -1,40 +1,47 @@
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color:#fff;
-} 
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fff;
+}
 
+#container-introducao-investidor {
+ 
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e9ecef;
+  padding-left: 5px;
+  padding-top: 5px;
+  min-height: 400px;
+}
 
 .btn-editar {
-    height: 30px;
-    font-size: 12px;
-    border: none;
-    background-color: #ccc;
-  }
-  
-  .btn-editar:hover {
-    border: none;
-    background-color: rgba(187, 184, 184, 0.911);
-  }
-  
-  .btn-editar:focus {
-    border: none;
-    outline: none;
-    box-shadow: none;
-    background-color: #ccc;
-  }
-  
-  .btn-editar:not(:disabled):active:focus:focus {
-    box-shadow: none;
-    background-color: #ccc;
-  }
+  height: 30px;
+  font-size: 12px;
+  border: none;
+  background-color: #ccc;
+}
 
-  
+.btn-editar:hover {
+  border: none;
+  background-color: rgba(187, 184, 184, 0.911);
+}
+
+.btn-editar:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+  background-color: #ccc;
+}
+
+.btn-editar:not(:disabled):active:focus:focus {
+  box-shadow: none;
+  background-color: #ccc;
+}
+
 .my-select-input {
   position: absolute;
   list-style: none;
@@ -67,7 +74,6 @@ body {
 }
 /*-----------------------------------------*/
 
-
 #dashboard-investidor i {
   font-size: 18px;
   transition: all 0.3s;
@@ -79,7 +85,6 @@ body {
   font-size: 14px;
 }
 /*-----------------------------------------------------------------*/
-
 
 #btn-meeting {
   border-radius: 12px;
@@ -93,7 +98,7 @@ body {
   color: white;
   padding: 10px;
   margin-bottom: 0px;
-  display:flex;
+  display: flex;
   justify-content: space-between;
 }
 
@@ -161,7 +166,6 @@ body {
   text-align: left;
   border-radius: 5px;
   font-size: 15px;
-   
 }
 #chat .me {
   text-align: right;
@@ -175,9 +179,9 @@ body {
 
 #chat .me .entete::after {
   content: '';
-  position:relative;
-  top:4px;
-  right:20px;
+  position: relative;
+  top: 4px;
+  right: 20px;
   border-style: solid;
   border-width: 0 10px 10px 10px;
   border-color: transparent transparent #6fbced transparent;
@@ -205,11 +209,25 @@ body {
   float: right;
 }
 
-@media(max-width:1024px){
-  #popup-chat-container-investor{
-    display:none;
+@media (max-width: 1024px) {
+  #popup-chat-container-investor {
+    display: none;
   }
-  #btn-meeting-investor{
-    display:none;
+  #btn-meeting-investor {
+    display: none;
+  }
+  @media (min-width:577px) and (max-width: 846px) {
+    #container-introducao-investidor {
+      flex-direction: column;
+      
+    }
+    #container-introducao-investidor>div{
+      max-width:100% !important;
+    }
+    #container-btn-introducao-investidor{
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+    }
   }
 }

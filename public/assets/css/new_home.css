@@ -73,6 +73,9 @@ nav {
   #header h1 {
     font-size: 25px;
   }
+  #img-container{
+    height:400px !important;
+  }
   .card {
     width: 95%;
   }

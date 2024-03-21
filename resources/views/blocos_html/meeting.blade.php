@@ -1,5 +1,6 @@
 <header style="border:1px solid #ccc;padding:7px 16px;">
-    <div>
+
+    <div style="display:flex;">
         @php
         $nome = null;
         if($otherUser->tipo == 'startup')
@@ -7,11 +8,14 @@
         else
         $nome = $otherUser->investidor->nome.' '.$otherUser->investidor->sobrenome;
         @endphp
-        <h6 style="margin-bottom: -2px;">{{$nome}}</h6>
-        <span style="font-size:13px;">Ativo</span>
+        <a rule="button" style="margin-right:30px;font-size:20px;display:none;" id="btn-back-to-meetings"><i class="fa fa-bell"></i></a>
+        <div style="display: inline-block;">
+            <h6 style="margin-bottom: -2px;">{{$nome}}</h6>
+            <span style="font-size:13px;">Ativo</span>
+        </div>
     </div>
     <a>
-        <a href="{{route('startup.perfil',$otherUser->code_user)}}" ><i class="fa fa-bell"></i></a>
+        <a href="{{route('startup.perfil',$otherUser->code_user)}}" style="font-size:20px;"><i class="fa fa-bell"></i></a>
     </a>
 
 </header>

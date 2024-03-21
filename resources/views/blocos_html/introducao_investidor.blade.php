@@ -4,11 +4,11 @@
     <img src="{{asset('storage/'.$investidor->foto)}}" style="width:100%;height:100%;border-radius:50%;object-fit:cover !important;">
   </div>
 
-  <p>
+  <p >
     <span style="font-size:25px;">{{$investidor->nome_completo}}</span>
   </p>
   <span style="display:block;margin-top:-17px;color:#545b62b0;font-size:15px;" >Investidor<i style="font-size:20px;margin-right:4px;margin-left:4px;">•</i>Pessoa Física</span>
-  <div>
+  <div id="container-btn-introducao-investidor">
     @if($myProfile != true)
     <button type="button" id="btn-meeting-investor" class="btn btn-outline-secondary " style="height:33px;font-size:14px;">Meeting</button>
     @endif

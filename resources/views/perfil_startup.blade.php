@@ -6,7 +6,7 @@
 @section('contentBody_base_inicio')
 <section id="body-section" class="container-fluid" style="padding-left:6.5%;padding-right:6.5%; padding-bottom:10px;">
 
-    <div id="content-intro-startup" style="display:flex;padding-bottom:15px;border-bottom:2px solid #e9ecef;background: #f8f9fa;padding-left:5px;padding-top:5px;">
+    <div id="content-intro-startup">
         <div class="d-flex justify-content-center " style="width:100%;height:120px;">
             <div class="spinner-border align-self-center" style="width: 7rem; height: 7rem;" role="status">
                 <span class="sr-only">Loading...</span>
@@ -69,6 +69,7 @@
 @include('modais/adicionar_membro_equipa')
 @include('modais/eliminar_membro_startup')
 @include('modais/adicionar_oferta');
+@include('modais/investir');
 
 
 @endsection
@@ -99,6 +100,17 @@
     var codigoStartup = "{{$codigoStartup}}";
     destinatarioMessageChat = "{{$startup->fk_user}}";
 
+    var loader = "<div class='d-flex flex-column justify-content-center align-items-center' style='min-height:240px;'>\
+                        <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
+                        </div>\
+                    </div>";
+
+    var loaderComParagrafo = "<div class='d-flex flex-column justify-content-center align-items-center' style='min-height:240px;'>\
+                    <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
+                    </div>\
+                    <p>Processando...</p>\
+                </div>";
+
 
 
     $(function() {
@@ -107,6 +119,7 @@
         loadOferta();
         loadInvestorsTable();
         loadMembrosEquipa();
+
 
 
         $('#modal-editar-introducao-startup').on('show.bs.modal', function(event) {
@@ -161,6 +174,29 @@
             $("#btn-aceitar-eliminar-investidor").prop('info', codeOfClickedBtn);
 
         });
+
+        $('#modal-investir').on('show.bs.modal', function(event) {
+            $("#forms-meio-pagamento-investir").empty();
+            $("#forms-meio-pagamento-investir").append(loader);
+            $.ajax({
+                url: "/load_form_investir_express",
+                type: "get",
+                data: {
+                    '_token': '{{csrf_token()}}',
+                    'codigoStartup': codigoStartup
+                },
+                success: function(response) {
+                    $("#forms-meio-pagamento-investir").empty();
+                    $("#forms-meio-pagamento-investir").append(response['html']);
+                },
+                error: function(erro) {
+                    console.log("ERRO");
+                    console.log(erro);
+                }
+            });
+            $(this).off('shown.bs.modal');
+        });
+       
 
         $("#modal-excluir-membro-startup").on('show.bs.modal', function(event) {
             let button = $(event.relatedTarget);
@@ -245,6 +281,37 @@
 
         });
 
+        $("#modal-investir").on('click', '#btn-investir-express', function() {
+
+            let numeroTelefone = $("#numero-telefone").val().trim();
+
+            if (numeroTelefone.length == 0)
+                return false;
+
+            $("#forms-meio-pagamento-investir").empty();
+            $("#forms-meio-pagamento-investir").append(loaderComParagrafo);
+
+            let formExpress = new FormData($("#form-investir-express")[0]);
+            formExpress.append('codeStartup', codigoStartup);
+
+            $.ajax({
+                url: '/investir_express',
+                type: 'post',
+                contentType: false,
+                processData: false,
+                data: formExpress,
+                success: function(response) {
+                    $("#modal-body-investir").empty();
+                    $("#modal-body-investir").append(response);
+                },
+                error: function(error) {
+                    console.log("ERRO AO INVESTIR EXPRESS");
+                    console.log(error);
+                }
+            });
+
+        });
+
         $("#content-intro-startup").on('click', '#btn-anular-ivestimento', function() {
             $.ajax({
                 url: '/anular_oferta',
@@ -263,7 +330,7 @@
             });
         });
 
-    
+
 
         //SOBRE ADICIONAR MEMBRO
 

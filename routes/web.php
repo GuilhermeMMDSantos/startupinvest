@@ -158,3 +158,10 @@ Route::get('/set_status_message','MessageController@setMessageStatus');
 
 Route::get('/show_meeting_empty','MessageController@showMeetingEmpty');
 
+Route::get('/show_menu_mobile','UserController@showMenuMobile')->name('menu_mobile');
+
+ 
+Route::get('/load_form_investir_express','PagamentosController@loadFormInvestirExpress');
+
+Route::post('/investir_express','PagamentosController@enviarOrdemTransferencia');
+

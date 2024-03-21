@@ -14,5 +14,11 @@ body {
     
 }
 
+@media only screen and (max-width:1024px){
+  #startup_cards_container{
+    padding-bottom:50px;
+  }
+}
+
 /*custom bootstrap*/
 

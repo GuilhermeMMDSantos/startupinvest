@@ -1,6 +1,6 @@
-<div class="col-sm-8" style="padding-top:10px;">
-    <div class="card">
-        <div class="card-body" style="padding-bottom:30px;">
+<div class="col-12 col-sm-8" style="padding-top:10px;" >
+    <div class="card" id="card-video">
+        <div class="card-body " style="padding-bottom:30px;">
             <video style="border:2px solid #e9ecef9c;" src="@if($havePermissionToWatchPitch || $myprofile){{asset('storage/'.$startup->pitch_deck)}}@endif" width="100%" height="80%" controls="true">
             </video>
 
@@ -38,7 +38,7 @@
 
             @if($havePermissionToWatchPitch)
             <div style=" border-radius:5px;height:47px;text-align:center;" id="container-btn-participar-rodada">
-                <button data-toggle="modal" data-target="#modal-participar-rodada" id="btn-participar-rodada" class="btn btn-lg btn-block" style="background:#379f4f;color:white;">Participar na rodada</button>
+                <button data-toggle="modal" data-target="#modal-investir" id="btn-participar-rodada" class="btn btn-lg btn-block" style="background:#379f4f;color:white;">Participar na rodada</button>
             </div>
             @endif
 

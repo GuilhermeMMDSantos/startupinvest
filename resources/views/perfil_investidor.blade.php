@@ -6,7 +6,7 @@
 @section('contentBody_base_inicio')
 <section class="container-fluid" style="padding-left:6.5%;padding-right:6.5%; padding-bottom:10px;">
 
-  <div class="row" id="container-introducao-investidor" style="display:flex;padding-bottom:15px;border-bottom:2px solid #e9ecef;padding-left:5px;padding-top:5px; height:400px;">
+  <div class="row" id="container-introducao-investidor">
 
     <div class="d-flex justify-content-center " style="width:100%;height:100%;">
       <div class="spinner-border align-self-center" style="width: 7rem; height: 7rem;" role="status">
@@ -18,17 +18,19 @@
 
 
   <div class="row">
-    <div class="col-12" style="padding-top:10px;">
-    
+    <div class="col-12">
+      <header>
+        <h1>Portifólio</h1>
+      </header>
     </div>
   </div>
 
-  <div>
-    <header><h1>Portifólio</h1></header>
-  </div>
-
-  <div>
-    <header><h1>Transações</h1></header>
+  <div class="row">
+    <div class="col-12">
+      <header>
+        <h1>Transações</h1>
+      </header>
+    </div>
   </div>
 
   <div id="popup-chat-container-investor">

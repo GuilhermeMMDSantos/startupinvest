@@ -1,8 +1,8 @@
 @if(count($investidoresDaStartup)>0)
-<table class="table table-striped">
+<table class="table">
 
     <thead>
-        <tr>
+        <tr class="no-mobile-table">
             <th scope="col">Nome</th>
             <th scope="col" style="text-align:center;">Entidade</th>
             <th scope="col" style="text-align:center; ">Porcentagem</th>
@@ -10,11 +10,12 @@
 
             @if($isMyProfile) <th scope="col" style="text-align:center;width:15%;"></th>@endif
         </tr>
+        
     </thead>
 
     <tbody id="body-table-investidores-da-startup">
         @foreach($investidoresDaStartup as $investors)
-        <tr id="tupla_{{$investors->id}}">
+        <tr id="tupla_{{$investors->id}}" class="no-mobile-table">
             <td>{{$investors->nome}} @if($investors->sobrenome != null) {{$investors->sobrenome}} @endif</td>
             <td style="text-align:center;">{{$investors->tipo_entidade}}</td>
             <td style="text-align:center;">{{$investors->porcentagem_na_startup}}%</td>
@@ -24,6 +25,21 @@
             <td style="text-align:center;">
                 <button type="button" class="btn btn-primary btn-editar" data-toggle="modal" data-target="#modal-editar-investidor-startup" data-code="{{$investors->id}}" style="height: 30px;font-size: 12px;">Editar</button>
                 &nbsp;
+                <button type="button" class="btn btn-primary btn-editar" style="height: 30px;font-size: 12px;" data-toggle="modal" data-target="#modal-excluir-investidor-startup" data-code="{{$investors->id}}">Eliminar</button>
+            </td>
+            @endif
+        </tr>
+        <tr class="mobile-table">
+            <td>
+                {{$investors->nome}} @if($investors->sobrenome != null) {{$investors->sobrenome}} @endif,
+                entidade {{$investors->tipo_entidade}} com
+                {{$investors->porcentagem_na_startup}}%<br>
+                {{$investors->email}}
+            </td>
+            @if($isMyProfile)
+            <td style="text-align:center;">
+                <button type="button" class="btn btn-primary btn-editar mb-2" data-toggle="modal" data-target="#modal-editar-investidor-startup" data-code="{{$investors->id}}" style="height: 30px;font-size: 12px;display:block;">Editar</button>
+                
                 <button type="button" class="btn btn-primary btn-editar" style="height: 30px;font-size: 12px;" data-toggle="modal" data-target="#modal-excluir-investidor-startup" data-code="{{$investors->id}}">Eliminar</button>
             </td>
             @endif

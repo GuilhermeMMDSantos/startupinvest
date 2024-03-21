@@ -8,6 +8,15 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+#content-intro-startup {
+  display: flex;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e9ecef;
+  background: #f8f9fa;
+  padding-left: 5px;
+  padding-top: 5px;
+}
+
 #content-finalidades-investimento li {
   display: inline-block;
   margin-right: 10px;
@@ -101,7 +110,7 @@ body {
   color: white;
   padding: 10px;
   margin-bottom: 0px;
-  display:flex;
+  display: flex;
   justify-content: space-between;
 }
 
@@ -169,7 +178,6 @@ body {
   text-align: left;
   border-radius: 5px;
   font-size: 15px;
-   
 }
 #chat .me {
   text-align: right;
@@ -183,9 +191,9 @@ body {
 
 #chat .me .entete::after {
   content: '';
-  position:relative;
-  top:4px;
-  right:20px;
+  position: relative;
+  top: 4px;
+  right: 20px;
   border-style: solid;
   border-width: 0 10px 10px 10px;
   border-color: transparent transparent #6fbced transparent;
@@ -213,11 +221,55 @@ body {
   float: right;
 }
 
-@media(max-width:1024px){
-  #popup-chat-container{
-    display:none;
+.mobile-table {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  #popup-chat-container {
+    display: none;
   }
-  #btn-meeting{
-    display:none;
+  #btn-meeting {
+    display: none;
+  }
+}
+@media (max-width: 946px) {
+ #content-oferta {
+  flex-direction: column;
+ }
+
+ #content-oferta > div{
+  max-width:100% !important;
+ }
+
+ .card video{
+  height:100% !important;
+ }
+
+}
+@media (max-width: 508px) {
+  .mobile-table {
+    display: block;
+  }
+  .no-mobile-table {
+    display: none;
+  }
+  #content-intro-startup {
+    display: block;
+  }
+  #content-intro-startup > div {
+    margin-left: auto;
+    margin-right: auto;
+
+    text-align: center;
+  }
+  #nome-startup-intoducao {
+    display: block;
+  }
+
+  #btn-startup-intoducao {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
   }
 }

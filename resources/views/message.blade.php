@@ -24,7 +24,7 @@
 
 
             </div>
-            <div id="message-contaner" style="border:1px solid #ccc;width:65%;min-height:500px;">
+            <div id="message-contaner">
 
             </div>
         </div>
@@ -89,7 +89,18 @@
 
         });
 
-
+        $(".card-body").on("click", ".meeting", function() {
+            if (window.innerWidth <= 930) {
+                $("#tolkeed-to").hide();
+                $("#message-contaner").show();
+            }
+        });
+        $(".card-body").on("click", "#btn-back-to-meetings", function() {
+            if (window.innerWidth <= 930) {
+                $("#tolkeed-to").show();
+                $("#message-contaner").hide();
+            }
+        });
 
         //------------------------OUVINTES
         Echo.private('send-message-channel.' + '{{$code}}')
