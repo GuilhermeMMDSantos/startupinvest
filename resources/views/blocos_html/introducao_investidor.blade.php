@@ -1,4 +1,4 @@
-<div class="col-12 col-sm-4" style=" text-align:center;">
+<div class="col-12 col-sm-4" style=" text-align:center;padding-bottom:7px;">
 
   <div style="width:110px;height:110px;border:1px solid #ccc;border-radius:50%;margin:auto;">
     <img src="{{asset('storage/'.$investidor->foto)}}" style="width:100%;height:100%;border-radius:50%;object-fit:cover !important;">
@@ -11,6 +11,8 @@
   <div id="container-btn-introducao-investidor">
     @if($myProfile != true)
     <button type="button" id="btn-meeting-investor" class="btn btn-outline-secondary " style="height:33px;font-size:14px;">Meeting</button>
+    @else
+    <a role="button" href="{{route('rodadas.page')}}" class="btn btn-outline-secondary " style="height:33px;font-size:14px;border-radius: 30px">Rodadas de captação</a>
     @endif
 
     @if(isset($permissoesVerPitch) && $permissoesVerPitch->estado == 'espera' && $myProfile != true)

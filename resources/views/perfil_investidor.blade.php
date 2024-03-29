@@ -19,17 +19,17 @@
 
   <div class="row">
     <div class="col-12">
-      <header>
+      <header class="mb-3">
         <h1>Portifólio</h1>
+        <h6>Startups investidas na plataforma</h6>
       </header>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-12">
-      <header>
-        <h1>Transações</h1>
-      </header>
+      <section class="mb-3" id="portifolio-investidor-body">
+        <div class="d-flex justify-content-center " style="width:100%;height:100%;">
+          <div class="spinner-border align-self-center" style="width: 7rem; height: 7rem;" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 
@@ -60,6 +60,7 @@
   $(function() {
 
     getIntroducaoInvestidor();
+    getStartupsNoPortifolio();
 
 
 
@@ -254,6 +255,26 @@
         },
         error: function(error) {
           console.log("Erro ao carregar ao alterar status das mensagens");
+          console.log(error);
+        }
+      });
+    }
+
+    function getStartupsNoPortifolio() {
+      $.ajax({
+        url: "/get_startups_no_portifolio",
+        type: "get",
+        data: {
+          codeUser: '{{$codigoInvestidor}}',
+          myProfile: '{{$myProfile}}'
+        },
+        success: function(response) {
+         
+          $("#portifolio-investidor-body").empty();
+          $("#portifolio-investidor-body").append(response['html']);
+        },
+        error: function(error) {
+          console.log("Erro ao carregar startups no portifolio");
           console.log(error);
         }
       });

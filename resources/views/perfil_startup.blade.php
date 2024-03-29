@@ -14,7 +14,6 @@
         </div>
     </div>
 
-
     <div class="row" id="content-oferta">
         <div class="d-flex justify-content-center " style="width:100%;height:400px;">
             <div class="spinner-border align-self-center" style="width: 7rem; height: 7rem;" role="status">
@@ -74,6 +73,9 @@
 
 @endsection
 @section('scripts_base_inicio')
+
+<script src="https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js" type="text/javascript">
+</script>
 
 <script type="text/javascript">
     $.ajaxSetup({
@@ -175,28 +177,6 @@
 
         });
 
-        $('#modal-investir').on('show.bs.modal', function(event) {
-            $("#forms-meio-pagamento-investir").empty();
-            $("#forms-meio-pagamento-investir").append(loader);
-            $.ajax({
-                url: "/load_form_investir_express",
-                type: "get",
-                data: {
-                    '_token': '{{csrf_token()}}',
-                    'codigoStartup': codigoStartup
-                },
-                success: function(response) {
-                    $("#forms-meio-pagamento-investir").empty();
-                    $("#forms-meio-pagamento-investir").append(response['html']);
-                },
-                error: function(erro) {
-                    console.log("ERRO");
-                    console.log(erro);
-                }
-            });
-            $(this).off('shown.bs.modal');
-        });
-       
 
         $("#modal-excluir-membro-startup").on('show.bs.modal', function(event) {
             let button = $(event.relatedTarget);
@@ -205,6 +185,39 @@
             $("#btn-aceitar-eliminar-membro").prop('info', codeOfClickedBtn);
 
         });
+
+        $("#modal-investir").on('show.bs.modal', async function() {
+            let responsePayment;
+
+            $.ajax({
+                url: "/set_payment",
+                type: "get",
+                async: false,
+                data: {},
+                success: function(response) {
+                    responsePayment = response;
+                    console.log(response);
+                },
+                error: function(erro) {
+                    console.log("ERRO SET PAYMENT");
+                    console.log(erro);
+                }
+            });
+
+            var ppp = await PAYPAL.apps.PPP({
+                "approvalUrl": responsePayment.links[1].href,
+                "placeholder": "ppplus",
+                "mode": "sandbox",
+                "payerEmail": "guitocode@hotmail.com",
+                "payerFirstName": "Miranda",
+                "payerLastName": "Martins",
+                "payerTaxId": "35581050600",
+                "language": "pt_BR",
+                "country": "BR"
+            });
+        });
+
+
 
         $("#btn-aceitar-eliminar-membro").click(function() {
             let idMembroDaStartup = $(this).prop('info');
@@ -256,9 +269,25 @@
             $("#input-aux-pitch-video").val($(this)[0].files[0].name);
         });
 
+        $('#modal-adicionar-oferta').on('hidden.bs.modal', function(e) {
+            $("#btn-spinner-oferta").css({
+                'display': 'none'
+            });
+        })
+
+
         $("#btn-publicar-oferta").click(function() {
 
             let myForm = new FormData($("#form-criar-oferta")[0]);
+
+            if (!myForm.get('meta') || !myForm.get('porcentagem') || !myForm.get('pitch_video') || !myForm.get('max_investidores')) {
+
+                return false;
+            }
+
+            $("#btn-spinner-oferta").css({
+                'display': 'inline-block'
+            });
 
             $.ajax({
                 url: '/criar_oferta',
@@ -272,40 +301,10 @@
                     $("#btn-anular-ivestimento").show();
 
                     $("#modal-adicionar-oferta").modal('hide');
+
                 },
                 error: function(error) {
                     console.log("ERRO AO CADASTRAR OFERTA");
-                    console.log(error);
-                }
-            });
-
-        });
-
-        $("#modal-investir").on('click', '#btn-investir-express', function() {
-
-            let numeroTelefone = $("#numero-telefone").val().trim();
-
-            if (numeroTelefone.length == 0)
-                return false;
-
-            $("#forms-meio-pagamento-investir").empty();
-            $("#forms-meio-pagamento-investir").append(loaderComParagrafo);
-
-            let formExpress = new FormData($("#form-investir-express")[0]);
-            formExpress.append('codeStartup', codigoStartup);
-
-            $.ajax({
-                url: '/investir_express',
-                type: 'post',
-                contentType: false,
-                processData: false,
-                data: formExpress,
-                success: function(response) {
-                    $("#modal-body-investir").empty();
-                    $("#modal-body-investir").append(response);
-                },
-                error: function(error) {
-                    console.log("ERRO AO INVESTIR EXPRESS");
                     console.log(error);
                 }
             });
@@ -1382,6 +1381,9 @@
             let caracterSequence = sequenceArray.toString();
             return caracterSequence.replace(/\,/g, "");
         }
+
+
+
 
     });
 </script>

@@ -18,7 +18,7 @@
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" for="meta-oferta">Kz</label>
                                 </div>
-                                <input type="text" class="form-control my-mask-money" name="meta" id="meta-oferta" style="background: #fdfdff;">
+                                <input type="number" class="form-control my-mask-money" name="meta" id="meta-oferta" style="background: #fdfdff;">
                             </div>
                             <span style="font-size:10px;color:red;margin-top:-4px;display:block;" id="content-alert-unset-meta"></span>
 
@@ -62,7 +62,10 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="btn-publicar-oferta">Publicar</button>
+                <button type="button" class="btn btn-primary" id="btn-publicar-oferta">
+                    <span class="spinner-border spinner-border-sm" id="btn-spinner-oferta" role="status" aria-hidden="true"></span>
+                    <span>Publicar</span>
+                </button>
             </div>
         </div>
     </div>

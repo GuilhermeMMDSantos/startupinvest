@@ -125,14 +125,13 @@ class AuthController extends Controller
 
 
 
-        $codeUser = strtolower($dados['nome']) . '' . Carbon::now()->format('ddmmYYhis');
+        $codeUser = strtolower($dados['nome_completo']) . '' . Carbon::now()->format('ddmmYYhis');
         $user = $this->create($dados, 'investidor', $codeUser);
 
 
         Investidores::create([
             'fk_user' => $user->id,
-            'nome_completo' => $dados['nome'],
-            'sobrenome' => $dados['sobrenome'],
+            'nome_completo' => $dados['nome_completo'],
             'bilhete_identidade' => $biUploaded,
             'video_investidor' => $videoUploaded,
             'foto' => 'armazenamento/investidor/img/img_standard_investidor.png'

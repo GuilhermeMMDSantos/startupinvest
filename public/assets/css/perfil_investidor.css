@@ -10,7 +10,6 @@ body {
 }
 
 #container-introducao-investidor {
- 
   padding-bottom: 15px;
   border-bottom: 2px solid #e9ecef;
   padding-left: 5px;
@@ -216,18 +215,22 @@ body {
   #btn-meeting-investor {
     display: none;
   }
-  @media (min-width:577px) and (max-width: 846px) {
+  @media (min-width: 577px) and (max-width: 846px) {
     #container-introducao-investidor {
       flex-direction: column;
-      
     }
-    #container-introducao-investidor>div{
-      max-width:100% !important;
+    #container-introducao-investidor > div {
+      max-width: 100% !important;
     }
-    #container-btn-introducao-investidor{
-    display: flex;
-    justify-content: center;
-    padding-top: 10px;
+    #container-btn-introducao-investidor {
+      display: flex;
+      justify-content: center;
+      padding-top: 10px;
     }
+  }
+}
+@media (max-width: 580px) {
+  #portifolio-investidor-body li{
+    flex-direction: column;
   }
 }

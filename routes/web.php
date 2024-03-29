@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailSenha;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -128,13 +127,6 @@ Route::get('/delete_membros_equipa','UserController@deleteMembrosEquipa');
 
 Route::get('/get_startups_investidas','UserController@getStartupsInvestidas');
 
-/*
-Route::get('/gerar_referencia_pagamento','PagamentosController@createReference');
-Route::get('/get_pagamentos','PagamentosController@getPagamentos')->middleware('auth');
-Route::get('/show_pagamento_page','PagamentosController@index')->name('admin.pagamento.page')->middleware('auth');
-Route::get('/confirmar_pagamento','PagamentosController@confirmPayment')->middleware('auth');
-*/
-
 Route::get('/','HomeController@showNewHome')->name('new_home_page');
 
 Route::get('/new_cadastro_page','HomeController@showNewCadastroPage')->name('new_cadastro_page');
@@ -163,5 +155,14 @@ Route::get('/show_menu_mobile','UserController@showMenuMobile')->name('menu_mobi
  
 Route::get('/load_form_investir_express','PagamentosController@loadFormInvestirExpress');
 
+Route::get('/load_form_investir_paypal','PagamentosController@loadFormInvestirPaypal');
+
 Route::post('/investir_express','PagamentosController@enviarOrdemTransferencia');
 
+Route::get('/set_payment','PagamentosController@investirComPaypal'); // feature inacabada 
+
+Route::get('/get_startups_no_portifolio','UserController@getStartupsNoPortifolio');
+
+Route::get('/rodadas','UserController@showRodadasPage')->name('rodadas.page')->middleware('auth'); // feature inacabada
+
+Route::get('/TESTE','PagamentosController@teste');

@@ -221,6 +221,10 @@ body {
   float: right;
 }
 
+#btn-spinner-oferta{
+  display: none;
+}
+
 .mobile-table {
   display: none;
 }

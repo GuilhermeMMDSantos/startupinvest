@@ -36,6 +36,8 @@ use App\Notifications\Message;
 use App\ReferenciasPagamento;
 use App\Events\AbrirRodada;
 use App\Events\AnularRodada;
+use App\RodadasInvestidores;
+use Facade\FlareClient\Http\Response;
 
 class UserController extends Controller
 {
@@ -231,7 +233,7 @@ class UserController extends Controller
 
         $dataAtual = Carbon::now()->format('mYdhsm');
 
-        if (!empty($request->file('img_startup_edit'))) { //naruto3
+        if (!empty($request->file('img_startup_edit'))) {
             $extensao = $request->file('img_startup_edit')->extension();
 
             $nomeArquivo = "logotipo_{$startup->fk_user}_{$dataAtual}.{$extensao}";
@@ -355,7 +357,7 @@ class UserController extends Controller
     }
 
     public function loadInvestorsTable(Request $request)
-    { 
+    {
 
         $isMyProfile = $request->ismyprofile == 'true' ? true : false;
         $codeUser = $request->codigoStartup;
@@ -374,7 +376,7 @@ class UserController extends Controller
     }
 
     public function adicionarInvestidor(Request $request)
-    { 
+    {
         $isMyProfile = true;
         $userCode = $request->codeUser;
         $startup = Startups::whereHas('user', function ($query) use ($userCode) {
@@ -582,7 +584,7 @@ class UserController extends Controller
 
         $uploadFicheiro = 'armazenamento/startups/img/membros/img_standard_membro_equipa.png';
 
-        if (!empty($request->file('imagem'))) { //naruto3
+        if (!empty($request->file('imagem'))) {
             $extensao = $request->file('imagem')->extension();
             $nomeArquivo = "imagem_membro{$membro->id}.{$extensao}";
             $filesForDelete = public_path() . '/storage/armazenamento/startups/img/membros/imagem_membro' . $membro->id . '*';
@@ -678,10 +680,6 @@ class UserController extends Controller
         $userId = Auth::user()->id;
         $nomePitch = "pitch_{$userId}.{$extensaoPitch}";
 
-        $filesForDelete = public_path() . '/storage/armazenamento/startups/pitch/pitch_' . $userId . '*';
-        chmod(public_path() . '/storage/armazenamento/startups/pitch/', 0777); // Caso o sistema seja hospedado num linux server
-        array_map("unlink", glob($filesForDelete));
-
         $uploadFicheiro = $request->file('pitch_video')->storeAs('armazenamento/startups/pitch', $nomePitch);
 
         $rodadaInvestimento = RodadasInvestimento::create([
@@ -689,7 +687,7 @@ class UserController extends Controller
             'valor_objetivo' => $meta,
             'oferta_acoes' => $porcentagem,
             'max_investidores' => $maxInvestidores,
-            'valor_minimo_investimento' => ($meta/$maxInvestidores),
+            'valor_minimo_investimento' => ($meta / $maxInvestidores),
             'data_limite' => $dataTermino,
             'estado' => 'aberta'
         ]);;
@@ -725,6 +723,10 @@ class UserController extends Controller
             ->update([
                 'estado' => 'vencido'
             ]);
+
+        $filesForDelete = public_path() . '/storage/armazenamento/startups/pitch/pitch_' . $idUser . '*';
+        chmod(public_path() . '/storage/armazenamento/startups/pitch/', 0777); // Caso o sistema seja hospedado num linux server
+        array_map("unlink", glob($filesForDelete));
 
         event(new AnularRodada());
     }
@@ -1088,7 +1090,8 @@ class UserController extends Controller
         ]);
     }
 
-    public function showMenuMobile(){
+    public function showMenuMobile()
+    {
 
         $presentUser = Auth::user()->id;
         $notifications = Notifications::where('fk_user_distination', $presentUser)
@@ -1109,5 +1112,70 @@ class UserController extends Controller
         $qtdMessageUnview = (int) count($messages);
 
         return view('menuMobile', compact('qtdnotifications', 'qtdMessageUnview', 'code'));
+    }
+
+    public function getStartupsNoPortifolio(Request $request)
+    {
+        $codeUser = $request->codeUser;
+
+
+        $investidor = Investidores::whereHas('user', function ($query) use ($codeUser) {
+            $query->where('code_user', $codeUser);
+        })
+            ->first();
+
+        $rodadas = RodadasInvestidores::whereHas('rodada', function ($query) {
+
+                $query->where('estado', 'fechada');
+            })
+            ->where('fk_investidor', $investidor->fk_user)
+             ->where('contrato_mutou_aprovacao','aprovado')
+            ->get(); 
+        $html = view('blocos_html/startups_portifolio_investidor', compact('rodadas'))->render();
+
+        return response()->json([
+            'html' => $html
+        ]);
+    }
+
+    public function showRodadasPage(){
+
+        $qtdnotifications = 0;
+        $presentUser = Auth::user()->id;
+        $rodadas = null;
+
+        Notifications::where('fk_user_distination', $presentUser)
+            ->where('status', 'nao_visto')
+            ->update([
+                'status' => 'visto'
+            ]);
+
+        $notificacoes  = Notifications::where('fk_user_distination', $presentUser)
+            ->select('*', DB::raw('DATE_FORMAT(created_at,"%d/%m/%Y %h:%m") as data'))
+            ->orderBy('created_at','DESC')
+            ->get();
+
+        $messages = Mensagens::where([
+
+            ['fk_destinatario', $presentUser],
+            ['vista', 'nao']
+        ])
+            ->get();
+
+        $qtdMessageUnview = (int) count($messages);
+
+        if(Auth::user()->tipo == 'startup'){
+
+        }else if(Auth::user()->tipo == 'investidor')
+        {
+
+        }else if(Auth::user()->tipo == 'admin'){
+
+        }
+
+        $rodadas = RodadasInvestidores::where()
+        ->get();
+
+        return view('rodadas_captacao',compact('rodadas', 'qtdnotifications','qtdMessageUnview'));
     }
 }
