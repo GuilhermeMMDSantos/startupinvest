@@ -1,11 +1,10 @@
-@extends('../layout')
-@section('stylesheets')
+@extends('Admin.layout_admin')
+@section('stylesheets_admin')
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/painel.css')}}">
 @endsection
-@section('contentBody')
+@section('contentBody_admin')
 <div>
 
-    @include('Admin/header_admin')
     <div class="container-fluid">
         <div class="row" style="padding-left: 6.5%; padding-right: 6.5%;">
             <section class="container-fluid col-sm-12">
@@ -124,6 +123,6 @@
 
 </div>
 @endsection
-@section('scripts')
+@section('scripts_admin')
 <script src="assets/js/script3.js"></script>
 @endsection

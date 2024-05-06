@@ -52,3 +52,7 @@ Broadcast::channel('confirmar-pagamento-channel',function(){
 Broadcast::channel('anular-rodada-channel',function(){
   return true;
 });
+
+Broadcast::channel('atualizar-estado-oferta',function(){
+  return true;
+});

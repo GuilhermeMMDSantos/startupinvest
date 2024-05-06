@@ -48,7 +48,7 @@ $(function () {
                 'nomeStartup': nomeStartup
             },
             success: function (response) {
-               
+  
                 $("#startup_cards_container").empty();
                 $("#startup_cards_container").html(response);
 

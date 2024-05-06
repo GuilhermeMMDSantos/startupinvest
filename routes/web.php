@@ -152,12 +152,7 @@ Route::get('/show_meeting_empty','MessageController@showMeetingEmpty');
 
 Route::get('/show_menu_mobile','UserController@showMenuMobile')->name('menu_mobile');
 
- 
-Route::get('/load_form_investir_express','PagamentosController@loadFormInvestirExpress');
-
-Route::get('/load_form_investir_paypal','PagamentosController@loadFormInvestirPaypal');
-
-Route::post('/investir_express','PagamentosController@enviarOrdemTransferencia');
+Route::get('/load_paypal_form','PagamentosController@loadFormInvestirPaypal');
 
 Route::get('/set_payment','PagamentosController@investirComPaypal'); // feature inacabada 
 
@@ -165,4 +160,12 @@ Route::get('/get_startups_no_portifolio','UserController@getStartupsNoPortifolio
 
 Route::get('/rodadas','UserController@showRodadasPage')->name('rodadas.page')->middleware('auth'); // feature inacabada
 
+Route::get('/rodadas_admin','AdminController@showRodadasPage')->name('rodadas.page.admin')->middleware('auth');
+
+Route::get('/load_estatistica_rodadas','UserController@loadEstatisticaRodadas');
+
+Route::get('/load_lista_rodadas/{page?}','UserController@loadListaRodadas');
+
 Route::get('/TESTE','PagamentosController@teste');
+
+Route::get('/atualizar_porcentagem_pelo_montante','PagamentosController@atualizarPorcentagemPeloMontante');

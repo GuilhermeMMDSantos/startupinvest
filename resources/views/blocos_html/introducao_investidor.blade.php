@@ -10,17 +10,17 @@
   <span style="display:block;margin-top:-17px;color:#545b62b0;font-size:15px;" >Investidor<i style="font-size:20px;margin-right:4px;margin-left:4px;">•</i>Pessoa Física</span>
   <div id="container-btn-introducao-investidor">
     @if($myProfile != true)
-    <button type="button" id="btn-meeting-investor" class="btn btn-outline-secondary " style="height:33px;font-size:14px;">Meeting</button>
+    <!--<button type="button" id="btn-meeting-investor" class="btn btn-outline-secondary " style="height:33px;font-size:14px;">Meeting</button>-->
     @else
     <a role="button" href="{{route('rodadas.page')}}" class="btn btn-outline-secondary " style="height:33px;font-size:14px;border-radius: 30px">Rodadas de captação</a>
     @endif
 
     @if(isset($permissoesVerPitch) && $permissoesVerPitch->estado == 'espera' && $myProfile != true)
-    <button type="button" id="btn-pode-assistir-pitch" class="btn btn-outline-secondary" style="height:33px;font-size:14px;">Permitir ver pitch</button>
+    <button type="button" id="btn-pode-assistir-pitch" class="btn btn-outline-secondary" style="height:33px;font-size:14px;border-radius: 30px">Permitir ver pitch</button>
 
     @elseif(isset($permissoesVerPitch) && $permissoesVerPitch->estado == 'ativo' && $myProfile != true)
 
-    <button type="button" class="btn btn-outline-secondary" style="height:33px;font-size:14px;">Solicitação atendida...</button>
+    <span style="font-size:14px;">Solicitação atendida...</span>
 
     @endif
 

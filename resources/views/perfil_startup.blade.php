@@ -1,11 +1,16 @@
 @extends('inicio_base')
 @section('stylesheets_base_inicio')
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/perfil_startup.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{asset('assets/css/cardfields.css')}}" />
 @endsection
 
 @section('contentBody_base_inicio')
-<section id="body-section" class="container-fluid" style="padding-left:6.5%;padding-right:6.5%; padding-bottom:10px;">
+<div id="container-popup-alert-perfil-startup" style="position:absolute;right:10px;top:10px;z-index:40;">
 
+</div>
+
+<section id="body-section" class="container-fluid" style="padding-left:6.5%;padding-right:6.5%; padding-bottom:10px;">
+    <input type="text" value="{{$codigoStartup}}" id="codigo-startup" hidden>
     <div id="content-intro-startup">
         <div class="d-flex justify-content-center " style="width:100%;height:120px;">
             <div class="spinner-border align-self-center" style="width: 7rem; height: 7rem;" role="status">
@@ -73,10 +78,8 @@
 
 @endsection
 @section('scripts_base_inicio')
-
-<script src="https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js" type="text/javascript">
-</script>
-
+<script src="https://www.paypal.com/sdk/js?components=card-fields&client-id=AZyNcOI3rX2NQ92uaU7RpNBW0f0N9SvQM_4FjtpkUaNij05CTlVLN1dj6E1J1mteOqUJXNtRtPE5y7QJ"></script>
+<script src="{{asset('assets/js/teste.js')}}"></script>
 <script type="text/javascript">
     $.ajaxSetup({
         headers: {
@@ -114,7 +117,6 @@
                 </div>";
 
 
-
     $(function() {
 
         loadIntroducaoStartup();
@@ -122,7 +124,73 @@
         loadInvestorsTable();
         loadMembrosEquipa();
 
+        $(".my-currency-format").val('0,00');
+        $(".my-currency-format").keyup(function(e) {
 
+            let valor = $(this).val();
+            let valor_formatado = [];
+            let contador = 0;
+
+            valor = apagarVirgulaEPonto(valor);
+
+            if (valor.length > 17)
+                valor = valor.slice(0, 17);
+
+            ////O erro de 9999999999999999999999999999 para 100000000000000000000000000
+            if (isNaN(valor)) {
+                return false;
+            } else
+                valor = (valor - 0) + '';
+            ///-------------------------
+
+
+            for (let i = valor.length - 1; i >= 0; i--) {
+                valor_formatado.push(valor[i]);
+
+                if ((valor.length - 1) - i == 1) {
+                    valor_formatado.push(',');
+                    contador = 0;
+                }
+
+                if (contador % 3 == 0 && contador != 0 && i > 0) {
+                    valor_formatado.push('.');
+                }
+
+                contador++;
+            }
+
+            for (let i = valor.length; i < 3; i++) {
+
+                valor_formatado.push(0);
+
+                if (i == 1 && valor_formatado.indexOf(',') == -1) {
+                    valor_formatado.push(',');
+                }
+            }
+            $(this).val(valor_formatado.reverse().join(''));
+
+        });
+
+        $("#valor-a-investir").keyup(function() {
+
+            let rodada_id = "{{$rodadaId}}";
+            let valorMontante = $(this).val();
+            $.ajax({
+                url: "/atualizar_porcentagem_pelo_montante",
+                type: "get",
+                data: {
+                    'rodada_id': rodada_id,
+                    'valorMontante': valorMontante
+                },
+                success: function(response) {
+                    $("#porcentagem-por-valor").val(response['porcentagem']);
+                },
+                error: function(erro) {
+                    console.log("ERRO AO ATUALIZAR PORCENTAGEM");
+                    console.log(erro);
+                }
+            });
+        });
 
         $('#modal-editar-introducao-startup').on('show.bs.modal', function(event) {
 
@@ -186,38 +254,11 @@
 
         });
 
-        $("#modal-investir").on('show.bs.modal', async function() {
-            let responsePayment;
-
-            $.ajax({
-                url: "/set_payment",
-                type: "get",
-                async: false,
-                data: {},
-                success: function(response) {
-                    responsePayment = response;
-                    console.log(response);
-                },
-                error: function(erro) {
-                    console.log("ERRO SET PAYMENT");
-                    console.log(erro);
-                }
+        $("#modal-investir").on('hidden.bs.modal', function(e) {
+            $("#btn-spinner-investir").css({
+                'display': 'none'
             });
-
-            var ppp = await PAYPAL.apps.PPP({
-                "approvalUrl": responsePayment.links[1].href,
-                "placeholder": "ppplus",
-                "mode": "sandbox",
-                "payerEmail": "guitocode@hotmail.com",
-                "payerFirstName": "Miranda",
-                "payerLastName": "Martins",
-                "payerTaxId": "35581050600",
-                "language": "pt_BR",
-                "country": "BR"
-            });
-        });
-
-
+        })
 
         $("#btn-aceitar-eliminar-membro").click(function() {
             let idMembroDaStartup = $(this).prop('info');
@@ -280,8 +321,23 @@
 
             let myForm = new FormData($("#form-criar-oferta")[0]);
 
-            if (!myForm.get('meta') || !myForm.get('porcentagem') || !myForm.get('pitch_video') || !myForm.get('max_investidores')) {
+            if (!myForm.get('meta') || !myForm.get('porcentagem') || myForm.get('pitch_video').size == 0 || !myForm.get('max_investidores') || !myForm.get('termino')) {
+                showPopUpAlert('container-popup-alert-modal-adicionar-oferta', "Formulário com campos não preenchidos.", 'error');
+                return false;
+            }
 
+            if ((new Date(myForm.get('termino')) - new Date()) < 85400000) {
+                showPopUpAlert('container-popup-alert-modal-adicionar-oferta', 'Deve declarar uma data aposterior a actual.', 'error');
+                return false;
+            }
+
+            if (myForm.get('max_investidores') < 1) {
+                showPopUpAlert('container-popup-alert-modal-adicionar-oferta', 'Número de investidores deve ser igual ou maior que 1(um).', 'error');
+                return false;
+            }
+
+            if ((myForm.get('pitch_video').size / 1000000) >= 65) {
+                showPopUpAlert('container-popup-alert-modal-adicionar-oferta', 'Tamanho máximo do arquivo pitch deck deve ser de 64MB.', 'error');
                 return false;
             }
 
@@ -296,11 +352,19 @@
                 processData: false,
                 data: myForm,
                 success: function(response) {
-                    loadOferta();
-                    $("#btn-buscar-investimento").hide();
-                    $("#btn-anular-ivestimento").show();
 
-                    $("#modal-adicionar-oferta").modal('hide');
+                    if (response['status'] == 200) {
+                        loadOferta();
+                        $("#btn-buscar-investimento").hide();
+                        $("#btn-anular-ivestimento").show();
+
+                        $("#modal-adicionar-oferta").modal('hide');
+                    } else {
+                        showPopUpAlert('container-popup-alert-modal-adicionar-oferta', response['message'], 'error');
+                        $("#btn-spinner-oferta").css({
+                            'display': 'none'
+                        });
+                    }
 
                 },
                 error: function(error) {
@@ -327,6 +391,19 @@
                     console.log(error);
                 }
             });
+        });
+
+
+        $("#input-pitch-video").change(function() {
+            if (($(this)[0].files[0].size / 1000000) < 65) {
+                $("#pitch-label-tamanho").css({
+                    'color': 'black'
+                });
+            } else {
+                $("#pitch-label-tamanho").css({
+                    'color': 'red'
+                });
+            }
         });
 
 
@@ -1077,6 +1154,13 @@
                 getNewMessage(e.messageId);
             });
 
+        Echo.private('atualizar-estado-oferta')
+            .listen('AtualizarEstadoRodada', function(e) {
+                console.log("OUVIMOS");
+                loadOferta();
+                $("#modal-investir .close").click();
+
+            });
 
         //------------------------EXPLICIT FUNCTIONS-----------------------------
 
@@ -1383,8 +1467,39 @@
         }
 
 
+        function apagarVirgulaEPonto(valor) {
+            while (valor.indexOf('.') != -1) {
+                valor = valor.replace('.', '');
+            }
+            valor = valor.replace(',', '');
 
+            return valor;
+        }
 
+        function showPopUpAlert(container_popup, mensagem, tipo) {
+
+            var color = '#e68790';
+
+            if (tipo == 'sucesso')
+                color = '#5fa56f';
+
+            var componente = "<div class='toast' role='alert' aria-live='assertive' aria-atomic='true' data-delay=3000 data-animation=true style='z-index:10;background:" + color + ";'>\
+            <div class='toast-header'>\
+                <i class='fa fa-bell rounded mr-2'></i>\
+                <strong class='mr-auto'>Validação</strong>\
+            </div>\
+            <div class='toast-body'>\
+                " + mensagem + "\
+            </div>\
+        </div>";
+
+            $("#" + container_popup).empty();
+
+            $("#" + container_popup).append(componente);
+
+            $("#" + container_popup + " .toast").toast('show');
+
+        }
     });
 </script>
 @endsection

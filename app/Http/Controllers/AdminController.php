@@ -80,4 +80,8 @@ class AdminController extends Controller
         $user->save();
         return response()->json($senha);
     }
+
+    public function showRodadasPage(){
+        return view('Admin/rodadas_captacao_admin');
+    }
 }

@@ -11,6 +11,7 @@ class PermissoesVerPitch extends Model
         'fk_startup',
         'fk_investidor',
         'data_permissao',
-        'estado'
+        'estado',
+        'fk_rodada'
     ];
 }

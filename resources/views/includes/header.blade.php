@@ -14,14 +14,14 @@
 
                 <li class="liMenu" style="position: relative !important;">
                     <a href="{{route('notificacao.menu')}}" class="anchorMenu">
-                        <i class="fa fa-bell"></i><span>Notificões</span>
+                        <i class="fa fa-bell"></i><span>Notificacões</span>
                     </a>
                     <span id="indicador-existe-notificacao" class="badge badge-light" style="position: absolute !important ;top:0px;left:33px;min-width:13px;border-radius:50%;padding:1px !important;border:1px solid black;font-size:10px;text-align:center;background-color:#ffcb2f;@if($qtdnotifications==0)display:none;@endif">@if($qtdnotifications>0) {{$qtdnotifications}} @endif</span>
                 </li>
 
                 <li class="liMenu" style="position: relative !important;">
                     <a href="{{route('mensagens.menu')}}" class="anchorMenu" id="link-message">
-                        <i class="fa fa-envelope"></i><span>Mensagens</span>
+                        <i class="fa fa-envelope"></i><span>Meetings</span>
                     </a>
                     <span id="indicador-existe-mensagem" class="badge badge-light" style="position: absolute !important ;top:0px;left:37px;min-width:13px;border-radius:50%;padding:1px !important;border:1px solid black;font-size:10px;text-align:center;background-color:#ffcb2f;color:#ffcb2f;@if($qtdMessageUnview==0)display:none;@endif">0</span>
 
@@ -29,9 +29,9 @@
 
 
                 @if(Auth::user()->tipo == 'investidor')
-                <li class="liMenu"><a href="{{route('investidor.menu')}}" class="anchorMenu"><i class="fa fa-envelope"></i><span>Investidores</span></a></li>
+                <li class="liMenu"><a href="{{route('investidor.menu')}}" class="anchorMenu"><i class="fa fa-users"></i><span>Investidores</span></a></li>
                  @endif
-                <li class="liMenu"><a href="{{route('startup.menu')}}" class="anchorMenu"><i class="fa fa-users"></i><span>Startups</span></a></li>
+                <li class="liMenu"><a href="{{route('startup.menu')}}" class="anchorMenu"><i class="fa fa-rocket"></i><span>Startups</span></a></li>
 
             </ul>
 

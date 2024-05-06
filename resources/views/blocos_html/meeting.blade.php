@@ -8,15 +8,15 @@
         else
         $nome = $otherUser->investidor->nome.' '.$otherUser->investidor->sobrenome;
         @endphp
-        <a rule="button" style="margin-right:30px;font-size:20px;display:none;" id="btn-back-to-meetings"><i class="fa fa-bell"></i></a>
+        <a rule="button" style="margin-right:30px;font-size:20px;display:none;" id="btn-back-to-meetings"><i class="fa fa-arrow-left"></i></a>
         <div style="display: inline-block;">
             <h6 style="margin-bottom: -2px;">{{$nome}}</h6>
             <span style="font-size:13px;">Ativo</span>
         </div>
     </div>
-    <a>
-        <a href="{{route('startup.perfil',$otherUser->code_user)}}" style="font-size:20px;"><i class="fa fa-bell"></i></a>
-    </a>
+    
+        <a href="{{route('startup.perfil',$otherUser->code_user)}}" style="font-size:20px;"><i class="fa fa-link"></i></a>
+   
 
 </header>
 <section>

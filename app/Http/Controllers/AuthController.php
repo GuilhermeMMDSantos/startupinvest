@@ -16,12 +16,12 @@ use App\User;
 use App\Startups;
 use App\Investidores;
 use App\IncubadorasAceleradoras;
+use App\Setores;
 
 class AuthController extends Controller
 {
     public function cadastrarStartup(Request $request)
     {
-
 
         $validador = Validator::make($request->all(), [
             'nome' => 'required|unique:startups',
@@ -52,7 +52,6 @@ class AuthController extends Controller
 
         ]);
 
-
         if ($validador->fails()) {
             return redirect()
                 ->back()
@@ -63,16 +62,24 @@ class AuthController extends Controller
 
         $dados = $request->all();
         $codeUser = strtolower($dados['nome']) . '' . Carbon::now()->format('mYdhsm');
-
         $user = $this->create($dados, 'startup', $codeUser);
-
-
-
         $pitch = "A##{$dados['nome']}##está construindo##{$dados['pitch_line1']}##para ajudar##{$dados['pitch_line2']}##
         a##{$dados['pitch_line3']}##com##{$dados['pitch_line4']}";
 
         $nifUploaded = $this->saveFile($request, 'nif', 'armazenamento/startups/nif');
         $mvpUploaded = $this->saveFile($request, 'mvp', 'armazenamento/startups/mvp');
+
+        if (strrpos($dados['sector'], "addxx")) {
+            $nomeSector = ucwords(explode(' ', $dados['sector'])[0]);
+            $sectorExistente = Setores::where('nome', $nomeSector)->first();
+            if ($sectorExistente == null) {
+                $novoSector = Setores::create([
+                    'nome' => $nomeSector
+                ]);
+                $dados['sector'] = $novoSector->id;
+            } else
+                $dados['sector'] = $sectorExistente->id;
+        }
 
         Startups::create([
             'fk_user' => $user->id,

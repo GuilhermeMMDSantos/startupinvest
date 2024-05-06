@@ -24,7 +24,7 @@
                 <p style="font-size:11px;">
                     <span style="background:#ccc;display:inline-block;padding:2px;border-radius:5px;">{{$startupCard->fase->nome}}</span>
                     <span style="background:#ccc;display:inline-block;padding:2px;border-radius:5px;">{{$startupCard->setor->nome}}</span>
-                    </p>
+                </p>
                 <p class="card-text">
                     {{ str_replace('##',' ',$startupCard->pitch_elevator) }}
                 </p>
@@ -33,31 +33,31 @@
             @if($startupCard->rodadaAtual != null)
             <div class="card-footer" style="border-top:none;background-color:white;">
                 <hr style="margin-bottom:0.5rem;">
-                <span style="font-size:12px;color:#adb5bdd6;">Conseguido</span>
                 @php
                 $porcentagem =($startupCard->rodadaAtual->valor_obtido*100)/$startupCard->rodadaAtual->valor_objetivo;
 
                 @endphp
-                <p style="font-size:14px;">{{$porcentagem}}% - {{$startupCard->rodadaAtual->tempo_restante}} Dias Restantes</p>
+                <p style="font-size:14px;">{{$porcentagem}}%<i style="font-size:15px;margin-right:4px;margin-left:4px;color:#ccc;">•</i>{{$startupCard->rodadaAtual->tempo_restante}} Dias Restantes</p>
 
                 <div class="progress" style="margin-top:-13px;">
                     <div class="progress-bar bg-warning" role="progressbar" style="width:{{$porcentagem}}%"></div>
                 </div>
 
                 <div class="row" style="margin-top:5px;">
-                    <div class="col-4">
-                        <span style="font-size:13px;color:#adb5bdd6;">Objectivo</span>
-                        <p>{{number_format($startupCard->rodadaAtual->valor_objetivo,2,',','.')}} AOA</p>
-                    </div>
-                    <div class="col-4" style="border-left:1px solid #ccc;border-right:1px solid #ccc;">
-                        <span style="font-size:13px;color:#adb5bdd6;">
-                            Atingido
-                        </span>
-                        <p>{{number_format($startupCard->rodadaAtual->valor_obtido,2,',','.')}} AOA</p>
-                    </div>
-                    <div class="col-4">
-                        <span style="font-size:13px;color:#adb5bdd6;">Investidores</span>
-                        <p>{{count($startupCard->rodadaAtual->investidores)}}</p>
+                    <div class="pl-3">
+                        <p><span style="font-size:13px;color:#adb5bdd6;">Objectivo: </span>
+                            {{number_format($startupCard->rodadaAtual->valor_objetivo,2,',','.')}} AOA
+                        </p>
+
+                        <p> <span style="font-size:13px;color:#adb5bdd6;">
+                                Atingido:
+                            </span>
+                            {{number_format($startupCard->rodadaAtual->valor_obtido,2,',','.')}} AOA
+                        </p>
+
+                        <p><span style="font-size:13px;color:#adb5bdd6;">Investidores: </span>
+                            {{count($startupCard->rodadaAtual->investidores)}}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -68,7 +68,7 @@
 </div>
 
 @empty
-<div  class="d-flex justify-content-center align-items-center col-12">
+<div class="d-flex justify-content-center align-items-center col-12">
     <h4 style="font-size: 25px; 
     color: #545b62;">Nenhuma Startup Buscando Financiamento</h4>
 </div>

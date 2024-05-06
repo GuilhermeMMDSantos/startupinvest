@@ -24,10 +24,10 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: process.env.MIX_PUSHER_APP_KEY,
     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    forceTLS: false,
+    forceTLS: true,
     wsHost: window.location.hostname,
     wsPort: 6001,
     wssPort: 6001,
-    disableStats: true,
+    disableStats: false,
     enabledTransports: ['ws', 'wss']
 });

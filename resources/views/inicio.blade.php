@@ -16,7 +16,7 @@
                              <div class="form-row" style="font-size:13px;">
                                  <div class="form-group col-md-4">
                                      <label for="fase-desenvolvimento-filter">Fase Desenvolvimento</label>
-                                     <select id="fase-desenvolvimento-filter" class="form-control selectpicker" title="Todos" multiple data-selected-text-format="count>1" data-count-selected-text="+{0} Filtros" multiple>
+                                     <select id="fase-desenvolvimento-filter" class="form-control selectpicker" title="Todos" multiple data-selected-text-format="count>1" data-count-selected-text="+{0} Filtros" data-size="5"  multiple>
 
                                          @foreach($fases as $fase)
                                          <option value="{{$fase->id}}">{{$fase->nome}}</option>
@@ -25,7 +25,7 @@
                                  </div>
                                  <div class="form-group col-md-4">
                                      <label for="sector-economico-filter">Sector Económico</label>
-                                     <select id="sector-economico-filter" class="form-control selectpicker" data-live-search="true" title="Todos" multiple data-selected-text-format="count>2" data-count-selected-text="+{0} Filtros" multiple>
+                                     <select id="sector-economico-filter" class="form-control selectpicker" data-live-search="true" title="Todos" multiple data-selected-text-format="count>2" data-count-selected-text="+{0} Filtros" data-size="5" multiple>
 
                                          @foreach($setores as $setor)
                                          <option value="{{$setor->id}}">{{$setor->nome}}</option>

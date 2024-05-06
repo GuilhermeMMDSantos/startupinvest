@@ -1,7 +1,5 @@
 $(function () {
 
-
-
     $("#entity-startup").click(function () {
         showFormStartup();
     });
@@ -20,25 +18,68 @@ $(function () {
 
     });
 
-   $("#btn-cadastrar-investidor").click(function(){
-    $("#form-investidor").submit();
-    $(this).prop("disabled",true);
-    $("#btn-spinner-investidor").css({
-        'opacity':1 
+    $("button[class='btn dropdown-toggle btn-light']").click(function () {
+        $(".my-btn-container").remove();
     });
-    true;
-   });
+    $(".bs-searchbox input[type='search']").keyup(function () {
+        var valor = $(this).val();
+        var elemento = "<div class='pl-2 pt-2 my-btn-container'><button type='button' class='btn btn-outline-primary' id='btn-add-novo-sector'>Adicionar sector</button><div>"
+        $(".my-btn-container").remove();
+        if (valor.length > 0)
+            $("div[class='dropdown-menu show']").append(elemento);
 
-   $("#btn-cadastrar-startup").click(function(){
-    $("#form-startup").submit();
-    $(this).prop("disabled",true);
-    $("#btn-spinner-startup").css({
-        'opacity':1 
+
     });
-    true;
-   });
 
-   $('.toast').toast('show');
+    $("div[class='dropdown bootstrap-select form-control']").on('click', '#btn-add-novo-sector', function () {
+        var valor = $(".bs-searchbox input[type='search']").val();
+        $(".filter-option-inner-inner").html(valor);
+        $("#sectores").append("<option value='"+valor+" addxx' selected hidden></option>");
+    });
+
+    $("#mvp").change(function () {
+        if (($(this)[0].files[0].size / 1000000) < 65) {
+            $("#mvp-label-tamanho").css({
+                'color': 'black'
+            });
+        } else {
+            $("#mvp-label-tamanho").css({
+                'color': 'red'
+            });
+        }
+    });
+
+    $("#video-investor").change(function () {
+        if (($(this)[0].files[0].size / 1000000) < 65) {
+            $("#video-investor-label-tamanho").css({
+                'color': 'black'
+            });
+        } else {
+            $("#video-investor-label-tamanho").css({
+                'color': 'red'
+            });
+        }
+    });
+
+    $("#btn-cadastrar-investidor").click(function () {
+        $("#form-investidor").submit();
+        $(this).prop("disabled", true);
+        $("#btn-spinner-investidor").css({
+            'opacity': 1
+        });
+        true;
+    });
+
+    $("#btn-cadastrar-startup").click(function () {
+        $("#form-startup").submit();
+        $(this).prop("disabled", true);
+        $("#btn-spinner-startup").css({
+            'opacity': 1
+        });
+        true;
+    });
+
+    $('.toast').toast('show');
 
     function shoeEntityAtivo(node) {
         $(".input-type-entity-ativo").removeClass("input-type-entity-ativo");

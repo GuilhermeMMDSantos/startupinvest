@@ -9,7 +9,7 @@
             <div class="row mb-3">
 
                 <div class="col-12">
-                    <label for="nome-completo-investidor" class="label_inv"><span id="nome-completo-investidor-label"> Nome</span> </label>
+                    <label for="nome-completo-investidor" class="label_inv"><span id="nome-completo-investidor-label"> Nome Completo</span> </label>
                     <input type="text" name="nome_completo" class=" form-control" value="{{old('nome_completo')}}" id="nome-completo-investidor" autocomplete="off" placeholder="Joel" />
                 </div>
             </div>
@@ -30,9 +30,9 @@
 
             <div class="row mb-3">
                 <div class="col-12">
-                    <label for="video-investor">Experiência e ciência sobre equity crowdfunding(.MP4, .MKV)</label>
-                    <input class="form-control" type="file" accept=".MP4,.MKV" id="video-investor" name="video_investidor" >
-                    
+                    <label for="video-investor">Experiência e ciência sobre equity crowdfunding (Video - <span id="video-investor-label-tamanho">max.64MB</span>)</label>
+              <input class="form-control" type="file" accept=".MP4,.MKV" id="video-investor" name="video_investidor" >
+
                     <div class="jumbotron" style="margin-top:10px;padding-top:10px !important;padding-bottom:5px !important;">
                             <p class="font-weight-bold">Submeta um vídeo onde respondes as seguintes questões:</p>
                             <p>Qual a Data de gravação do vídeo</p>

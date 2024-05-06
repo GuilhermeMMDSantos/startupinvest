@@ -14,7 +14,6 @@ use App\InvestidoresDaStartup;
 use App\User;
 use App\RodadasInvestimento;
 use App\Setores;
-use App\TipoBusness;
 use App\CertificadosFormacao;
 use App\AreasFormacao;
 use App\CargosExecutivo;
@@ -33,17 +32,16 @@ use App\Notifications\Notificao;
 use App\Mensagens;
 use App\Events\SendMessage;
 use App\Notifications\Message;
-use App\ReferenciasPagamento;
 use App\Events\AbrirRodada;
 use App\Events\AnularRodada;
+use App\Own\Traits\UserTrait;
 use App\RodadasInvestidores;
-use Facade\FlareClient\Http\Response;
+use Illuminate\Database\Eloquent\Builder;
+use ErrorException;
 
 class UserController extends Controller
 {
-
-
-
+    use UserTrait;
 
     public function loadStartups(Request $request)
     {
@@ -54,6 +52,7 @@ class UserController extends Controller
         $faseDesenvolvimento = $request->faseDesenvolvimento;
         $setorEconomico = $request->setorEconomico;
         $nomeStartup = $request->nomeStartup;
+        $index = 0;
 
 
 
@@ -68,6 +67,10 @@ class UserController extends Controller
                 ->select('*', DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_limite) AS tempo_restante'))
                 ->get();
         }])
+            ->whereHas('rodadaAtual', function ($query) {
+                $query->where(DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_limite)'), '>', -1)
+                    ->where('estado', 'aberta');
+            })
             ->where('estado_busca_invest', 'sim')
             ->whereHas('user', function ($query) {
                 $query->where('estado', 'aceite');
@@ -83,8 +86,6 @@ class UserController extends Controller
                 return $query2->where('nome', 'like', $nomeStartup . '%');
             })
             ->get();
-
-
 
         $returnHtml = view('blocos_html.startup_cards', compact('startupsCards', 'dataAtual'))->render();
         return response()->json($returnHtml);
@@ -258,20 +259,26 @@ class UserController extends Controller
     {
         $userCode = $request->codigoStartup;
         $tipoUser = Auth::user()->tipo;
+        $rodadaId = 0;
 
         $startup = Startups::whereHas('user', function ($query) use ($userCode) {
             $query->where('code_user', $userCode);
         })
             ->first();
 
+        $rodada = RodadasInvestimento::where('fk_startup', $startup->fk_user)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if (!empty($rodada))
+            $rodadaId = $rodada->id;
+
 
         $alreadySendRequestForSeePitch =  false;
 
-        $this->verificarValidadePermissoesPitch($startup->fk_user, Auth::user()->id);
-
-
         $permissoesVerPitch = PermissoesVerPitch::where('fk_startup', $startup->fk_user)
             ->where('fk_investidor', Auth::user()->id)
+            ->where('fk_rodada',$rodadaId)
             ->whereIn('estado', ['espera', 'ativo'])
             ->first();
 
@@ -282,9 +289,7 @@ class UserController extends Controller
 
         $myprofile = $startup->fk_user == Auth::user()->id;
 
-
-
-        $html = view('blocos_html/introducao_startup', compact('startup', 'myprofile', 'tipoUser', 'alreadySendRequestForSeePitch'))->render();
+        $html = view('blocos_html/introducao_startup', compact('startup', 'myprofile', 'tipoUser', 'alreadySendRequestForSeePitch','rodada'))->render();
 
         return response()->json(
             [
@@ -317,6 +322,8 @@ class UserController extends Controller
         $codeUser = $request->codeStartup;
         $havePermissionToWatchPitch = false;
         $referencaPagamento = [];
+        $participanteNaRodada = null;
+        $idRodada = 0;
 
         $startup = Startups::whereHas('user', function ($query) use ($codeUser) {
             $query->where('code_user', $codeUser);
@@ -324,32 +331,52 @@ class UserController extends Controller
 
         $myprofile = $startup->fk_user == Auth::user()->id;
 
-        $rodada = RodadasInvestimento::with(['investidores', 'finalidadesInvestimento'])
+        $rodada = RodadasInvestimento::with(['investidoresNaRodada', 'finalidadesInvestimento'])
             ->select('*', DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_limite) AS tempo_restante'))
             ->where('fk_startup', $startup->fk_user)
-            ->where('estado', 'aberta')
+            ->orderBy('created_at', 'desc')
             ->first();
 
+        if (!empty($rodada)) {
+            $idRodada = $rodada->id;
+            if ($rodada->tempo_restante < 0) {
 
+                $rodada->update([
+                    "estado" => 'anulada'
+                ]);
+
+                Startups::where('fk_user', $startup->fk_user)
+                    ->update([
+                        "estado_busca_invest" => 'nao'
+                    ]);
+            }
+        }
 
         if (Auth::user()->tipo == 'investidor') {
-            $permissao = PermissoesVerPitch::select('estado', DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_permissao) AS tempo_restante'))
+
+            if ($idRodada != 0) {
+                foreach ($rodada->investidoresNaRodada as $investor) {
+                    if ($investor->fk_investidor == Auth::user()->id) {
+                        $participanteNaRodada = $investor;
+                        break;
+                    }
+                }
+            }
+
+            $permissao = PermissoesVerPitch::select('estado'/*, DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_permissao) AS tempo_restante')*/)
                 ->where('fk_startup', $startup->fk_user)
                 ->where('fk_investidor', Auth::user()->id)
+                ->where('fk_rodada', $idRodada)
                 ->where('estado', 'ativo')
                 ->first();
 
-            if (!empty($permissao) && $permissao->tempo_restante > 1) {
-                $permissao->update([
-                    'estado' => 'vencido'
-                ]);
-            } else if (!empty($permissao) && $permissao->tempo_restante < 1)
+
+
+            if (!empty($permissao))
                 $havePermissionToWatchPitch = true;
         }
 
-
-
-        $returnHtml = view('blocos_html/content_oferta', compact('rodada', 'startup', 'havePermissionToWatchPitch', 'myprofile'))->render();
+        $returnHtml = view('blocos_html/content_oferta', compact('rodada', 'startup', 'havePermissionToWatchPitch', 'myprofile', 'participanteNaRodada'))->render();
 
         return response()->json([
             'html' =>    $returnHtml
@@ -366,7 +393,7 @@ class UserController extends Controller
         $investidoresDaStartup = DB::table('investidores_da_startup')
             ->where('fk_startup', $idUser)
 
-            ->simplePaginate(3);
+            ->simplePaginate(5);
 
         $html = view('blocos_html/table_investors_startup', compact('investidoresDaStartup', 'isMyProfile'))->render();
 
@@ -405,7 +432,7 @@ class UserController extends Controller
         $investidoresDaStartup = DB::table('investidores_da_startup')
             ->where('fk_startup',  $startup->fk_user)
 
-            ->simplePaginate(3);
+            ->simplePaginate(5);
 
         $html = view('blocos_html/table_investors_startup', compact('investidoresDaStartup', 'isMyProfile'))->render();
 
@@ -671,21 +698,28 @@ class UserController extends Controller
 
     public function cadastrarOferta(Request $request)
     {
-        $meta = $request->meta;
-        $porcentagem = $request->porcentagem;
+
+        $meta =  str_replace(',', '.', str_replace('.', '', $request->meta));
+        $porcentagem = str_replace(',', '.', str_replace('.', '', $request->porcentagem));
         $dataTermino = $request->termino;
         $maxInvestidores = $request->max_investidores;
+        $pitchFile = $request->file('pitch_video');
+        try {
 
-        $extensaoPitch = $request->file('pitch_video')->extension();
-        $userId = Auth::user()->id;
-        $nomePitch = "pitch_{$userId}.{$extensaoPitch}";
+            $this->validarMetaPorcentagem($meta, $porcentagem);
+            $extensaoPitch = $pitchFile->extension();
+            $userId = Auth::user()->id;
+            $nomePitch = "pitch_{$userId}.{$extensaoPitch}";
 
-        $uploadFicheiro = $request->file('pitch_video')->storeAs('armazenamento/startups/pitch', $nomePitch);
+            $uploadFicheiro = $request->file('pitch_video')->storeAs('armazenamento/startups/pitch', $nomePitch);
+        } catch (ErrorException $e) {
+            return response()->json(['status' => 500, 'message' => $e->getMessage()]);
+        }
 
-        $rodadaInvestimento = RodadasInvestimento::create([
+        RodadasInvestimento::create([
             'fk_startup' => $userId,
-            'valor_objetivo' => $meta,
-            'oferta_acoes' => $porcentagem,
+            'valor_objetivo' => $meta + 0.0,
+            'oferta_acoes' => $porcentagem + 0.0,
             'max_investidores' => $maxInvestidores,
             'valor_minimo_investimento' => ($meta / $maxInvestidores),
             'data_limite' => $dataTermino,
@@ -702,6 +736,8 @@ class UserController extends Controller
 
 
         event(new AbrirRodada());
+
+        return response()->json(['status' => 200]);
     }
 
     public function anularOferta()
@@ -852,6 +888,10 @@ class UserController extends Controller
             $query->where('code_user', $codeUser);
         })->first();
 
+        $rodada = RodadasInvestimento::where('fk_startup', $startup->fk_user)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
         $investidor = Investidores::where('fk_user', Auth::user()->id)->first();
 
         $nomeCompletoInvestidor = $investidor->nome;
@@ -872,7 +912,8 @@ class UserController extends Controller
         PermissoesVerPitch::create([
             'fk_startup' => $startup->fk_user,
             'fk_investidor' => $investidor->fk_user,
-            'estado' => 'espera'
+            'estado' => 'espera',
+            'fk_rodada' => $rodada->id
         ]);
 
         $notificacoes = Notifications::where('fk_user_distination', $startup->fk_user)
@@ -900,6 +941,12 @@ class UserController extends Controller
         $startup = Startups::where('fk_user', Auth::user()->id)
             ->first();
 
+        $rodada = RodadasInvestimento::with(['investidoresNaRodada', 'finalidadesInvestimento'])
+            ->select('*', DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_limite) AS tempo_restante'))
+            ->where('fk_startup', $startup->fk_user)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
         $user = User::where('code_user', $codeUser)->first();
 
         $message = "A startup {$startup->nome} aceitou sua solicitação para ver o pitch.";
@@ -915,6 +962,7 @@ class UserController extends Controller
         PermissoesVerPitch::where([
             ['fk_startup', $startup->fk_user],
             ['fk_investidor', $investidor->fk_user],
+            ['fk_rodada', $rodada->id],
             ['estado', 'espera']
         ])
             ->update([
@@ -1126,11 +1174,11 @@ class UserController extends Controller
 
         $rodadas = RodadasInvestidores::whereHas('rodada', function ($query) {
 
-                $query->where('estado', 'fechada');
-            })
+            $query->where('estado', 'fechada');
+        })
             ->where('fk_investidor', $investidor->fk_user)
-             ->where('contrato_mutou_aprovacao','aprovado')
-            ->get(); 
+            ->where('contrato_mutou_aprovacao', 'aprovado')
+            ->get();
         $html = view('blocos_html/startups_portifolio_investidor', compact('rodadas'))->render();
 
         return response()->json([
@@ -1138,7 +1186,8 @@ class UserController extends Controller
         ]);
     }
 
-    public function showRodadasPage(){
+    public function showRodadasPage()
+    {
 
         $qtdnotifications = 0;
         $presentUser = Auth::user()->id;
@@ -1152,7 +1201,7 @@ class UserController extends Controller
 
         $notificacoes  = Notifications::where('fk_user_distination', $presentUser)
             ->select('*', DB::raw('DATE_FORMAT(created_at,"%d/%m/%Y %h:%m") as data'))
-            ->orderBy('created_at','DESC')
+            ->orderBy('created_at', 'DESC')
             ->get();
 
         $messages = Mensagens::where([
@@ -1164,18 +1213,153 @@ class UserController extends Controller
 
         $qtdMessageUnview = (int) count($messages);
 
-        if(Auth::user()->tipo == 'startup'){
-
-        }else if(Auth::user()->tipo == 'investidor')
-        {
-
-        }else if(Auth::user()->tipo == 'admin'){
-
+        if (Auth::user()->tipo == 'startup') {
+        } else if (Auth::user()->tipo == 'investidor') {
+        } else if (Auth::user()->tipo == 'admin') {
         }
 
-        $rodadas = RodadasInvestidores::where()
-        ->get();
+        $rodadas = RodadasInvestimento::whereHas('investidoresNaRodada', function (Builder $query) use ($presentUser) {
+            $query->where('fk_investidor', $presentUser);
+        })
+            ->get();
 
-        return view('rodadas_captacao',compact('rodadas', 'qtdnotifications','qtdMessageUnview'));
+        return view('rodadas_captacao', compact('rodadas', 'qtdnotifications', 'qtdMessageUnview'));
+    }
+
+    public function loadEstatisticaRodadas()
+    {
+        $presentUser = Auth::user()->id;
+        $tipoUser = Auth::user()->tipo;
+        $qtdRodadas = 0;
+        $qtdRodadasSucedidas = 0;
+        $qtdRodadasAbertas = 0;
+        $qtdRodadasFechadas = 0;
+        $qtdRodadasAnuladas = 0;
+        $totalValorInvestidoOuCaptado = 0;
+
+        if ($tipoUser == 'startup') {
+            $rodadas = RodadasInvestimento::where('fk_startup', $presentUser)
+                ->get();
+
+            foreach ($rodadas as $rodada) {
+                $totalValorInvestidoOuCaptado  = $totalValorInvestidoOuCaptado + $rodada->valor_obtido;
+                switch ($rodada->estado) {
+                    case "aberta":
+                        $qtdRodadasAbertas++;
+                        break;
+                    case "fechada":
+                        $qtdRodadasFechadas++;
+                        break;
+                    case "anulada":
+                        $qtdRodadasAnuladas++;
+                        break;
+                    case "sucedida":
+                        $qtdRodadasSucedidas++;
+                        break;
+                }
+            }
+        } else if ($tipoUser == 'investidor') {
+            $rodadas = RodadasInvestidores::where('fk_investidor', $presentUser)
+                ->get();
+
+            foreach ($rodadas as $rodada) {
+                $totalValorInvestidoOuCaptado  = $totalValorInvestidoOuCaptado + $rodada->valor_investido;
+                switch ($rodada->rodada->estado) {
+                    case "aberta":
+                        $qtdRodadasAbertas++;
+                        break;
+                    case "fechada":
+                        $qtdRodadasFechadas++;
+                        break;
+                    case "anulada":
+                        $qtdRodadasAnuladas++;
+                        break;
+                    case "sucedida":
+                        $qtdRodadasSucedidas++;
+                        break;
+                }
+            }
+        } else if ($tipoUser == 'admin') {
+            $rodadas = RodadasInvestimento::get();
+
+            foreach ($rodadas as $rodada) {
+                $totalValorInvestidoOuCaptado  = $totalValorInvestidoOuCaptado + $rodada->valor_obtido;
+                switch ($rodada->estado) {
+                    case "aberta":
+                        $qtdRodadasAbertas++;
+                        break;
+                    case "fechada":
+                        $qtdRodadasFechadas++;
+                        break;
+                    case "anulada":
+                        $qtdRodadasAnuladas++;
+                        break;
+                    case "sucedida":
+                        $qtdRodadasSucedidas++;
+                        break;
+                }
+            }
+        }
+
+        $qtdRodadas = count($rodadas);
+
+
+        $html = view('blocos_html/estatistica_rodadas', compact('tipoUser', 'qtdRodadas', 'totalValorInvestidoOuCaptado', 'qtdRodadasAbertas', 'qtdRodadasFechadas', 'qtdRodadasAnuladas', 'qtdRodadasSucedidas'))->render();
+        return response()->json([
+            'html' => $html
+        ]);
+    }
+
+    public function loadListaRodadas(Request $request)
+    {
+
+        $filtros = $request->filtro;
+        $haveFiltro = !empty($filtros);
+        $presentUser = Auth::user()->id;
+        $tipoUser = Auth::user()->tipo;
+
+        if ($tipoUser == 'startup') {
+            $rodadas = RodadasInvestimento::where('fk_startup', $presentUser)
+                ->select(
+                    '*',
+                    DB::raw('DATE_FORMAT(created_at,"%d/%m/%Y") as data_inicio'),
+                    DB::raw('DATE_FORMAT(updated_at,"%d/%m/%Y") as data_fim')
+                )
+                ->when($haveFiltro, function ($query) use ($filtros) {
+                    return $query->whereIn('estado', $filtros);
+                })
+                ->simplePaginate(5);
+        } else if ($tipoUser == 'investidor') {
+            $rodadas = RodadasInvestimento::whereHas('investidoresNaRodada', function (Builder $query) use ($presentUser) {
+                $query->where('fk_investidor', $presentUser);
+            })
+                ->select(
+                    '*',
+                    DB::raw('DATE_FORMAT(created_at,"%d/%m/%Y") as data_inicio'),
+                    DB::raw('DATE_FORMAT(updated_at,"%d/%m/%Y") as data_fim')
+                )
+                ->when($haveFiltro, function ($query) use ($filtros) {
+                    return $query->whereIn('estado', $filtros);
+                })
+                ->simplePaginate(5);
+        } else if ($tipoUser == 'admin') {
+            $rodadas = RodadasInvestimento::when($haveFiltro, function ($query) use ($filtros) {
+                return $query->whereIn('estado', $filtros);
+            })
+                ->select(
+                    '*',
+                    DB::raw('DATE_FORMAT(created_at,"%d/%m/%Y") as data_inicio'),
+                    DB::raw('DATE_FORMAT(updated_at,"%d/%m/%Y") as data_fim')
+                )
+                ->simplePaginate(5);
+        }
+
+
+
+
+        $html = view('blocos_html/lista_rodadas', compact('rodadas', 'tipoUser'))->render();
+        return response()->json([
+            'html' => $html
+        ]);
     }
 }

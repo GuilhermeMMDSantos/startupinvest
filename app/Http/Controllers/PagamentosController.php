@@ -4,15 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Exception;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use GuzzleHttp\Client;
-use Illuminate\Http\Response;
 use App\RodadasInvestimento;
 use App\User;
 use App\Own\ClassPagamento;
-use Error;
+use App\Transactions;
+use ErrorException;
+use App\Own\ClassRodadas;
+use App\RodadasInvestidores;
+use App\Events\AtualizarEstadoRodada;
+use App\Startups;
 
 class PagamentosController extends Controller
 {
@@ -24,23 +25,6 @@ class PagamentosController extends Controller
   }
 
 
-
-  public function loadFormInvestirExpress(Request $request)
-  {
-
-    $idUser = User::where('code_user', $request->codigoStartup)
-      ->first()->id;
-
-    $rodada = RodadasInvestimento::where('fk_startup', $idUser)
-      ->where('estado', 'aberta')
-      ->first();
-
-    $html = view('modais.forms.form_investir_express', compact('rodada'))->render();
-
-    return response()->json([
-      'html' => $html
-    ]);
-  }
 
 
   public function loadFormInvestirPaypal(Request $request)
@@ -59,84 +43,6 @@ class PagamentosController extends Controller
     ]);
   }
 
-  public function investirComPaypal(Request $request)
-  {
-
-    $pagamento = new ClassPagamento();
-
-    /*  $dados = '{
-            "intent": "sale",
-            "payer": {
-              "payment_method": "paypal"
-            },
-            "transactions": [
-              {
-                "amount": {
-                  "total": "30.11",
-                  "currency": "USD",
-                  "details": {
-                    "subtotal": "30.00",
-                    "tax": "0.07",
-                    "shipping": "0.03",
-                    "handling_fee": "1.00",
-                    "shipping_discount": "-1.00",
-                    "insurance": "0.01"
-                  }
-                },
-                "description": "The payment transaction description.",
-                "custom": "EBAY_EMS_90048630024435",
-                "invoice_number": "48787589673",
-                "payment_options": {
-                  "allowed_payment_method": "INSTANT_FUNDING_SOURCE"
-                },
-                "soft_descriptor": "ECHI5786786",
-                "item_list": {
-                  "items": [
-                    {
-                      "name": "hat",
-                      "description": "Brown hat.",
-                      "quantity": "5",
-                      "price": "3",
-                      "tax": "0.01",
-                      "sku": "1",
-                      "currency": "USD"
-                    },
-                    {
-                      "name": "handbag",
-                      "description": "Black handbag.",
-                      "quantity": "1",
-                      "price": "15",
-                      "tax": "0.02",
-                      "sku": "product34",
-                      "currency": "USD"
-                    }
-                  ],
-                  "shipping_address": {
-                    "recipient_name": "Brian Robinson",
-                    "line1": "4th Floor",
-                    "line2": "Unit #34",
-                    "city": "San Jose",
-                    "country_code": "US",
-                    "postal_code": "95131",
-                    "phone": "011862212345678",
-                    "state": "CA"
-                  }
-                }
-              }
-            ],
-            "note_to_payer": "Contact us for any questions on your order.",
-            "redirect_urls": {
-              "return_url": "https://example.com/return",
-              "cancel_url": "https://example.com/cancel"
-            }
-          }';
-*/
-    $pega = $pagamento->getToken();
-    dd($pega);
-    // $getResponse =  $pagamento->setInvoce($dados);
-    // return response()->json($getResponse);
-  }
-
 
   public function teste()
   {
@@ -145,10 +51,12 @@ class PagamentosController extends Controller
 
   public function orders(Request $request)
   {
-    // Product Details 
-    $itemNumber = "23";
-    $itemName = "Startup invest";
-    $itemPrice = 400000;
+    $user = User::where('code_user', $request->codigoStartup)
+      ->first();
+    $itemNumber = $request->codigoStartup;
+    $itemName = $user->startup->nome;
+    $montante = str_replace(',', '.', str_replace('.', '', $request->montante))+0.0;
+    $idPayer = $request->payer;
     $currency = "USD";
 
     $postParams = array(
@@ -159,31 +67,123 @@ class PagamentosController extends Controller
           "description" => $itemName,
           "amount" => array(
             "currency_code" => $currency,
-            "value" => $itemPrice
+            "value" => $montante
           )
         )
       )
     );
 
-    $payment = new ClassPagamento();
-    $order = $payment->setOrder($postParams);
+    try {
 
-    return response()->json([
-      'status' => 1,
-      'data' => $order
-    ]);
+      ClassRodadas::verificarSePodeInvestir($user->id, $montante);
+      $payment = new ClassPagamento();
+      $order = $payment->setOrder($postParams);
+
+
+
+      Transactions::create([
+        'item_number' => $itemNumber,
+        'item_name' => $itemName,
+        'item_price' => $montante,
+        'order_id' => $order->id,
+        'fk_payer' => $idPayer,
+        'payment_status' => "created"
+      ]);
+
+      return response()->json([
+        'status' => 1,
+        'data' => $order
+      ]);
+    } catch (ErrorException $e) {
+
+      return response()->json([
+        'status' => 0,
+        'message' => $e->getMessage()
+      ]);
+    }
   }
 
   public function capture(Request $request)
   {
     $orderId = $request->order_id;
-    $payment = new ClassPagamento();
-    $order = $payment->capturePayment($orderId);
+    $codigostartup = $request->codigoStartup;
+    $porcentagemPeloMontante = str_replace(',', '.', str_replace('.', '', $request->porcentagemPeloMontante))+0.0;
+    $user =  User::where('code_user', $request->codigoStartup)
+      ->first();
 
-    return response()->json([
-      'status' => 1,
-      'data' => $order
-    ]);
+    try {
 
+      $payment = new ClassPagamento();
+      $order = $payment->capturePayment($orderId);
+
+      if ($order->status != "COMPLETED") {
+        throw new Exception("Pagamento não completado");
+      }
+
+      $transacao = Transactions::where('order_id', $orderId)->first();
+
+      $transacao->update([
+        "payment_source" => 'card',
+        "payment_source_card_last_digits" => $order->payment_source->card->last_digits,
+        "payment_source_card_expiry" => $order->payment_source->card->expiry,
+        "payment_source_card_brand" => $order->payment_source->card->brand,
+      ]);
+
+      $rodada = RodadasInvestimento::where('fk_startup', $user->id)
+        ->where('estado', 'aberta')
+        ->first();
+
+      $valorObtido = $rodada->valor_obtido + $transacao->item_price;
+
+      $rodada->update([
+        "valor_obtido" => $valorObtido
+      ]);
+
+      if ($rodada->valor_objetivo == $rodada->valor_obtido) {
+
+        $rodada->update([
+          'estado' => 'fechada'
+        ]);
+
+        Startups::where('fk_user', $user->id)
+          ->update([
+            "estado_busca_invest" => 'nao'
+          ]);
+      }
+
+      RodadasInvestidores::create([
+        'fk_rodada' => $rodada->id,
+        'fk_investidor' => $transacao->fk_payer,
+        'valor_investido' => $transacao->item_price,
+        'acoes_adquirida' => $porcentagemPeloMontante
+      ]);
+
+      event(new AtualizarEstadoRodada());
+
+      return response()->json([
+        'status' => 1,
+        'data' => $order
+      ]);
+    } catch (ErrorException $e) {
+
+      return response()->json([
+        'status' => 0,
+        'message' => $e->getMessage()
+      ]);
+    }
+  }
+
+
+  public function atualizarPorcentagemPeloMontante(Request $request)
+  {
+    $idRodada = $request->rodada_id;
+    $valorMontante =  str_replace(',', '.', str_replace('.', '', $request->valorMontante)) + 0.0;
+    
+
+    $rodada = RodadasInvestimento::where('id', $idRodada)->first();
+    $x = 100 * $valorMontante / $rodada->valor_objetivo;
+    $y = (($x * $rodada->oferta_acoes)/100).'';
+    $z = preg_replace("/(^0+(?=\d))|(,?0+$)/",'',number_format($y,12,',','.'));
+    return response()->json(['porcentagem' => $z]);
   }
 }

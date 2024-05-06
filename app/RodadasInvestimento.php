@@ -10,6 +10,7 @@ class RodadasInvestimento extends Model
     protected $fillable = [
         'fk_startup',
         'valor_objetivo',
+        'valor_obtido',
         'oferta_acoes',
         'max_investidores',
         'valor_minimo_investimento',
@@ -20,6 +21,10 @@ class RodadasInvestimento extends Model
 
     public function investidores(){
         return $this->belongsToMany('App\Investidores','rodadas_investidores','fk_rodada','fk_investidor','id','fk_user');
+    }
+
+    public function investidoresNaRodada(){
+        return $this->hasMany('App\RodadasInvestidores','fk_rodada','id');
     }
 
     public function startup(){

@@ -5,11 +5,6 @@
   font-family: 'Roboto', sans-serif;
 }
 
-
- 
-
-
-
 #header {
   background-color: var(--secundary);
 }
@@ -56,6 +51,8 @@ nav {
 .card{
   padding:20px 10px;
   text-align: center;
+  border-radius: .60rem;
+  box-shadow: 0px 1px 1px #ccc;
 }
 
 .card figure{
@@ -87,6 +84,10 @@ nav {
 
   #why-crowdfunding-content p {
     text-align: center;
+  }
+
+  .row div{
+    margin-bottom:10px;
   }
 }
 

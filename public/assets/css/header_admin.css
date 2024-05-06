@@ -42,3 +42,8 @@
     transition: all 0.3s;
   }
   
+  @media only screen and (max-width:1024px){
+    .no-mobile{
+        display:none;
+    }
+}

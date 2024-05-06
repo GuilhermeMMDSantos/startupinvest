@@ -1,4 +1,9 @@
 <div class="modal fade" id="modal-adicionar-oferta" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <div id="container-popup-alert-modal-adicionar-oferta" style="position:absolute;right:10px;top:10px;z-index:40;">
+        
+    </div>
+
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,6 +13,7 @@
                 </button>
             </div>
             <div class="modal-body">
+
                 <form enctype="multipart/form-data" id="form-criar-oferta">
                     @csrf
 
@@ -18,7 +24,7 @@
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" for="meta-oferta">Kz</label>
                                 </div>
-                                <input type="number" class="form-control my-mask-money" name="meta" id="meta-oferta" style="background: #fdfdff;">
+                                <input type="text" class="form-control my-currency-format mt-0" name="meta" id="meta-oferta" style="background: #fdfdff;">
                             </div>
                             <span style="font-size:10px;color:red;margin-top:-4px;display:block;" id="content-alert-unset-meta"></span>
 
@@ -30,7 +36,7 @@
                                 <div class="input-group-prepend">
                                     <label for="porcentagem-oferta" class="input-group-text">%</label>
                                 </div>
-                                <input type="text" class="form-control" name="porcentagem" id="porcentagem-oferta" style="background: #fdfdff;">
+                                <input type="text" class="form-control my-currency-format mt-0" name="porcentagem" id="porcentagem-oferta" style="background: #fdfdff;">
                             </div>
                             <span style="font-size:10px;color:red;margin-top:-4px;display:block;" id="content-alert-unset-porcentagem"></span>
                         </div>
@@ -38,14 +44,14 @@
 
                     <div class="row">
                         <div class="col-12 col-sm-6" style="padding-top:10px;">
-                            <label for="input-pitch-video">Pitch</label>
+                            <label for="input-pitch-video">Pitch (Video - <span id="pitch-label-tamanho">max.64MB</span>)</label>
                             <input class="form-control" accept=".MP4,.MKV" type="file" id="input-pitch-video" name="pitch_video">
                             <span style="font-size:10px;color:red;" id="content-alert-unset-pitch-video"></span>
                         </div>
 
                         <div class="col-12 col-sm-6" style="padding-top:10px;">
-                            <label for="max-investidores">Nº max. investidores</label>
-                            <input type="number" class="form-control" name="max_investidores" id="max-investidores" style="background: #fdfdff;">
+                            <label for="max-investidores">Número máximo de investidores</label>
+                            <input type="number" class="form-control" name="max_investidores" id="max-investidores" style="background: #fdfdff;" min='1' value="1">
                             <span style="font-size:10px;color:red;" id="content-alert-unset-max-investor"></span>
                         </div>
                     </div>

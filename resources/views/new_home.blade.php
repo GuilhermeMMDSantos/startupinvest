@@ -47,12 +47,12 @@
     </div>
 </div>
 
-<div id="why-crowdfunding-content" class="mb-4">
+<div id="why-crowdfunding-content" style="background: #f8f9fa6e;" class="mb-4">
     <div class="container-fluid">
         <h1 class="mb-5 text-center">startupInveste oferece</h1>
         <div class="row mb-md-4">      
 
-            <div class="col-md-4 ">
+            <div class="col-md-4">
                 <div class="h-100 card">
                     <figure>
                         <img class="img-fluid" src="{{asset('assets/img/investment-model-svgrepo-com.svg')}}">
@@ -89,19 +89,28 @@
                     <figure>
                         <img class="img-fluid" src="{{asset('assets/img/money-svgrepo-com.svg')}}">
                     </figure>
-                    <p>Captação de investimento</p>
+                    <p>Captação de investimento financeiro</p>
                 </div>
             </div>
 
 
+            <div class="col-md-4 ">
+                <div class="h-100 card">
+                    <figure>
+                        <img class="img-fluid" src="{{asset('assets/img/team-svgrepo-com.svg')}}">
+                    </figure>
+                    <p>Possibilidade de escolher parceiros para a jornada empreendedora</p>
+                </div>
+            </div>
         </div>
 
     </div>
 </div>
 
-<div id="footer">
-    <div class="container-fluid">
-    </div>
+<div class="d-flex align-items-center" id="footer" style="background-color: #343a40;color:#fff; min-height:60px;width:100%;">
+   
+        <p class="pl-3" style="font-size:14px;">2024 © STARTUPINVEST - Todos os direitos reservados.</p>
+    
 </div>
 
 @endsection

@@ -72,6 +72,16 @@
   display: none;
 }
 
+.bootstrap-select {
+  border: 1px solid #ccc !important;
+  background-color: white !important;
+}
+
+.no-results { /*Elemento que surge quando o selectpicker não encontra o sector a ser pesquisado*/
+  display: none;
+  
+}
+
 #btn-cadastrar-startup,
 #btn-cadastrar-investidor {
   transition: all 0.5s !important;
@@ -94,8 +104,8 @@
   opacity: 0;
 }
 
-.jumbotron p{
-  margin-bottom:1px;
+.jumbotron p {
+  margin-bottom: 1px;
 }
 
 @media (max-width: 580px) {

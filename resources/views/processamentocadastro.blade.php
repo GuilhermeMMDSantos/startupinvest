@@ -45,7 +45,7 @@
     <h1>Obrigado!</h1>
     <h1>O seus dados serão validados em menos de 24 horas.</h1>
 
-    <a href="{{route('new_home_page')}}" title="inicio">Aguardando</a>
+    <a href="{{route('new_home_page')}}" title="inicio">Voltar</a>
 
 </section>
 
