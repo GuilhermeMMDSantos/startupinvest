@@ -32,13 +32,13 @@ class ClassRodadas
         $tmp2 = $rodadas->valor_objetivo - ($rodadas->valor_obtido + $valorAInvestir);
 
         if ($tmp1 > $rodadas->valor_objetivo)
-            throw new ErrorException("Valor obtido + Valor a Investir ultrapassa o valor objetivo");
+            throw new ErrorException("Valor Obtido + Valor a Investir Ultrapassou o Valor Objetivo");
 
         if ($tmp2 != 0 && $tmp2 < $rodadas->valor_minimo_investimento)
-            throw new ErrorException("A subtração entre o valor objetivo e (Valor obtido + Valor a Investir) deve ser maior o igual ao valor minimo a investir ou zero");
+            throw new ErrorException("A Subtração Entre o Valor Objetivo e (Valor Obtido + Valor a Investir) Deve Ser Maior Ou Igual Ao Valor Minimo a Investir Ou Zero");
 
         if ($valorAInvestir < $rodadas->valor_minimo_investimento)
-            throw new ErrorException("Valor a investir deve ser maior ou igual ao valor minimo a investir(".$rodadas->valor_minimo_investimento.")");
+            throw new ErrorException("Valor a Investir Deve Ser Maior ou Igual ao Valor Minimo a Investir(".$rodadas->valor_minimo_investimento.")");
 
         return true;
     }

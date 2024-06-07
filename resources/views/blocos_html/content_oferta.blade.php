@@ -43,39 +43,24 @@
             </div>
 
 
-            @if($havePermissionToWatchPitch)
+            @if($havePermissionToWatchPitch && $participanteNaRodada == null)
 
-
-            @if($rodada->estado == 'aberta')
-
-            @if($participanteNaRodada != null)
-
-            <div>
-                <span style="font-weight: bold;text-align:center;display:inline-block;width:100%;background: #00800029;">Valor Investido</span>
-                <h5 style="color:green;text-align:center;">{{number_format($participanteNaRodada->valor_investido,2,',','.')}} AOA</h5>
-            </div>
-
-            @else
-            <div style=" border-radius:5px;height:47px;text-align:center;" id="container-btn-participar-rodada">
+            <div style="border-radius:5px;height:47px;text-align:center;" id="container-btn-participar-rodada">
                 <button data-toggle="modal" data-target="#modal-investir" id="btn-participar-rodada" class="btn btn-lg btn-block" style="background:#379f4f;color:white;">Participar na rodada</button>
             </div>
-            @endif
 
-            @elseif($rodada->estado == 'fechada' && $participanteNaRodada != null)
+            @elseif($participanteNaRodada != null)
 
-
+            @if($rodada->estado == 'anulada')
+            <div>
+                <span style="font-weight: bold;text-align:center;display:inline-block;width:100%;background: #00800029;">Valor Investido(Reembolsável)</span>
+                <h5 style="color:green;text-align:center;">{{number_format($participanteNaRodada->valor_investido,2,",",".")}} AOA</h5>
+            </div>
+            @else
             <div>
                 <span style="font-weight: bold;text-align:center;display:inline-block;width:100%;background: #00800029;">Valor Investido</span>
-                <h5 style="color:green;text-align:center;">{{number_format($participanteNaRodada->valor_investido,2,',','.')}} AOA</h5>
+                <h5 style="color:green;text-align:center;">{{number_format($participanteNaRodada->valor_investido,2,",",".")}} AOA</h5>
             </div>
-
-            @elseif($rodada->estado == 'anulada' && $participanteNaRodada != null)
-
-            <div>
-                <span style="font-weight: bold;text-align:center;display:inline-block;width:100%;">Valor Investido</span>
-                <h5 style="color:green;text-align:center;">{{number_format($participanteNaRodada->valor_investido,2,',','.')}} AOA</h5>
-            </div>
-
             @endif
 
             @endif
@@ -87,8 +72,7 @@
             </div>
 
             <p class="card-text" style="padding:5px 15px;text-align:center;font-size:17px;">Sem Oferta Declarada</p>
-            <p class="card-text" style="padding:5px 15px;text-align:center;font-size:14px;">Startup  Não Está a Buscar Investimento no Momento</p>
-
+            <p class="card-text" style="padding:5px 15px;text-align:center;font-size:14px;">Startup Não Está a Buscar Investimento no Momento</p>
             @endif
         </div>
     </div>

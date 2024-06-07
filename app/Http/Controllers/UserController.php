@@ -276,6 +276,8 @@ class UserController extends Controller
 
         $alreadySendRequestForSeePitch =  false;
 
+        
+
         $permissoesVerPitch = PermissoesVerPitch::where('fk_startup', $startup->fk_user)
             ->where('fk_investidor', Auth::user()->id)
             ->where('fk_rodada',$rodadaId)
@@ -771,7 +773,7 @@ class UserController extends Controller
     {
         $codeUser = $request->codeUser;
         $myProfile = $request->myProfile;
-
+        $rodada = 0;
 
         $investidor = Investidores::whereHas('user', function ($query) use ($codeUser) {
             $query->where('code_user', $codeUser);
@@ -781,11 +783,19 @@ class UserController extends Controller
         $myProfile = Auth::user()->id == $investidor->fk_user;
         $permissoesVerPitch = null;
 
+        $rodada = RodadasInvestimento::where('fk_startup', Auth::user()->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if (!empty($rodada))
+            $rodadaId = $rodada->id;
+
         if (Auth::user()->tipo == "startup") {
 
-            $this->verificarValidadePermissoesPitch(Auth::user()->id, $investidor->fk_user);
+            //$this->verificarValidadePermissoesPitch(Auth::user()->id, $investidor->fk_user);
             $permissoesVerPitch = PermissoesVerPitch::where('fk_startup', Auth::user()->id)
                 ->where('fk_investidor', $investidor->fk_user)
+                ->where('fk_rodada',$rodadaId)
                 ->whereIn('estado', ['espera', 'ativo'])
                 ->first();
         }

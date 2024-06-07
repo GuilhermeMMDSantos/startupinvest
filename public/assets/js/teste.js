@@ -40,10 +40,18 @@ const cardField = paypal.CardFields({
                 return res.json();
             })
             .then((result) => {
+                console.log(result);
                 if (result.status == 1) {
                     console.log("SECESSO");
-                    showPopUpAlertForPay('container-popup-alert-perfil-startup', 'TRANSAÇÃO EFECTUADA COM SUCESSO.', 'sucesso');
-                } else {
+                    alertify.set('notifier', 'position', 'top-right');
+                    alertify.notify('Transação Efectuada Com Sucesso.', 'success', 5, function () {
+                        console.log('dismissed');
+                    });
+                }
+                else if (result.status == 0) {
+                    throw result.message;
+                }
+                else {
                     console.log(result.msg);
                 }
 
@@ -90,9 +98,9 @@ if (cardField.isEligible()) {
                         error = "Número de Confirmação do Cartão Inválido.";
                     else if (error == "Error: INVALID_EXPIRY")
                         error = "Data de Expiração Inválida.";
-                    else
-                        error = "Cartão Inválido.";
-                    showPopUpAlertForPay('container-popup-alert-modal-investir', error, 'error');
+
+                    alertify.set('notifier', 'position', 'top-right');
+                    alertify.notify(`${error}`, 'error', 5, function () { });
                     $("#btn-spinner-investir").css({
                         'display': 'none'
                     });
@@ -114,28 +122,5 @@ const encodeFormData = (data) => {
     return form_data;
 }
 
-function showPopUpAlertForPay(container_popup, mensagem, tipo) {
 
-    var color = '#e68790';
-
-    if (tipo == 'sucesso')
-        color = '#5fa56f';
-
-    var componente = "<div class='toast' role='alert' aria-live='assertive' aria-atomic='true' data-delay=4500 data-animation=true style='z-index:10;background:" + color + ";'>\
-    <div class='toast-header'>\
-        <i class='fa fa-bell rounded mr-2'></i>\
-        <strong class='mr-auto'>Validação</strong>\
-    </div>\
-    <div class='toast-body'>\
-        " + mensagem + "\
-    </div>\
-</div>";
-
-    $("#" + container_popup).empty();
-
-    $("#" + container_popup).append(componente);
-
-    $("#" + container_popup + " .toast").toast('show');
-
-}
 

@@ -322,22 +322,34 @@
             let myForm = new FormData($("#form-criar-oferta")[0]);
 
             if (!myForm.get('meta') || !myForm.get('porcentagem') || myForm.get('pitch_video').size == 0 || !myForm.get('max_investidores') || !myForm.get('termino')) {
-                showPopUpAlert('container-popup-alert-modal-adicionar-oferta', "Formulário com campos não preenchidos.", 'error');
+                alertify.set('notifier', 'position', 'top-right');
+                alertify.notify('Formulário com campos não preenchidos.', 'error', 5, function() {
+                    console.log('dismissed');
+                });
+                // alertify.alert('Alerta', 'Formulário com campos não preenchidos.', function(){ alertify.success('Ok'); });
+                /* alertify.confirm('Confirm Title', 'Confirm Message', function(){ alertify.success('Ok') }
+                  , function(){ alertify.error('Cancel')}); */
                 return false;
             }
 
             if ((new Date(myForm.get('termino')) - new Date()) < 85400000) {
-                showPopUpAlert('container-popup-alert-modal-adicionar-oferta', 'Deve declarar uma data aposterior a actual.', 'error');
+                alertify.notify('Deve declarar uma data aposterior a actual.', 'error', 5, function() {
+                    console.log('dismissed');
+                });
                 return false;
             }
 
             if (myForm.get('max_investidores') < 1) {
-                showPopUpAlert('container-popup-alert-modal-adicionar-oferta', 'Número de investidores deve ser igual ou maior que 1(um).', 'error');
+                alertify.notify('Número de investidores deve ser igual ou maior que 1(um).', 'error', 5, function() {
+                    console.log('dismissed');
+                });
                 return false;
             }
 
             if ((myForm.get('pitch_video').size / 1000000) >= 65) {
-                showPopUpAlert('container-popup-alert-modal-adicionar-oferta', 'Tamanho máximo do arquivo pitch deck deve ser de 64MB.', 'error');
+                alertify.notify('Tamanho máximo do arquivo pitch deck deve ser de 64MB.', 'error', 5, function() {
+                    console.log('dismissed');
+                });
                 return false;
             }
 
@@ -356,11 +368,16 @@
                     if (response['status'] == 200) {
                         loadOferta();
                         $("#btn-buscar-investimento").hide();
+                        alertify.set('notifier', 'position', 'top-right');
+                        alertify.notify('Oferta Publicada.', 'success', 5, function() {
+                            console.log('dismissed');
+                        });
                         $("#btn-anular-ivestimento").show();
-
                         $("#modal-adicionar-oferta").modal('hide');
                     } else {
-                        showPopUpAlert('container-popup-alert-modal-adicionar-oferta', response['message'], 'error');
+                        alertify.notify(response['message'], 'error', 5, function() {
+                            console.log('dismissed');
+                        });
                         $("#btn-spinner-oferta").css({
                             'display': 'none'
                         });
@@ -1156,7 +1173,6 @@
 
         Echo.private('atualizar-estado-oferta')
             .listen('AtualizarEstadoRodada', function(e) {
-                console.log("OUVIMOS");
                 loadOferta();
                 $("#modal-investir .close").click();
 
@@ -1259,7 +1275,6 @@
                     "codeStartup": codeStartup
                 },
                 success: function(response) {
-
                     $("#content-oferta").empty();
                     $("#content-oferta").append(response['html']);
                 },
@@ -1476,30 +1491,7 @@
             return valor;
         }
 
-        function showPopUpAlert(container_popup, mensagem, tipo) {
 
-            var color = '#e68790';
-
-            if (tipo == 'sucesso')
-                color = '#5fa56f';
-
-            var componente = "<div class='toast' role='alert' aria-live='assertive' aria-atomic='true' data-delay=3000 data-animation=true style='z-index:10;background:" + color + ";'>\
-            <div class='toast-header'>\
-                <i class='fa fa-bell rounded mr-2'></i>\
-                <strong class='mr-auto'>Validação</strong>\
-            </div>\
-            <div class='toast-body'>\
-                " + mensagem + "\
-            </div>\
-        </div>";
-
-            $("#" + container_popup).empty();
-
-            $("#" + container_popup).append(componente);
-
-            $("#" + container_popup + " .toast").toast('show');
-
-        }
     });
 </script>
 @endsection

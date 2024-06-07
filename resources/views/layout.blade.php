@@ -19,7 +19,7 @@
     <script src="{{asset('assets/js/popper.min.js')}}"></script>
     <script src="{{asset('assets/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('assets/js/bootstrap-select.min.js')}}"></script>
-   
+    <script src="{{asset('assets/js/alertify.min.js')}}"></script>
 
 
     <!-- Styles -->
@@ -28,6 +28,9 @@
     <link href="{{asset('assets/css/bootstrap-select.min.css')}}" type="text/css" rel="stylesheet">
     <link href="{{asset('assets/css/config.css')}}" type="text/css" rel="stylesheet">
     <link href="{{asset('assets/css/custom.css')}}" type="text/css" rel="stylesheet">
+
+    <link href="{{asset('assets/css/alertify.min.css')}}" type="text/css" rel="stylesheet">
+    <link href="{{asset('assets/css/default.min.css')}}" type="text/css" rel="stylesheet">
     @yield('stylesheets')
 
 </head>
