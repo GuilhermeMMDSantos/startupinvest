@@ -241,10 +241,6 @@ body {
   display: none;
 }
 
-.is-invalid-field{
-  border-color:red !important;
-}
-
 @media (max-width: 1024px) {
   #popup-chat-container {
     display: none;

@@ -176,14 +176,15 @@ class AuthController extends Controller
             ],
             [
                 'email_login.required' => 'Email em falta',
-                'password_login.required' => 'Senha em falta'
+                'password_login.required' => 'Palavra-passe em falta'
             ]
         );
 
         if ($validador->fails()) {
             return redirect()
                 ->back()
-                ->withErrors($validador);
+                ->withErrors($validador)
+                ->withInput();
         }
 
         $dados = $request->only('email_login', 'password_login');
@@ -198,7 +199,13 @@ class AuthController extends Controller
             return redirect()->intended("stackholder_startup");
         }
 
-        return Redirect::to("new_login_page")->with('error', 'Credenciais erradas');
+        return redirect()
+                ->back()
+                ->withErrors([
+                    'email_login' => 'Email não associado a palavra-passe',
+                    'password_login' => 'Palavra-passe não associada ao email'
+                ])
+                ->withInput();
     }
 
 

@@ -12,16 +12,6 @@
     </div>
 </div>
 <div id="form-container" class="w-100" style="padding-top:40px;position:relative;">
-
-    @if($errors->any())
-    @foreach ($errors->all() as $error)
-    <input type="radio" class="err1" value="{{$error}}" checked hidden>
-    @endforeach
-    @elseif(!empty(Session::get('error')))
-    <input type="radio" class="err2" value="{{Session::get('error')}}" checked hidden>
-    @endif
-
-
     <h2 id="header-card">Entrar</h2>
     <div class="card">
 
@@ -32,17 +22,27 @@
                 <div class="row mb-3">
                     <div class="col-12">
                         <label>Email</label>
-                        <input type="email" class="form-control" name="email_login" placeholder="Email" autocomplete="off">
+                        <input type="email" class="form-control @error('email_login') is-invalid @enderror" name="email_login" value="{{old('email_login')}}" id="email-login" placeholder="startupinvest@hotmail.com" autocomplete="off">
+                        @error('email_login')
+                        <span style="margin-top:1px;font-size: .875em;color: #dc3545;display:block;" id="alert-login-email" class="alert-login">{{$message}}</span>
+                        @enderror
                     </div>
                 </div>
 
-                <div class="row mb-3">
+                <div class="row mb-4">
                     <div class="col-12">
                         <div id="label-password">
-                            <label>Password</label>
-
+                            <label>Palavra-passe</label>
                         </div>
-                        <input type="password" class="form-control" name="password_login" placeholder="Senha" autocomplete="off">
+                        <div class="input-group">
+                            <input type="password" class="form-control @error('password_login') is-invalid @enderror" id="password-login" name="password_login" value="{{old('password_login')}}" placeholder="*******" autocomplete="off">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" role="button" id="show-password" style="background-color:#e9ecef5c"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                            </div>
+                        </div>
+                        @error('password_login')
+                        <span style="margin-top:1px;font-size: .875em;color: #dc3545;display:block;" id="alert-login-password" class="alert-login">{{$message}}</span>
+                        @enderror
                     </div>
                 </div>
 
@@ -54,9 +54,6 @@
                         </button>
                     </div>
                 </div>
-
-
-
             </form>
         </div>
 
@@ -68,14 +65,16 @@
 @section('scripts')
 <script type="text/javascript">
     $(function() {
-
-         $("#btn-entrar").click(function() {
-            $("#form-login").submit();
-            $(this).prop("disabled", true);
-            $("#btn-spinner-user").css({
-                'opacity': 1
-            });
-            true;
+        $("#show-password").click(function(){
+            console.log("clicou");
+            if ($("#password-login").attr('type') == 'password')
+            {
+                $("#password-login").attr('type', 'text');
+                $("#show-password i").attr('class','fa fa-eye');
+            }else{
+                $("#password-login").attr('type', 'password');
+                $("#show-password i").attr('class','fa fa-eye-slash');
+            }
         });
     });
 </script>

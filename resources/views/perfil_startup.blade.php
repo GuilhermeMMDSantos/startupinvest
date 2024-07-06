@@ -282,7 +282,7 @@
             $("#modal-adicionar-oferta input[type='text']").val('0,00');
             $("#max-investidores").val(1);
             $(".alert-adicionar-oferta").html('');
-            $('.is-invalid-field').removeClass("is-invalid-field");
+            $('.is-invalid').removeClass("is-invalid");
         })
 
         $("#btn-publicar-oferta").click(function() {
@@ -320,11 +320,11 @@
                         $("#modal-adicionar-oferta").modal('hide');
                     } else {
                         if (response[0]["meta"]) {
-                            $("#meta-oferta").addClass("is-invalid-field");
+                            $("#meta-oferta").addClass("is-invalid");
                             $("#alert-meta").html(response[0]["meta"]);
                         }
                         if (response[0]["porcentagem"]) {
-                            $("#porcentagem-oferta").addClass("is-invalid-field");
+                            $("#porcentagem-oferta").addClass("is-invalid");
                             $("#alert-porcentagem").html(response[0]["porcentagem"]);
                         }
                         $("#btn-spinner-oferta").css({
@@ -1510,47 +1510,52 @@
         function check_empty_field(myForm) {
             let find_error = 0;
 
-            $(".is-invalid-field").removeClass("is-invalid-field");
+            $(".is-invalid").removeClass("is-invalid");
             $(".alert-adicionar-oferta").html('');
             if (!myForm.get('meta')) {
                 $("#alert-meta").html("Meta não informada");
-                $("#meta-oferta").addClass("is-invalid-field");
+                $("#meta-oferta").addClass("is-invalid");
                 find_error = 1;
             }
 
             if (!myForm.get('termino')) {
                 $("#alert-data-angariacao").html("Data não informada");
-                $("#termino-oferta").addClass("is-invalid-field");
+                $("#termino-oferta").addClass("is-invalid");
                 find_error = 1;
-            } else if ((new Date(myForm.get('termino')) - new Date()) < 85400000) {
-                $("#alert-data-angariacao").html("Deve declarar uma data aposterior a actual");
-                $("#termino-oferta").addClass("is-invalid-field");
+            } else if (new Date(new Date(myForm.get('termino')).toDateString()) - new Date(new Date().toDateString()) < 604800000) {
+                $("#alert-data-angariacao").html("O tempo para angariação deve ser de (1) uma semana no mínimo");
+                $("#termino-oferta").addClass("is-invalid");
                 find_error = 1;
             }
-
+            else if(new Date(new Date(myForm.get('termino')).toDateString()) - new Date(new Date().toDateString()) > 16070400000) //milisegundos = 6meses com 31 dias cada
+            {
+                $("#alert-data-angariacao").html("O tempo para angariação deve ser de (6) seis meses no máximo");
+                $("#termino-oferta").addClass("is-invalid");
+                find_error = 1;
+            }
             if (!myForm.get('max_investidores')) {
                 $("#alert-n-investidor").html("Número máximo de investidores não informado");
-                $("#max-investidores").addClass("is-invalid-field");
+                $("#max-investidores").addClass("is-invalid");
                 find_error = 1;
             } else if (myForm.get('max_investidores') < 1) {
                 $("#alert-n-investidor").html("Número de investidores deve ser igual ou maior que 1(um)");
-                $("#max-investidores").addClass("is-invalid-field");
+                $("#max-investidores").addClass("is-invalid");
                 find_error = 1;
             }
 
             if (myForm.get('pitch_video').size == 0) {
                 $("#alert-pitch").html("Pitch não carregado");
-                $("#input-pitch-video").addClass("is-invalid-field");
+                $("#input-pitch-video").addClass("is-invalid");
                 find_error = 1;
             } else if ((myForm.get('pitch_video').size / 1000000) >= 65) {
                 $("#alert-pitch").html("Tamanho máximo do arquivo pitch deck deve ser de 64MB");
-                $("#input-pitch-video").addClass("is-invalid-field");
+                $("#input-pitch-video").addClass("is-invalid");
                 find_error = 1;
             }
 
             if (!myForm.get('porcentagem')) {
                 $("#alert-porcentagem").html("Porcentagem não informada");
-                $("#porcentagem-oferta").addClass("is-invalid-field");
+                $("#porcentagem-oferta").addClass("is-invalid");
                 find_error = 1;
             }
 
