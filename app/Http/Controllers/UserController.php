@@ -276,11 +276,11 @@ class UserController extends Controller
 
         $alreadySendRequestForSeePitch =  false;
 
-        
+
 
         $permissoesVerPitch = PermissoesVerPitch::where('fk_startup', $startup->fk_user)
             ->where('fk_investidor', Auth::user()->id)
-            ->where('fk_rodada',$rodadaId)
+            ->where('fk_rodada', $rodadaId)
             ->whereIn('estado', ['espera', 'ativo'])
             ->first();
 
@@ -291,7 +291,7 @@ class UserController extends Controller
 
         $myprofile = $startup->fk_user == Auth::user()->id;
 
-        $html = view('blocos_html/introducao_startup', compact('startup', 'myprofile', 'tipoUser', 'alreadySendRequestForSeePitch','rodada'))->render();
+        $html = view('blocos_html/introducao_startup', compact('startup', 'myprofile', 'tipoUser', 'alreadySendRequestForSeePitch', 'rodada'))->render();
 
         return response()->json(
             [
@@ -702,28 +702,30 @@ class UserController extends Controller
     {
 
         $meta =  str_replace(',', '.', str_replace('.', '', $request->meta));
+        $taxa = str_replace(',', '.', str_replace('.', '', $request->montante_acrescer));
+        $metaComATaxa = $meta + $taxa;
         $porcentagem = str_replace(',', '.', str_replace('.', '', $request->porcentagem));
         $dataTermino = $request->termino;
         $maxInvestidores = $request->max_investidores;
         $pitchFile = $request->file('pitch_video');
-        try {
 
-            $this->validarMetaPorcentagem($meta, $porcentagem);
-            $extensaoPitch = $pitchFile->extension();
-            $userId = Auth::user()->id;
-            $nomePitch = "pitch_{$userId}.{$extensaoPitch}";
+        $getErros = $this->validarMetaPorcentagem($meta, $porcentagem);
+        if ($getErros != null)
+            return response()->json(['status' => 500, $getErros]);
 
-            $uploadFicheiro = $request->file('pitch_video')->storeAs('armazenamento/startups/pitch', $nomePitch);
-        } catch (ErrorException $e) {
-            return response()->json(['status' => 500, 'message' => $e->getMessage()]);
-        }
+        $extensaoPitch = $pitchFile->extension();
+        $userId = Auth::user()->id;
+        $nomePitch = "pitch_{$userId}.{$extensaoPitch}";
+
+        $uploadFicheiro = $request->file('pitch_video')->storeAs('armazenamento/startups/pitch', $nomePitch);
 
         RodadasInvestimento::create([
             'fk_startup' => $userId,
-            'valor_objetivo' => $meta + 0.0,
+            'valor_objetivo' => $metaComATaxa + 0.0,
+            'valor_objetivo_sem_taxa' => $meta + 0.0,
             'oferta_acoes' => $porcentagem + 0.0,
             'max_investidores' => $maxInvestidores,
-            'valor_minimo_investimento' => ($meta / $maxInvestidores),
+            'valor_minimo_investimento' => ($metaComATaxa / $maxInvestidores),
             'data_limite' => $dataTermino,
             'estado' => 'aberta'
         ]);;
@@ -795,7 +797,7 @@ class UserController extends Controller
             //$this->verificarValidadePermissoesPitch(Auth::user()->id, $investidor->fk_user);
             $permissoesVerPitch = PermissoesVerPitch::where('fk_startup', Auth::user()->id)
                 ->where('fk_investidor', $investidor->fk_user)
-                ->where('fk_rodada',$rodadaId)
+                ->where('fk_rodada', $rodadaId)
                 ->whereIn('estado', ['espera', 'ativo'])
                 ->first();
         }

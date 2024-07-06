@@ -5,9 +5,7 @@
 @endsection
 
 @section('contentBody_base_inicio')
-<div id="container-popup-alert-perfil-startup" style="position:absolute;right:10px;top:10px;z-index:40;">
 
-</div>
 
 <section id="body-section" class="container-fluid" style="padding-left:6.5%;padding-right:6.5%; padding-bottom:10px;">
     <input type="text" value="{{$codigoStartup}}" id="codigo-startup" hidden>
@@ -126,49 +124,15 @@
 
         $(".my-currency-format").val('0,00');
         $(".my-currency-format").keyup(function(e) {
-
             let valor = $(this).val();
-            let valor_formatado = [];
-            let contador = 0;
-
-            valor = apagarVirgulaEPonto(valor);
-
-            if (valor.length > 17)
-                valor = valor.slice(0, 17);
-
-            ////O erro de 9999999999999999999999999999 para 100000000000000000000000000
-            if (isNaN(valor)) {
-                return false;
-            } else
-                valor = (valor - 0) + '';
-            ///-------------------------
-
-
-            for (let i = valor.length - 1; i >= 0; i--) {
-                valor_formatado.push(valor[i]);
-
-                if ((valor.length - 1) - i == 1) {
-                    valor_formatado.push(',');
-                    contador = 0;
-                }
-
-                if (contador % 3 == 0 && contador != 0 && i > 0) {
-                    valor_formatado.push('.');
-                }
-
-                contador++;
-            }
-
-            for (let i = valor.length; i < 3; i++) {
-
-                valor_formatado.push(0);
-
-                if (i == 1 && valor_formatado.indexOf(',') == -1) {
-                    valor_formatado.push(',');
-                }
-            }
-            $(this).val(valor_formatado.reverse().join(''));
-
+            let valor_formatado = set_format(valor);
+            $(this).val(valor_formatado);
+            if ($(this).attr('name') == 'meta')
+                show_valor_a_acrescer(valor);
+        });
+        $(".my-currency-format").keypress(function(e){
+            if (!(e.key >= 0 && e.key <= 9) && e.key != "Backspace")
+                e.preventDefault();
         });
 
         $("#valor-a-investir").keyup(function() {
@@ -314,49 +278,26 @@
             $("#btn-spinner-oferta").css({
                 'display': 'none'
             });
+            $('#modal-adicionar-oferta input').val('');
+            $("#modal-adicionar-oferta input[type='text']").val('0,00');
+            $("#max-investidores").val(1);
+            $(".alert-adicionar-oferta").html('');
+            $('.is-invalid-field').removeClass("is-invalid-field");
         })
-
 
         $("#btn-publicar-oferta").click(function() {
 
             let myForm = new FormData($("#form-criar-oferta")[0]);
 
-            if (!myForm.get('meta') || !myForm.get('porcentagem') || myForm.get('pitch_video').size == 0 || !myForm.get('max_investidores') || !myForm.get('termino')) {
-                alertify.set('notifier', 'position', 'top-right');
-                alertify.notify('Formulário com campos não preenchidos.', 'error', 5, function() {
-                    console.log('dismissed');
-                });
-                // alertify.alert('Alerta', 'Formulário com campos não preenchidos.', function(){ alertify.success('Ok'); });
-                /* alertify.confirm('Confirm Title', 'Confirm Message', function(){ alertify.success('Ok') }
-                  , function(){ alertify.error('Cancel')}); */
-                return false;
-            }
-
-            if ((new Date(myForm.get('termino')) - new Date()) < 85400000) {
-                alertify.notify('Deve declarar uma data aposterior a actual.', 'error', 5, function() {
-                    console.log('dismissed');
-                });
-                return false;
-            }
-
-            if (myForm.get('max_investidores') < 1) {
-                alertify.notify('Número de investidores deve ser igual ou maior que 1(um).', 'error', 5, function() {
-                    console.log('dismissed');
-                });
-                return false;
-            }
-
-            if ((myForm.get('pitch_video').size / 1000000) >= 65) {
-                alertify.notify('Tamanho máximo do arquivo pitch deck deve ser de 64MB.', 'error', 5, function() {
-                    console.log('dismissed');
-                });
-                return false;
-            }
-
             $("#btn-spinner-oferta").css({
                 'display': 'inline-block'
             });
-
+            if (!check_empty_field(myForm)) {
+                $("#btn-spinner-oferta").css({
+                    'display': 'none'
+                });
+                return false;
+            }
             $.ajax({
                 url: '/criar_oferta',
                 type: 'POST',
@@ -364,20 +305,28 @@
                 processData: false,
                 data: myForm,
                 success: function(response) {
-
                     if (response['status'] == 200) {
                         loadOferta();
                         $("#btn-buscar-investimento").hide();
-                        alertify.set('notifier', 'position', 'top-right');
-                        alertify.notify('Oferta Publicada.', 'success', 5, function() {
-                            console.log('dismissed');
+
+                        Swal.fire({
+                            icon: "success",
+                            title: "Oferta Publicada",
+                            showConfirmButton: false,
+                            timer: 1500
                         });
+
                         $("#btn-anular-ivestimento").show();
                         $("#modal-adicionar-oferta").modal('hide');
                     } else {
-                        alertify.notify(response['message'], 'error', 5, function() {
-                            console.log('dismissed');
-                        });
+                        if (response[0]["meta"]) {
+                            $("#meta-oferta").addClass("is-invalid-field");
+                            $("#alert-meta").html(response[0]["meta"]);
+                        }
+                        if (response[0]["porcentagem"]) {
+                            $("#porcentagem-oferta").addClass("is-invalid-field");
+                            $("#alert-porcentagem").html(response[0]["porcentagem"]);
+                        }
                         $("#btn-spinner-oferta").css({
                             'display': 'none'
                         });
@@ -393,21 +342,50 @@
         });
 
         $("#content-intro-startup").on('click', '#btn-anular-ivestimento', function() {
-            $.ajax({
-                url: '/anular_oferta',
-                type: 'GET',
-                data: {
-                    '_token': '{{csrf_token()}}'
-                },
-                success: function(response) {
-                    loadIntroducaoStartup();
-                    loadOferta();
-                },
-                error: function(error) {
-                    console.log("ERRO AO ANULAR OFERTA");
-                    console.log(error);
+
+            Swal.fire({
+                title: "Deseja Anular Rodada?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#c43333bf",
+                cancelButtonColor: "#319c4ad4",
+                confirmButtonText: "Desejo",
+                cancelButtonText: "Não",
+                customClass: {
+                    confirmButton: 'btn-anular-rodada',
+                    cancelButton: 'btn-anular-rodada'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: '/anular_oferta',
+                        type: 'GET',
+                        data: {
+                            '_token': '{{csrf_token()}}'
+                        },
+                        success: function(response) {
+                            loadIntroducaoStartup();
+                            loadOferta();
+                            Swal.fire({
+                                icon: "success",
+                                title: "Rodada Anulada",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        },
+                        error: function(error) {
+                            console.log("ERRO AO ANULAR OFERTA");
+                            console.log(error);
+                        }
+                    });
+
+
+
                 }
             });
+
+
         });
 
 
@@ -981,25 +959,6 @@
         });
 
 
-        $(".my-mask-money").keyup(function(e) {
-
-
-            var elemento = $(this);
-            var valorInput = elemento.val();
-
-
-            var valorInputSoAlgarismo = valorInput.replace(/[\D]+/g, '');
-
-            var valorInputComVirgula = valorInputSoAlgarismo.replace(/([0-9]{2})$/g, ",$1");
-
-
-
-
-
-
-        });
-
-
         //----------------------CHAT--------------------------
 
 
@@ -1491,7 +1450,114 @@
             return valor;
         }
 
+        function show_valor_a_acrescer(valor) {
+            valor = set_format(valor);
+            while (valor.indexOf('.') != -1) {
+                valor = valor.replace('.', '');
+            }
+            valor = valor.replace(',', '.');
 
+            let valor_acrescer = (valor * 25 / 100).toFixed(2) + ''; // o paypal desconsta 25 em cada valor transacionado
+            valor_acrescer = set_format(valor_acrescer);
+            $("#montante-acrescer").val(valor_acrescer);
+        }
+
+        function set_format(valor) {
+            let valor_formatado = [];
+            let contador = 0;
+            let valor2;
+            valor = apagarVirgulaEPonto(valor);
+
+            if (valor.length > 17)
+                valor = valor.slice(0, 17);
+
+            ////O erro de 9999999999999999999999999999 para 100000000000000000000000000
+            if (isNaN(valor)) {
+                return false;
+            } else
+                valor = (valor - 0) + '';
+            ///-------------------------
+
+
+            for (let i = valor.length - 1; i >= 0; i--) {
+                valor_formatado.push(valor[i]);
+
+                if ((valor.length - 1) - i == 1) {
+                    valor_formatado.push(',');
+                    contador = 0;
+                }
+
+                if (contador % 3 == 0 && contador != 0 && i > 0) {
+                    valor_formatado.push('.');
+                }
+
+                contador++;
+            }
+
+            for (let i = valor.length; i < 3; i++) {
+
+                valor_formatado.push(0);
+
+                if (i == 1 && valor_formatado.indexOf(',') == -1) {
+                    valor_formatado.push(',');
+                }
+            }
+            valor2 = valor_formatado.reverse().join('');
+
+            return (valor2);
+        }
+
+        function check_empty_field(myForm) {
+            let find_error = 0;
+
+            $(".is-invalid-field").removeClass("is-invalid-field");
+            $(".alert-adicionar-oferta").html('');
+            if (!myForm.get('meta')) {
+                $("#alert-meta").html("Meta não informada");
+                $("#meta-oferta").addClass("is-invalid-field");
+                find_error = 1;
+            }
+
+            if (!myForm.get('termino')) {
+                $("#alert-data-angariacao").html("Data não informada");
+                $("#termino-oferta").addClass("is-invalid-field");
+                find_error = 1;
+            } else if ((new Date(myForm.get('termino')) - new Date()) < 85400000) {
+                $("#alert-data-angariacao").html("Deve declarar uma data aposterior a actual");
+                $("#termino-oferta").addClass("is-invalid-field");
+                find_error = 1;
+            }
+
+            if (!myForm.get('max_investidores')) {
+                $("#alert-n-investidor").html("Número máximo de investidores não informado");
+                $("#max-investidores").addClass("is-invalid-field");
+                find_error = 1;
+            } else if (myForm.get('max_investidores') < 1) {
+                $("#alert-n-investidor").html("Número de investidores deve ser igual ou maior que 1(um)");
+                $("#max-investidores").addClass("is-invalid-field");
+                find_error = 1;
+            }
+
+            if (myForm.get('pitch_video').size == 0) {
+                $("#alert-pitch").html("Pitch não carregado");
+                $("#input-pitch-video").addClass("is-invalid-field");
+                find_error = 1;
+            } else if ((myForm.get('pitch_video').size / 1000000) >= 65) {
+                $("#alert-pitch").html("Tamanho máximo do arquivo pitch deck deve ser de 64MB");
+                $("#input-pitch-video").addClass("is-invalid-field");
+                find_error = 1;
+            }
+
+            if (!myForm.get('porcentagem')) {
+                $("#alert-porcentagem").html("Porcentagem não informada");
+                $("#porcentagem-oferta").addClass("is-invalid-field");
+                find_error = 1;
+            }
+
+            if (find_error)
+                return false;
+            return true;
+        }
     });
 </script>
 @endsection

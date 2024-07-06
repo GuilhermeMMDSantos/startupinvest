@@ -1,7 +1,5 @@
 <div class="modal fade" id="modal-investir" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
-    <div id="container-popup-alert-modal-investir" style="position:absolute;right:10px;top:10px;z-index:40;">
 
-    </div>
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">

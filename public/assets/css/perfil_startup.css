@@ -21,7 +21,14 @@ body {
   display: inline-block;
   margin-right: 10px;
 }
-
+.btn-anular-rodada{
+  border:none;
+  outline:none;
+}
+.btn-anular-rodada:focus{
+  border:none;
+  outline:none;
+}
 .btn-editar {
   height: 30px;
   font-size: 12px;
@@ -234,6 +241,9 @@ body {
   display: none;
 }
 
+.is-invalid-field{
+  border-color:red !important;
+}
 
 @media (max-width: 1024px) {
   #popup-chat-container {

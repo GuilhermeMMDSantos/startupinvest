@@ -43,10 +43,8 @@ const cardField = paypal.CardFields({
                 console.log(result);
                 if (result.status == 1) {
                     console.log("SECESSO");
-                    alertify.set('notifier', 'position', 'top-right');
-                    alertify.notify('Transação Efectuada Com Sucesso.', 'success', 5, function () {
-                        console.log('dismissed');
-                    });
+                
+                    console.log('Transação Efectuada Com Sucesso.', 'success')
                 }
                 else if (result.status == 0) {
                     throw result.message;
@@ -98,9 +96,7 @@ if (cardField.isEligible()) {
                         error = "Número de Confirmação do Cartão Inválido.";
                     else if (error == "Error: INVALID_EXPIRY")
                         error = "Data de Expiração Inválida.";
-
-                    alertify.set('notifier', 'position', 'top-right');
-                    alertify.notify(`${error}`, 'error', 5, function () { });
+                    console.log(`${error}`);
                     $("#btn-spinner-investir").css({
                         'display': 'none'
                     });

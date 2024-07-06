@@ -10,6 +10,7 @@ class RodadasInvestimento extends Model
     protected $fillable = [
         'fk_startup',
         'valor_objetivo',
+        'valor_objetivo_sem_taxa',
         'valor_obtido',
         'oferta_acoes',
         'max_investidores',

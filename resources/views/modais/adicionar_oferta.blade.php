@@ -1,8 +1,5 @@
 <div class="modal fade" id="modal-adicionar-oferta" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
 
-    <div id="container-popup-alert-modal-adicionar-oferta" style="position:absolute;right:10px;top:10px;z-index:40;">
-        
-    </div>
 
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
@@ -26,8 +23,7 @@
                                 </div>
                                 <input type="text" class="form-control my-currency-format mt-0" name="meta" id="meta-oferta" style="background: #fdfdff;">
                             </div>
-                            <span style="font-size:10px;color:red;margin-top:-4px;display:block;" id="content-alert-unset-meta"></span>
-
+                            <span style="margin-top:-5px;font-size: .875em;color: #dc3545;display:block;" id="alert-meta" class="alert-adicionar-oferta"></span>
                         </div>
                         <div class="col-12 col-sm-6">
                             <label for="porcentagem-oferta">Acções à oferecer</label>
@@ -38,30 +34,40 @@
                                 </div>
                                 <input type="text" class="form-control my-currency-format mt-0" name="porcentagem" id="porcentagem-oferta" style="background: #fdfdff;">
                             </div>
-                            <span style="font-size:10px;color:red;margin-top:-4px;display:block;" id="content-alert-unset-porcentagem"></span>
+                            <span style="margin-top:-5px;font-size: .875em;color: #dc3545;display:block;" id="alert-porcentagem" class="alert-adicionar-oferta"></span>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-12 col-sm-6" style="padding-top:10px;">
-                            <label for="input-pitch-video">Pitch (Video - <span id="pitch-label-tamanho">max.64MB</span>)</label>
-                            <input class="form-control" accept=".MP4,.MKV" type="file" id="input-pitch-video" name="pitch_video">
-                            <span style="font-size:10px;color:red;" id="content-alert-unset-pitch-video"></span>
+                            <label for="montante-acrescer">+Taxa de Captação</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="montante-acrescer">Kz</label>
+                                </div>
+                                <input type="text" class="form-control  mt-0" name="montante_acrescer" id="montante-acrescer" style="background: #fdfdff;" value="0,00"  readonly>
+                            </div>
                         </div>
 
                         <div class="col-12 col-sm-6" style="padding-top:10px;">
                             <label for="max-investidores">Número máximo de investidores</label>
                             <input type="number" class="form-control" name="max_investidores" id="max-investidores" style="background: #fdfdff;" min='1' value="1">
-                            <span style="font-size:10px;color:red;" id="content-alert-unset-max-investor"></span>
+                            <span style="margin-top:1px;font-size: .875em;color: #dc3545;display:block;" id="alert-n-investidor" class="alert-adicionar-oferta"></span>
                         </div>
                     </div>
 
 
                     <div class="row">
                         <div class="col-12 col-sm-6" style="padding-top:10px;">
+                            <label for="input-pitch-video">Pitch (Video - <span id="pitch-label-tamanho">max.64MB</span>)</label>
+                            <input class="form-control" accept=".MP4,.MKV" type="file" id="input-pitch-video" name="pitch_video">
+                            <span style="margin-top:1px;font-size: .875em;color: #dc3545;display:block;" id="alert-pitch" class="alert-adicionar-oferta"></span>
+                        </div>
+
+                        <div class="col-12 col-sm-6" style="padding-top:10px;">
                             <label for="termino-oferta">Término da Angariação</label>
                             <input type="date" class="form-control" name="termino" id="termino-oferta" style="background: #fdfdff;">
-                            <span style="font-size:10px;color:red;" id="content-alert-unset-termino-angariacao"></span>
+                            <span style="margin-top:1px;font-size: .875em;color: #dc3545;display:block;" id="alert-data-angariacao" class="alert-adicionar-oferta"></span>
                         </div>
                     </div>
 
