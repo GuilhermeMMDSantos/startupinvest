@@ -166,6 +166,9 @@ Route::get('/load_estatistica_rodadas','UserController@loadEstatisticaRodadas');
 
 Route::get('/load_lista_rodadas/{page?}','UserController@loadListaRodadas');
 
+Route::get('/rodada_page/2024{id_rodada}','RodadasController@showPage')->name('rodada.page');
+Route::get('/load_intro_rodada', 'RodadasController@load_intro_rodada');
+
 Route::get('/TESTE','PagamentosController@teste');
 
 Route::get('/atualizar_porcentagem_pelo_montante','PagamentosController@atualizarPorcentagemPeloMontante');

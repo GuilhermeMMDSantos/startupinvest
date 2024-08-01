@@ -26,7 +26,7 @@
             <td>{{$rodada->data_inicio}}</td>
             <td>@if($rodada->estado == 'aberta') - @else {{$rodada->data_fim}} @endif</td>
             <td>{{$rodada->estado}}</td>
-            <td><button type="button" class="btn btn-outline-primary" style="height:33px;font-size:14px;border-radius: 30px">Visualizar</button></td>
+            <td><a href="{{route('rodada.page',$rodada->id)}}" rule="button" class="btn btn-outline-primary" style="height:33px;font-size:14px;border-radius: 30px">Visualizar</a></td>
         </tr>
         <tr class="mobile-table-rodadas" style="font-size:12px;">
             <td>
@@ -35,7 +35,7 @@
                 incio:{{$rodada->data_inicio}}; fim:@if($rodada->estado == 'aberta') - @else {{$rodada->data_fim}} @endif<br>
                 estado: {{$rodada->estado}}<br>
                 <div class="d-flex justify-content-end">
-                    <button type="button" class="btn btn-outline-primary" style="height:33px;font-size:14px;border-radius: 30px">Visualizar</button>
+                    <a href="{{route('rodada.page',$rodada->id)}}" rule="button" class="btn btn-outline-primary" style="height:33px;font-size:14px;border-radius: 30px">Visualizar</a>
                 </div>
             </td>
         </tr>

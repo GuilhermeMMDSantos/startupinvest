@@ -5,8 +5,9 @@
 @endsection
 
 @section('contentBody_base_inicio')
-<section id="body-section" class="container-fluid" style="padding-left:6.5%;padding-right:6.5%; padding-bottom:50px;">
 
+<section id="body-section" class="container-fluid" style="padding-left:6.5%;padding-right:6.5%; padding-bottom:50px;">
+  
     <h2 class="mb-4" id="title-page">Rodadas Captação</h2>
 
     <div class="mb-4" id="estatistica">
@@ -16,7 +17,7 @@
             </div>
         </div>
     </div>
-   <div class="row" id="container-filtro" style="display:none;">
+    <div class="row" id="container-filtro" style="display:none;">
         <div class="col-12 col-sm-3 offset-sm-9">
             <label for="filtro-estado-rodada"><i class="fa fa-filter" aria-hidden="true"></i> Filtro Estados</label>
             <select id="filtro-estado-rodada" class="form-control selectpicker" title="Todos" multiple data-selected-text-format="count>2" data-count-selected-text="+{0} Filtros" multiple>
@@ -33,7 +34,7 @@
                 <span class="sr-only">Loading...</span>
             </div>
         </div>
-    </div> 
+    </div>
 
 </section>
 @endsection

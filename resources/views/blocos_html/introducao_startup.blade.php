@@ -20,8 +20,8 @@
     <div style="text-align:right;;margin-top:-13px;" id="btn-startup-intoducao">
         @if($myprofile)
         <button type="button" class="btn btn-primary btn-editar" data-toggle="modal" data-target="#modal-editar-introducao-startup" style="border-radius: 30px;">Editar</button>
-        <a role="button" href="{{route('rodadas.page')}}" class="btn btn-outline-secondary ml-sm-2" style="height:33px;font-size:14px;border-radius: 30px">Rodadas de captação</a>
-        @if(empty($rodada) || $rodada->estado != 'fechada')
+        <!--<a role="button" href="{{route('rodadas.page')}}" class="btn btn-outline-secondary ml-sm-2" style="height:33px;font-size:14px;border-radius: 30px">Rodadas de captação</a>
+--> @if(empty($rodada) || $rodada->estado != 'fechada')
         <button type="button" class="btn btn-outline-secondary ml-sm-2" id="btn-buscar-investimento" data-toggle="modal" data-target="#modal-adicionar-oferta" style="height:33px;font-size:14px;border-radius: 30px; border-radius: 30px;@if($startup->estado_busca_invest == 'sim') display:none; @endif">Buscar Investimento</button>
         <button type="button" class="btn btn-outline-secondary ml-sm-2" id="btn-anular-ivestimento" style="height:33px;font-size:14px;border-radius: 30px;@if($startup->estado_busca_invest == 'nao') display:none; @endif">Anular Captação</button>
         @endif
