@@ -744,7 +744,7 @@ class UserController extends Controller
         return response()->json(['status' => 200]);
     }
 
-    public function anularOferta()
+    public function anularOferta(Request $request)
     {
         $idUser = Auth::user()->id;
 
@@ -758,11 +758,16 @@ class UserController extends Controller
             ->update([
                 'estado' => 'anulada'
             ]);
+        
+        RodadasInvestidores::where('fk_rodada', $request->rodada_id)->update([
+            'situation'=>'Não Rembolsado'
+        ]);
 
         PermissoesVerPitch::where('fk_startup', $idUser)
             ->update([
                 'estado' => 'vencido'
             ]);
+
 
         $filesForDelete = public_path() . '/storage/armazenamento/startups/pitch/pitch_' . $idUser . '*';
         chmod(public_path() . '/storage/armazenamento/startups/pitch/', 0777); // Caso o sistema seja hospedado num linux server

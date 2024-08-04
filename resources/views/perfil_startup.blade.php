@@ -362,7 +362,8 @@
                         url: '/anular_oferta',
                         type: 'GET',
                         data: {
-                            '_token': '{{csrf_token()}}'
+                            '_token': '{{csrf_token()}}',
+                            'rodada_id':'{{$rodadaId}}'
                         },
                         success: function(response) {
                             loadIntroducaoStartup();

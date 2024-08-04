@@ -14,6 +14,7 @@ class RodadasInvestidores extends Model
         'valor_investido',
         'acoes_adquirida',
         'contrato_mutou',
+        'situation',
         'contrato_mutou_aprovacao'
     ];
 

@@ -24,3 +24,9 @@
       text-align: center;
     }
   }
+
+  @media (min-width:576px) and (max-width:1024px){
+   .card-investor-rodada div{
+    max-width: 100% !important;
+   }
+  }

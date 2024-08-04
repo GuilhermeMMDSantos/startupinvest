@@ -43,18 +43,37 @@
                 <div class="card-body row">
                     <div class="col-sm-6 col-12">
                         <p>
-                        <span class="badge badge-primary">Startup</span>&nbsp;<a href="{{route('startup.perfil',$investidor->rodada->startup->user->code_user)}}" style="font-size:20px;">{{$investidor->rodada->startup->nome}}</a>
-        
+                            <span class="badge badge-primary">Startup</span>&nbsp;<a href="{{route('startup.perfil',$investidor->rodada->startup->user->code_user)}}" style="font-size:20px;">{{$investidor->rodada->startup->nome}}</a>
+
                         </p>
                         <p>
-                        <span class="badge badge-primary">Aportado</span>&nbsp;<span style="font-size:20px;"> {{number_format($investidor->valor_investido,2,',','.')}} AOA</span>
+                            <span class="badge badge-primary">Aportado</span>&nbsp;<span style="font-size:20px;"> {{number_format($investidor->valor_investido,2,',','.')}} AOA</span>
                         </p>
                         <p>
-                        <span class="badge badge-primary">Porcentagem</span>&nbsp;<span style="font-size:20px;"> {{$investidor->acoes_adquirida}}%</span>
+                            <span class="badge badge-primary">Porcentagem</span>&nbsp;<span style="font-size:20px;"> {{$investidor->acoes_adquirida}}%</span>
                         </p>
                     </div>
                     <div class="col-sm-6 col-12">
-                        Contrato
+                        <p><span class="badge badge-primary">Situação</span></p>
+                        @if($investidor->situation == null)
+                        Captado
+                        @elseif($investidor->situation == 'Não Rembolsado')
+                        {{$investidor->situation}}
+                        @elseif($investidor->situation == 'Reembolsado')
+                        {{$investidor->situation}}
+                        @elseif($investidor->situation == 'Não Assinado')
+                        <div style="width:90px;height:90px;border:1px solid #ccc;margin:auto;">
+                            <img src="{{asset('assets/img/contract.png')}}" class="w-100 h-100" />
+                        </div>
+                        <a href="{{route('view_pdf',$investidor->contrato_mutou)}}">Assinar Contrato</a>
+                        @elseif($investidor->situation == 'Assinado')
+                        <div style="width:90px;height:90px;border:1px solid #ccc;margin:auto;">
+                            <img src="{{asset('assets/img/contract.png')}}" class="w-100 h-100" />
+                        </div>
+                        <a href="#" role="button">Visualizar Contrato</a>
+                        @elseif($investidor->situation == 'Aguardando Contracto')
+                        {{$investidor->situation}}
+                        @endif
                     </div>
                 </div>
             </div>
@@ -65,25 +84,46 @@
     <div class="container-fluid">
         <div class="row">
             @forelse($investidores as $investidor)
-            <div class="card col-sm-6 col-12 h-100">
-                <div class="card-body row">
-                    <div class="col-sm-8 col-12">
-                        <p> 
-                        <span class="badge badge-primary">Investidor</span>&nbsp;<a href="{{route('startup.perfil',$investidor->investidor->user->code_user)}}">{{$investidor->investidor->nome_completo}}</a>
-                        </p>
-                        <p>
-                        <span class="badge badge-primary">Aportado</span>&nbsp;<span>{{number_format($investidor->valor_investido,2,',','.')}} AOA</span>
-                        </p>
-                        <p>
-                        <span class="badge badge-primary">Porcentagem</span>&nbsp;<span> {{$investidor->acoes_adquirida}}%</span>
-                        </p>
-                    </div>
-                    <div class="col-sm-4 col-12">
-                        Contrato
+            <div class="col-sm-6 col-12">
+                <div class="card  h-100">
+                    <div class="card-body row card-investor-rodada">
+                        <div class="col-12 col-sm-8">
+                            <p>
+                                <span class="badge badge-primary">Investidor</span>&nbsp;<a href="{{route('startup.perfil',$investidor->investidor->user->code_user)}}">{{$investidor->investidor->nome_completo}}</a>
+                            </p>
+                            <p>
+                                <span class="badge badge-primary">Aportado</span>&nbsp;<span>{{number_format($investidor->valor_investido,2,',','.')}} AOA</span>
+                            </p>
+                            <p>
+                                <span class="badge badge-primary">Porcentagem</span>&nbsp;<span> {{$investidor->acoes_adquirida}}%</span>
+                            </p>
+                        </div>
+                        <div class="col-12 col-sm-4" style="text-align:center;">
+                            <p><span class="badge badge-primary">Situação</span></p>
+                            @if($investidor->situation == null)
+                            Captado
+                            @elseif($investidor->situation == 'Não Rembolsado')
+                            {{$investidor->situation}}
+                            @elseif($investidor->situation == 'Reembolsado')
+                            {{$investidor->situation}}
+                            @elseif($investidor->situation == 'Não Assinado')
+                            <div style="width:90px;height:90px;border:1px solid #ccc;margin:auto;">
+                                <img src="{{asset('assets/img/contract.png')}}" class="w-100 h-100" />
+                            </div>
+                            <a href="{{route('view_pdf',$investidor->contrato_mutou)}}">Assinar Contrato</a>
+                            @elseif($investidor->situation == 'Assinado')
+                            <div style="width:90px;height:90px;border:1px solid #ccc;margin:auto;">
+                                <img src="{{asset('assets/img/contract.png')}}" class="w-100 h-100" />
+                            </div>
+                            <a href="#" role="button">Visualizar Contrato</a>
+                            @elseif($investidor->situation == 'Aguardando Contracto')
+                            {{$investidor->situation}}
+                            @endif
+
+                        </div>
                     </div>
                 </div>
             </div>
-
             @empty
             <div class=" col-12 d-flex align-items-center justify-content-center" style="min-height:200px;">
                 <h2 style="font-size:25px;">Nenhum @if($investidor !=NULL )outro @endif Investidor Participou da Rodada.</h2>

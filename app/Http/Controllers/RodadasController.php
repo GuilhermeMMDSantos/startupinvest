@@ -48,4 +48,9 @@ class RodadasController extends Controller
         $rodada = RodadasInvestimento::where('id', $request->id_rodada)->first();
         return view('pagina_da_rodada', compact('notificacoes', 'qtdnotifications', 'qtdMessageUnview', 'investidores', 'rodada', 'investidor'))->render();
     }
+
+    public function visualizarParaAssinarPdf(Request $request){
+        $url_pdf = 'storage/armazenamento/contratos/'.$request->doc;
+        return view('visualiza_pdf', compact('url_pdf'));
+    }
 }

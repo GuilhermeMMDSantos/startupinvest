@@ -164,10 +164,13 @@ Route::get('/rodadas_admin','AdminController@showRodadasPage')->name('rodadas.pa
 
 Route::get('/load_estatistica_rodadas','UserController@loadEstatisticaRodadas');
 
-Route::get('/load_lista_rodadas/{page?}','UserController@loadListaRodadas');
+Route::get('/load_lista_rodadas/{page?}','UserController@loadListaRodadas')->middleware('auth');
 
-Route::get('/rodada_page/2024{id_rodada}','RodadasController@showPage')->name('rodada.page');
+Route::get('/rodada_page/2024{id_rodada}','RodadasController@showPage')->name('rodada.page')->middleware('auth');
+
 Route::get('/load_intro_rodada', 'RodadasController@load_intro_rodada');
+
+Route::get('/view_to_assign_pdf/{doc}','RodadasController@visualizarParaAssinarPdf')->name('view_pdf');
 
 Route::get('/TESTE','PagamentosController@teste');
 
