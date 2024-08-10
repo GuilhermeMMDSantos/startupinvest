@@ -65,16 +65,22 @@
 @section('scripts')
 <script type="text/javascript">
     $(function() {
-        $("#show-password").click(function(){
+        $("#show-password").click(function() {
             console.log("clicou");
-            if ($("#password-login").attr('type') == 'password')
-            {
+            if ($("#password-login").attr('type') == 'password') {
                 $("#password-login").attr('type', 'text');
-                $("#show-password i").attr('class','fa fa-eye');
-            }else{
+                $("#show-password i").attr('class', 'fa fa-eye');
+            } else {
                 $("#password-login").attr('type', 'password');
-                $("#show-password i").attr('class','fa fa-eye-slash');
+                $("#show-password i").attr('class', 'fa fa-eye-slash');
             }
+        });
+
+        $("#form-login").submit(function() {
+            $("#btn-spinner-user").css({
+                'opacity': 1
+            });
+            return true;
         });
     });
 </script>

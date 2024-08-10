@@ -170,7 +170,18 @@ Route::get('/rodada_page/2024{id_rodada}','RodadasController@showPage')->name('r
 
 Route::get('/load_intro_rodada', 'RodadasController@load_intro_rodada');
 
+
+
 Route::get('/view_to_assign_pdf/{doc}','RodadasController@visualizarParaAssinarPdf')->name('view_pdf');
+
+
+Route::post('/add-signature','RodadasController@addSignature')->name('pdf.add-signature');
+
+
+
+Route::get('/sign',function(){
+    return view('pdfjs');
+});
 
 Route::get('/TESTE','PagamentosController@teste');
 

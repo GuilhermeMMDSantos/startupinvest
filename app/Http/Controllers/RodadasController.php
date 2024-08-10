@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use App\Mensagens;
 use App\RodadasInvestidores;
 use App\RodadasInvestimento;
+use Illuminate\Support\Facades\Storage;
+use setasign\Fpdi\Fpdi;
 
 class RodadasController extends Controller
 {
@@ -53,4 +55,35 @@ class RodadasController extends Controller
         $url_pdf = 'storage/armazenamento/contratos/'.$request->doc;
         return view('visualiza_pdf', compact('url_pdf'));
     }
+
+    public function addSignature(Request $request)
+    {
+    
+        $path = $request->input('path');
+        $x = $request->input('x');
+        $y = $request->input('y');
+        $signatureData = $request->input('signature');
+        $public_path = public_path();
+
+        $pdf = new Fpdi();
+        $pageCount = $pdf->setSourceFile($public_path.'/storage/armazenamento/contratos/doc.pdf');
+        $template = $pdf->importPage(1);
+        $pdf->AddPage();
+        $pdf->useTemplate($template);
+
+        $signaturePath = $public_path.'/storage/armazenamento/contratos/signature.png';
+        list($type, $signatureData) = explode(';', $signatureData);
+        list(, $signatureData)      = explode(',', $signatureData);
+        $signatureData = base64_decode($signatureData);
+        file_put_contents($signaturePath, $signatureData);
+
+        $pdf->Image($signaturePath, $x, $y, 50); // Adjust size and position as needed
+
+        $outputPath = $public_path.'/storage/armazenamento/contratos/doc_two.pdf';
+        $pdf->Output($outputPath, 'F');
+
+        return response()->download($outputPath);
+    }  
+    
+   
 }
