@@ -170,6 +170,9 @@ Route::get('/rodada_page/2024{id_rodada}','RodadasController@showPage')->name('r
 
 Route::get('/load_intro_rodada', 'RodadasController@load_intro_rodada');
 
+Route::get('/TESTE','PagamentosController@teste');
+
+Route::get('/atualizar_porcentagem_pelo_montante','PagamentosController@atualizarPorcentagemPeloMontante');
 
 
 Route::get('/view_to_assign_pdf/{doc}','RodadasController@visualizarParaAssinarPdf')->name('view_pdf');
@@ -179,10 +182,13 @@ Route::post('/add-signature','RodadasController@addSignature')->name('pdf.add-si
 
 
 
-Route::get('/sign',function(){
-    return view('pdfjs');
-});
+Route::get('/sign_contract','RodadasController@signContract')->middleware('auth');
 
-Route::get('/TESTE','PagamentosController@teste');
 
-Route::get('/atualizar_porcentagem_pelo_montante','PagamentosController@atualizarPorcentagemPeloMontante');
+Route::post('/save_contrato','RodadasController@saveContrato');
+
+Route::get('/rm_contrato','RodadasController@removeContrato');
+
+Route::get('/update_iinvest_situation','RodadasController@updateIinvestSituation');
+
+Route::get('/view_doc/{rodada}{other}','RodadasController@viewDoc')->name('view_doc');

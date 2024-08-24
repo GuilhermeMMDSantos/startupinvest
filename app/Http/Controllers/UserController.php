@@ -760,7 +760,7 @@ class UserController extends Controller
             ]);
         
         RodadasInvestidores::where('fk_rodada', $request->rodada_id)->update([
-            'situation'=>'Não Rembolsado'
+            'status_investimento'=> 2
         ]);
 
         PermissoesVerPitch::where('fk_startup', $idUser)

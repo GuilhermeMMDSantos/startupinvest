@@ -19,6 +19,16 @@
     color: #6c757d;
   }
 
+  .btn-eliminar-contrato-alert{
+    border:none;
+    outline:none;
+  }
+
+  .btn-eliminar-contrato-alert:focus{
+    border:none;
+    outline:none;
+  }
+
   @media (max-width: 846px) {
     #intro-rodada h6, #intro-rodada h5{
       text-align: center;
