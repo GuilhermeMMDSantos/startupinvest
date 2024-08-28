@@ -118,4 +118,25 @@ $(function () {
         });
     }
 
+    //---------------Js DA MODAL
+
+    var scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    var modalBody = document.querySelector('#pdfModal');
+
+    modalBody.addEventListener('scroll', function() {
+        if (modalBody.scrollTop > 50) {
+            scrollToTopBtn.style.display = 'block';
+        } else {
+            scrollToTopBtn.style.display = 'none';
+        }
+    });
+
+
+    scrollToTopBtn.addEventListener('click', function() {
+        modalBody.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
 });

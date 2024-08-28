@@ -129,8 +129,11 @@
                                 <div style="width:90px;height:90px;border:1px solid #ccc;margin:auto;">
                                     <img src="{{asset('assets/img/contract.png')}}" class="w-100 h-100" />
                                 </div>
-                                <a href="{{route('view_doc',[$rodada->id, $investidor->fk_investidor])}}" rule="button" class="btn btn-primary" style="font-size:12px;margin-top:5px;">Visualizar Contrato</a>
-
+                                <!--<a href="{{route('view_doc',[$rodada->id, $investidor->fk_investidor])}}" rule="button" class="btn btn-primary" style="font-size:12px;margin-top:5px;">Visualizar Contrato</a>-->
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pdfModal">
+                                    Visualizar PDF
+                                </button>
+                                @include('modais/pdf_visualizer_m')
                                 @if($investidor->status_contrato_investidor != 4)
                                 <button class="btn btn-primary btn-eliminar-contrato" linker="{{$investidor->fk_investidor}}" style="font-size:12px;margin-top:5px;">Eliminar Contrato</button>
                                 @endif
@@ -180,6 +183,83 @@
 
 
 @section('scripts_base_inicio')
-<script type="text/javascript" src="{{asset('assets/js/pagina_da_rodada.js')}}">
+<script src="{{asset('assets/js/pdfJS_2_16_105.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('assets/js/pagina_da_rodada.js')}}"></script>
+<script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "{{ asset('assets/js/pdfJS_2_16_105.worker.min.js') }}";
+
+    var urlDoc = "{{ asset('storage/armazenamento/contratos/contract6.pdf') }}";
+    var pdfDoc = null,
+        pdfContainer = document.getElementById('pdf-container'),
+        pageNumDisplay = document.getElementById('page_num'),
+        pageCountDisplay = document.getElementById('page_count'),
+        scale = (document.getElementById('body-section').clientWidth)/800,
+        scale = scale < 1 ? scale : 1.3,
+        canvasList = [];
+
+    $('#pdfModal').on('shown.bs.modal', function () {
+        pdfjsLib.getDocument(urlDoc).promise.then(function (pdfDoc_) {
+            pdfDoc = pdfDoc_;
+            pageCountDisplay.textContent = pdfDoc.numPages;
+            renderAllPages();
+        });
+    });
+
+    $('#pdfModal').on('scroll', onScroll);
+
+    $(window).on('resize', function () {
+        scale = calculateScale();
+        renderAllPages();
+    });
+
+    function renderPage(num) {
+        pdfDoc.getPage(num).then(function (page) {
+            var viewport = page.getViewport({ scale: scale });
+            var canvas = document.createElement('canvas');
+            canvas.className = 'pdf-page';
+            var ctx = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            var renderContext = {
+                canvasContext: ctx,
+                viewport: viewport
+            };
+            page.render(renderContext).promise.then(function () {
+                pdfContainer.appendChild(canvas);
+                canvasList.push(canvas);
+            });
+        });
+    }
+
+    function getVisiblePageNumber() {
+        let currentPage = 1;
+        canvasList.forEach((canvas, index) => {
+            const rect = canvas.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom >= 0) {
+                currentPage = index + 1;
+            }
+        });
+        return currentPage;
+    }
+
+    function onScroll() {
+        const currentPage = getVisiblePageNumber();
+        pageNumDisplay.textContent = currentPage;
+    }
+
+    function renderAllPages() {
+        pdfContainer.innerHTML = '';
+        canvasList = [];
+        for (var i = 1; i <= pdfDoc.numPages; i++) {
+            renderPage(i);
+        }
+    }
+
+    function calculateScale() {
+        var containerWidth = pdfContainer.clientWidth;
+        var scaleFactor = containerWidth / 800;
+        return scaleFactor < 1 ? scaleFactor : 1.3;
+    }
 </script>
 @endsection
