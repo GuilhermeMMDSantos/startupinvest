@@ -1230,17 +1230,7 @@ class UserController extends Controller
 
         $qtdMessageUnview = (int) count($messages);
 
-        if (Auth::user()->tipo == 'startup') {
-        } else if (Auth::user()->tipo == 'investidor') {
-        } else if (Auth::user()->tipo == 'admin') {
-        }
-
-        $rodadas = RodadasInvestimento::whereHas('investidoresNaRodada', function (Builder $query) use ($presentUser) {
-            $query->where('fk_investidor', $presentUser);
-        })
-            ->get();
-
-        return view('rodadas_captacao', compact('rodadas', 'qtdnotifications', 'qtdMessageUnview'));
+        return view('rodadas_captacao', compact( 'qtdnotifications', 'qtdMessageUnview'));
     }
 
     public function loadEstatisticaRodadas()
@@ -1345,7 +1335,8 @@ class UserController extends Controller
                 ->when($haveFiltro, function ($query) use ($filtros) {
                     return $query->whereIn('estado', $filtros);
                 })
-                ->simplePaginate(5);
+                ->orderBy('updated_at', 'DESC')
+                ->paginate(5);
         } else if ($tipoUser == 'investidor') {
             $rodadas = RodadasInvestimento::whereHas('investidoresNaRodada', function (Builder $query) use ($presentUser) {
                 $query->where('fk_investidor', $presentUser);
@@ -1358,7 +1349,8 @@ class UserController extends Controller
                 ->when($haveFiltro, function ($query) use ($filtros) {
                     return $query->whereIn('estado', $filtros);
                 })
-                ->simplePaginate(5);
+                ->orderBy('updated_at', 'DESC')
+                ->paginate(5);
         } else if ($tipoUser == 'admin') {
             $rodadas = RodadasInvestimento::when($haveFiltro, function ($query) use ($filtros) {
                 return $query->whereIn('estado', $filtros);
@@ -1368,7 +1360,8 @@ class UserController extends Controller
                     DB::raw('DATE_FORMAT(created_at,"%d/%m/%Y") as data_inicio'),
                     DB::raw('DATE_FORMAT(updated_at,"%d/%m/%Y") as data_fim')
                 )
-                ->simplePaginate(5);
+                ->orderBy('updated_at', 'DESC')
+                ->paginate(5);
         }
 
 
