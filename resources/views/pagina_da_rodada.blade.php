@@ -130,10 +130,11 @@
                                     <img src="{{asset('assets/img/contract.png')}}" class="w-100 h-100" />
                                 </div>
                                 <!--<a href="{{route('view_doc',[$rodada->id, $investidor->fk_investidor])}}" rule="button" class="btn btn-primary" style="font-size:12px;margin-top:5px;">Visualizar Contrato</a>-->
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pdfModal">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pdfModal" data-doc="{{$investidor->contrato_mutou}}">
                                     Visualizar PDF
                                 </button>
                                 @include('modais/pdf_visualizer_m')
+                                @include('modais/sign_m')
                                 @if($investidor->status_contrato_investidor != 4)
                                 <button class="btn btn-primary btn-eliminar-contrato" linker="{{$investidor->fk_investidor}}" style="font-size:12px;margin-top:5px;">Eliminar Contrato</button>
                                 @endif
@@ -184,21 +185,28 @@
 
 @section('scripts_base_inicio')
 <script src="{{asset('assets/js/pdfJS_2_16_105.min.js')}}"></script>
+<script src="{{asset('assets/js/signature_pad.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('assets/js/pagina_da_rodada.js')}}"></script>
 <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = "{{ asset('assets/js/pdfJS_2_16_105.worker.min.js') }}";
 
-    var urlDoc = "{{ asset('storage/armazenamento/contratos/contract6.pdf') }}";
+    var canvas = null;
+    var signaturePad = null;
+    var urlDoc = null;
     var pdfDoc = null,
         pdfContainer = document.getElementById('pdf-container'),
         pageNumDisplay = document.getElementById('page_num'),
         pageCountDisplay = document.getElementById('page_count'),
-        scale = (document.getElementById('body-section').clientWidth)/800,
+        scale = (document.getElementById('body-section').clientWidth) / 800,
         scale = scale < 1 ? scale : 1.3,
         canvasList = [];
 
-    $('#pdfModal').on('shown.bs.modal', function () {
-        pdfjsLib.getDocument(urlDoc).promise.then(function (pdfDoc_) {
+    $('#pdfModal').on('shown.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        urlDoc =  "{{ asset('storage/') }}/" + button.data('doc');
+        $("#path_doc").val(button.data('doc'));
+        
+        pdfjsLib.getDocument(urlDoc).promise.then(function(pdfDoc_) {
             pdfDoc = pdfDoc_;
             pageCountDisplay.textContent = pdfDoc.numPages;
             renderAllPages();
@@ -207,14 +215,39 @@
 
     $('#pdfModal').on('scroll', onScroll);
 
-    $(window).on('resize', function () {
+    $(window).on('resize', function() {
         scale = calculateScale();
         renderAllPages();
     });
 
+    //-----------------------MODAL_SIGN
+    $("#signModal").on('shown.bs.modal', function() {
+        canvas = document.getElementById('signature-pad');
+        signaturePad = new SignaturePad(canvas);
+        resizeCanvas();
+    });
+
+    $("#clear-signature").click(function(){
+        signaturePad.clear();
+    });
+
+    $("#signModal").on('hidden.bs.modal',function(){
+        $('body').addClass('modal-open');
+    });
+
+    $("#add-sign").click(function(){
+        if (!signaturePad.isEmpty()) {
+            $("#signature").val(signaturePad.toDataURL());
+            submitSign();
+        }
+    });
+    //-----------------------END_MODAL_SIGN
+
     function renderPage(num) {
-        pdfDoc.getPage(num).then(function (page) {
-            var viewport = page.getViewport({ scale: scale });
+        pdfDoc.getPage(num).then(function(page) {
+            var viewport = page.getViewport({
+                scale: scale
+            });
             var canvas = document.createElement('canvas');
             canvas.className = 'pdf-page';
             var ctx = canvas.getContext('2d');
@@ -225,7 +258,7 @@
                 canvasContext: ctx,
                 viewport: viewport
             };
-            page.render(renderContext).promise.then(function () {
+            page.render(renderContext).promise.then(function() {
                 pdfContainer.appendChild(canvas);
                 canvasList.push(canvas);
             });
@@ -261,5 +294,32 @@
         var scaleFactor = containerWidth / 800;
         return scaleFactor < 1 ? scaleFactor : 1.3;
     }
+    //-----------------------MODAL_SIGN
+    function resizeCanvas() {
+        const ratio = Math.max(window.devicePixelRatio || 1,1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        canvas.getContext('2d').scale(ratio, ratio);
+        signaturePad.clear(); // Limpa a assinatura após redimensionar
+    }
+
+    function submitSign(){
+        var formPointSigned = new FormData($("#point-to-insert-sign")[0]);
+        $.ajax({
+            url: "{{ route('pdf.add-signature') }}",
+            type: 'post',
+            contentType:false,
+            processData:false,
+            data: formPointSigned,
+            sucess:function(response){
+                console.log("sucesso");
+            },
+            error:function(error){
+                console.log("Erro");
+                console.log(error);
+            }
+        });
+    }
+    //-----------------------END_MODAL_SIGN
 </script>
 @endsection

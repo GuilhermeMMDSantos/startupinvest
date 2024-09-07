@@ -208,7 +208,8 @@ class RodadasController extends Controller
 
     public function visualizarParaAssinarPdf(Request $request)
     {
-        $url_pdf = 'storage/armazenamento/contratos/' . $request->doc;
+       // dd("O que está a acontecer???");
+        $url_pdf = 'storage/armazenamento/contratos/contract6602202408241028.pdf';
         return view('visualiza_pdf', compact('url_pdf'));
     }
 
@@ -216,20 +217,21 @@ class RodadasController extends Controller
 
     public function addSignature(Request $request)
     {
-
-        $path = $request->input('path');
+        $pathDoc = $request->input('path_doc');
         $x = $request->input('x');
         $y = $request->input('y');
         $signatureData = $request->input('signature');
         $public_path = public_path();
+        $currentUser = Auth::user()->id;
+        $currentDate = Carbon::now()->format('Ymdhs');
 
         $pdf = new Fpdi();
-        $pageCount = $pdf->setSourceFile($public_path . '/storage/armazenamento/contratos/doc.pdf');
+        $pageCount = $pdf->setSourceFile($public_path . '/storage/'.$pathDoc);
         $template = $pdf->importPage(1);
         $pdf->AddPage();
         $pdf->useTemplate($template);
-
-        $signaturePath = $public_path . '/storage/armazenamento/contratos/signature.png';
+        $signName = 'signature'.$currentUser."_".$currentDate.".png";
+        $signaturePath = $public_path . '/storage/armazenamento/contratos/'.$signName;
         list($type, $signatureData) = explode(';', $signatureData);
         list(, $signatureData)      = explode(',', $signatureData);
         $signatureData = base64_decode($signatureData);
@@ -237,7 +239,7 @@ class RodadasController extends Controller
 
         $pdf->Image($signaturePath, $x, $y, 50); // Adjust size and position as needed
 
-        $outputPath = $public_path . '/storage/armazenamento/contratos/doc_two.pdf';
+        $outputPath = $public_path . '/storage/'.$pathDoc;
         $pdf->Output($outputPath, 'F');
 
         return response()->download($outputPath);

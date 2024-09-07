@@ -175,7 +175,7 @@ Route::get('/TESTE','PagamentosController@teste');
 Route::get('/atualizar_porcentagem_pelo_montante','PagamentosController@atualizarPorcentagemPeloMontante');
 
 
-Route::get('/view_to_assign_pdf/{doc}','RodadasController@visualizarParaAssinarPdf')->name('view_pdf');
+Route::get('/view_to_assign_pdf','RodadasController@visualizarParaAssinarPdf')->name('view_pdf');
 
 
 Route::post('/add-signature','RodadasController@addSignature')->name('pdf.add-signature');

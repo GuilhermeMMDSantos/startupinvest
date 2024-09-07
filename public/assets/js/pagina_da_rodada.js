@@ -96,6 +96,55 @@ $(function () {
     });
 
 
+    //---------------MODAL_VISUALIZER
+
+    var scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    var modalBody = document.querySelector('#pdfModal');
+
+    $("#btn-assinar").click(function () {
+        swal.fire({
+            title: "Assinar",
+            icon: "info",
+            text: "Clique onde deseja adicionar a assinatura no documento.",
+            confirmButtonText: "Ok"
+        }).then((result) => {
+            if (result.isConfirmed)
+                $(".pdf-page").addClass('clik-area');
+        });
+    });
+
+    $("#pdf-container").on('click', '.clik-area', function (event) {
+        $("#signModal").modal('show');
+        getPointToSign(event);
+        $(".pdf-page").removeClass('clik-area');
+
+    });
+
+    $("#pdfModal").on("hidden.bs.modal", function (e) {
+        $(".pdf-page").removeClass('clik-area');
+    });
+
+    modalBody.addEventListener('scroll', function () {
+        if (modalBody.scrollTop > 50) {
+            scrollToTopBtn.style.display = 'block';
+        } else {
+            scrollToTopBtn.style.display = 'none';
+        }
+    });
+
+
+    scrollToTopBtn.addEventListener('click', function () {
+        modalBody.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+
+
+    //---------------------------END_MODAL_VISUALIZER
+
+
     function updateInvestSituation1() {
         let rodadaId = $("#title-page").attr('val');
         $("#investor-invest-situation-container").empty();
@@ -117,26 +166,13 @@ $(function () {
             }
         });
     }
-
-    //---------------Js DA MODAL
-
-    var scrollToTopBtn = document.getElementById('scrollToTopBtn');
-    var modalBody = document.querySelector('#pdfModal');
-
-    modalBody.addEventListener('scroll', function() {
-        if (modalBody.scrollTop > 50) {
-            scrollToTopBtn.style.display = 'block';
-        } else {
-            scrollToTopBtn.style.display = 'none';
-        }
-    });
-
-
-    scrollToTopBtn.addEventListener('click', function() {
-        modalBody.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
+ //---------------MODAL_VISUALIZER
+    function getPointToSign(event) {
+        const viewer = document.getElementById('pdf-container');
+        const rect = viewer.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+    }
+//-----------------------------------------
 
 });
