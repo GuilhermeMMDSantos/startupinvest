@@ -237,6 +237,7 @@
 
     $("#add-sign").click(function(){
         if (!signaturePad.isEmpty()) {
+            console.log("add sign");
             $("#signature").val(signaturePad.toDataURL());
             submitSign();
         }
@@ -304,15 +305,17 @@
     }
 
     function submitSign(){
+        console.log("submiting");
         var formPointSigned = new FormData($("#point-to-insert-sign")[0]);
         $.ajax({
-            url: "{{ route('pdf.add-signature') }}",
+            url: '/add-signature',
             type: 'post',
             contentType:false,
             processData:false,
             data: formPointSigned,
-            sucess:function(response){
+            success:function(response){
                 console.log("sucesso");
+                console.log(response);
             },
             error:function(error){
                 console.log("Erro");

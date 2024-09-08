@@ -155,7 +155,7 @@ $(function () {
             data: {
                 'rodadaId': rodadaId
             },
-            sucess: function (response) {
+            success: function (response) {
                 $("#investor-invest-situation-container").empty();
                 $("#investor-invest-situation-container").append(response['html']);
             },
@@ -172,6 +172,12 @@ $(function () {
         const rect = viewer.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
+        $("#point_x").val(x);
+        $("#point_y").val(y);
+
+        console.log("Coordenadas");
+        console.log(x);
+        console.log(y);
     }
 //-----------------------------------------
 
