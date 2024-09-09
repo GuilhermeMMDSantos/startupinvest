@@ -1,0 +1,4 @@
+*
+!armazenamento/
+!armazenamento/**
+!.gitignore
