@@ -173,7 +173,7 @@ class RodadasController extends Controller
         ])->first();
 
         $urlDoc = "storage/" . $rodadaInvestimento->contrato_mutou;
-        return view('pdf_visualizer', compact('urlDoc', 'notificacoes', 'qtdnotifications', 'qtdMessageUnview',));
+        return view('pdf_visualizer', compact('urlDoc', 'notificacoes', 'qtdnotifications', 'qtdMessageUnview'));
     }
 
     public function signContract()
