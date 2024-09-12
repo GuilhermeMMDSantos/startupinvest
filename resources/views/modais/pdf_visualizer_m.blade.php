@@ -40,9 +40,11 @@
             <div class="modal-header">
 
                 <h5 class="modal-title">Assinar Contrato</h5>&nbsp;
-                <button class="btn btn-primary" id="btn-feito">Feito</button>
-                <button class="btn btn-primary" id="btn-cancelar">Cancelar</button>
-                <button class="btn btn-primary" id="btn-assinar">Assinar</button>
+                <div id="options-visualizer">
+                    <button class="btn btn-primary" id="btn-feito">Feito</button>
+                    <button class="btn btn-primary" id="btn-cancelar">Cancelar</button>
+                    <button class="btn btn-primary" id="btn-assinar">Assinar</button>
+                </div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

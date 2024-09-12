@@ -144,10 +144,9 @@
                                 <div style="width:90px;height:90px;border:1px solid #ccc;margin:auto;">
                                     <img src="{{asset('assets/img/contract.png')}}" class="w-100 h-100" />
                                 </div>
-                                <!--<a href="{{route('view_doc',[$rodada->id, $investidor->fk_investidor])}}" rule="button" class="btn btn-primary" style="font-size:12px;margin-top:5px;">Visualizar Contrato</a>-->
                                 <button type="button" class="btn btn-primary" data-toggle="modal"
-                                    data-target="#pdfModal" data-doc="{{$investidor->contrato_mutou}}">
-                                    Visualizar PDF
+                                    data-target="#pdfModal" data-doc="{{$investidor->contrato_mutou}}" data-origin=1>
+                                    Ler Contrato
                                 </button>
                                 @include('modais/pdf_visualizer_m')
                                 @include('modais/sign_m')
@@ -170,8 +169,10 @@
 
                                 @if($investidor->status_contrato_startup == 1)
                                 <p>Assinatura do Sócio Fundador em Falta</p>
-                                <button class="btn btn-primary" style="font-size:12px;margin-top:5px;">Assinar
-                                    Contrato</button>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#pdfModal" data-doc="{{$investidor->contrato_mutou}}" data-origin=2>
+                                    Assinar Contrato
+                                </button>
                                 @elseif($investidor->status_contrato_startup == 4)
                                 <p>Assinado Pelo Sócio Fundador</p>
                                 @endif
@@ -223,7 +224,12 @@
         canvasList = [];
 
     $('#pdfModal').on('shown.bs.modal', function(event) {
+
         var button = $(event.relatedTarget);
+        var origin = button.data('origin');
+        if (origin == 1) {
+            $("#options-visualizer").hide();
+        }
         urlDoc = "{{ asset('storage/') }}/" + button.data('doc');
         $("#path_doc").val(button.data('doc'));
 

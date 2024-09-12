@@ -113,6 +113,31 @@ $(function () {
         });
     });
 
+    $("#btn-feito").click(function () {
+        var pathDoc = $("#path_doc").val();
+        $.ajax({
+            url: '/confirmar_assinatura',
+            type: 'get',
+            data: {
+                'pathDoc': pathDoc
+            },
+            success: function (response) {
+               $("#pdfModal").modal('hide');
+               Swal.fire({
+                icon: "success",
+                title: "Contrato Assinado",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            },
+            error: function (error) {
+                console.log("Erro");
+                console.log(error);
+
+            }
+        });
+    });
+
     $("#pdf-container").on('click', '.clik-area', function (event) {
         $("#signModal").modal('show');
         getPointToSign(event);
@@ -166,7 +191,7 @@ $(function () {
             }
         });
     }
- //---------------MODAL_VISUALIZER
+    //---------------MODAL_VISUALIZER
     function getPointToSign(event) {
         const viewer = document.getElementById('pdf-container');
         const rect = viewer.getBoundingClientRect();
@@ -174,11 +199,7 @@ $(function () {
         const y = event.clientY - rect.top;
         $("#point_x").val(x);
         $("#point_y").val(y);
-
-        console.log("Coordenadas");
-        console.log(x);
-        console.log(y);
     }
-//-----------------------------------------
+    //-----------------------------------------
 
 });
