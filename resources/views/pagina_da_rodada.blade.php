@@ -5,11 +5,14 @@
 @endsection
 
 @section('contentBody_base_inicio')
-<section id="body-section" class="container-fluid" style="padding-left:6.5% !important;padding-right:6.5% !important; padding-bottom:50px;">
+<section id="body-section" class="container-fluid"
+    style="padding-left:6.5% !important;padding-right:6.5% !important; padding-bottom:50px;">
 
 
 
-    <h2 class="mb-4" id="title-page" val="{{$rodada->id}}">Rodada <i style="font-size:20px;margin-right:2px;color:#818182;">•</i><span style="font-size:15px;font-weight:bold;color:#818182;"> {{$rodada->estado}}</span></h2>
+    <h2 class="mb-4" id="title-page" val="{{$rodada->id}}">Rodada <i
+            style="font-size:20px;margin-right:2px;color:#818182;">•</i><span
+            style="font-size:15px;font-weight:bold;color:#818182;"> {{$rodada->estado}}</span></h2>
 
     <div class="card" style="margin-bottom:15px;" id="intro-rodada">
 
@@ -21,12 +24,12 @@
 
             <div class="col-sm-3 col-12">
                 <h5>Valor objectivo</h5>
-                <h6>{{number_format($rodada->valor_objetivo,2,',','.')}} AOA</h6>
+                <h6>{{number_format($rodada->valor_objetivo, 2, ',', '.')}} AOA</h6>
             </div>
 
             <div class="col-sm-3 col-12">
                 <h5>Valor Captado</h5>
-                <h6>{{number_format($rodada->valor_obtido,2,',','.')}} AOA</h6>
+                <h6>{{number_format($rodada->valor_obtido, 2, ',', '.')}} AOA</h6>
             </div>
 
             <div class="col-sm-3 col-12">
@@ -43,21 +46,25 @@
                 <div class="card-body row">
                     <div class="col-sm-6 col-12">
                         <p>
-                            <span class="badge badge-primary">Startup</span>&nbsp;<a href="{{route('startup.perfil',$investidor->rodada->startup->user->code_user)}}" style="font-size:20px;">{{$investidor->rodada->startup->nome}}</a>
+                            <span class="badge badge-primary">Startup</span>&nbsp;<a
+                                href="{{route('startup.perfil', $investidor->rodada->startup->user->code_user)}}"
+                                style="font-size:20px;">{{$investidor->rodada->startup->nome}}</a>
 
                         </p>
                         <p>
-                            <span class="badge badge-primary">Aportado</span>&nbsp;<span style="font-size:20px;"> {{number_format($investidor->valor_investido,2,',','.')}} AOA</span>
+                            <span class="badge badge-primary">Aportado</span>&nbsp;<span style="font-size:20px;">
+                                {{number_format($investidor->valor_investido, 2, ',', '.')}} AOA</span>
                         </p>
                         <p>
-                            <span class="badge badge-primary">Porcentagem</span>&nbsp;<span style="font-size:20px;"> {{$investidor->acoes_adquirida}}%</span>
+                            <span class="badge badge-primary">Porcentagem</span>&nbsp;<span style="font-size:20px;">
+                                {{$investidor->acoes_adquirida}}%</span>
                         </p>
                     </div>
                     <div class="col-sm-6 col-12">
                         <p><span class="badge badge-primary">Situação</span></p>
                         <div id="investor-invest-situation-container">
                             @if($investidor->status_investimento == 0)
-                            @if ($rodada->estado == 'fechada' && $presentUser==$investidor->investidor->fk_user)
+                            @if ($rodada->estado == 'fechada' && $presentUser == $investidor->investidor->fk_user)
                             @if($investidor->contrato_mutou == NULL)
                             <p> Contracto de Investimento Pendente.</p>
                             @else
@@ -107,41 +114,53 @@
                     <div class="card-body row card-investor-rodada">
                         <div class="col-12 col-sm-8">
                             <p>
-                                <span class="badge badge-primary">Investidor</span>&nbsp;<a href="{{route('startup.perfil',$investidor->investidor->user->code_user)}}">{{$investidor->investidor->nome_completo}}</a>
+                                <span class="badge badge-primary">Investidor</span>&nbsp;<a
+                                    href="{{route('startup.perfil', $investidor->investidor->user->code_user)}}">{{$investidor->investidor->nome_completo}}</a>
                             </p>
                             <p>
-                                <span class="badge badge-primary">Aportado</span>&nbsp;<span>{{number_format($investidor->valor_investido,2,',','.')}} AOA</span>
+                                <span
+                                    class="badge badge-primary">Aportado</span>&nbsp;<span>{{number_format($investidor->valor_investido, 2, ',', '.')}}
+                                    AOA</span>
                             </p>
                             <p>
-                                <span class="badge badge-primary">Porcentagem</span>&nbsp;<span> {{$investidor->acoes_adquirida}}%</span>
+                                <span class="badge badge-primary">Porcentagem</span>&nbsp;<span>
+                                    {{$investidor->acoes_adquirida}}%</span>
                             </p>
                         </div>
                         <div class="col-12 col-sm-4" style="text-align:center;">
                             <p><span class="badge badge-primary">Situação</span></p>
                             <div id="situation-container{{$investidor->fk_investidor}}" class="situation-container">
                                 @if($investidor->status_investimento == 0)
-                                @if ($rodada->estado == 'fechada' && $presentUser==$rodada->fk_startup)
+                                @if ($rodada->estado == 'fechada' && $presentUser == $rodada->fk_startup)
                                 @if($investidor->contrato_mutou == NULL)
                                 <p> Contracto de Investimento Pendente.</p>
-                                <input type="file" class="field-contract-2" linker="{{$investidor->fk_investidor}}" accept=".pdf" name="contrato_investimento" id="load-contrato-investimento{{$investidor->fk_investidor}}" hidden>
-                                <label type="button" class="btn btn-primary" for="load-contrato-investimento{{$investidor->fk_investidor}}" style="font-size:14px;border-radius:20px;margin-top:5px;">Adicionar Contrato</label>
+                                <input type="file" class="field-contract-2" linker="{{$investidor->fk_investidor}}"
+                                    accept=".pdf" name="contrato_investimento"
+                                    id="load-contrato-investimento{{$investidor->fk_investidor}}" hidden>
+                                <label type="button" class="btn btn-primary"
+                                    for="load-contrato-investimento{{$investidor->fk_investidor}}"
+                                    style="font-size:14px;border-radius:20px;margin-top:5px;">Adicionar Contrato</label>
                                 @else
                                 <div style="width:90px;height:90px;border:1px solid #ccc;margin:auto;">
                                     <img src="{{asset('assets/img/contract.png')}}" class="w-100 h-100" />
                                 </div>
                                 <!--<a href="{{route('view_doc',[$rodada->id, $investidor->fk_investidor])}}" rule="button" class="btn btn-primary" style="font-size:12px;margin-top:5px;">Visualizar Contrato</a>-->
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pdfModal" data-doc="{{$investidor->contrato_mutou}}">
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#pdfModal" data-doc="{{$investidor->contrato_mutou}}">
                                     Visualizar PDF
                                 </button>
                                 @include('modais/pdf_visualizer_m')
                                 @include('modais/sign_m')
                                 @if($investidor->status_contrato_investidor != 4)
-                                <button class="btn btn-primary btn-eliminar-contrato" linker="{{$investidor->fk_investidor}}" style="font-size:12px;margin-top:5px;">Eliminar Contrato</button>
+                                <button class="btn btn-primary btn-eliminar-contrato"
+                                    linker="{{$investidor->fk_investidor}}"
+                                    style="font-size:12px;margin-top:5px;">Eliminar Contrato</button>
                                 @endif
 
                                 @if($investidor->status_contrato_investidor == 3)
                                 <p>Investidor Discorda Com os Termos do Contrato.</p>
-                                <button class="btn btn-primary" style="font-size:12px;margin-top:5px;">Abrir Meeting</button><br>
+                                <button class="btn btn-primary" style="font-size:12px;margin-top:5px;">Abrir
+                                    Meeting</button><br>
 
                                 @elseif($investidor->status_contrato_investidor == 1)
                                 <p>Assinatura do Investidor em Falta.</p>
@@ -151,7 +170,8 @@
 
                                 @if($investidor->status_contrato_startup == 1)
                                 <p>Assinatura do Sócio Fundador em Falta</p>
-                                <button class="btn btn-primary" style="font-size:12px;margin-top:5px;">Assinar Contrato</button>
+                                <button class="btn btn-primary" style="font-size:12px;margin-top:5px;">Assinar
+                                    Contrato</button>
                                 @elseif($investidor->status_contrato_startup == 4)
                                 <p>Assinado Pelo Sócio Fundador</p>
                                 @endif
@@ -172,7 +192,8 @@
             </div>
             @empty
             <div class=" col-12 d-flex align-items-center justify-content-center" style="min-height:200px;">
-                <h2 style="font-size:25px;">Nenhum @if($investidor !=NULL )outro @endif Investidor Participou da Rodada.</h2>
+                <h2 style="font-size:25px;">Nenhum @if($investidor !=NULL )outro @endif Investidor Participou da Rodada.
+                </h2>
             </div>
             @endforelse
         </div>
@@ -203,9 +224,9 @@
 
     $('#pdfModal').on('shown.bs.modal', function(event) {
         var button = $(event.relatedTarget);
-        urlDoc =  "{{ asset('storage/') }}/" + button.data('doc');
+        urlDoc = "{{ asset('storage/') }}/" + button.data('doc');
         $("#path_doc").val(button.data('doc'));
-        
+
         pdfjsLib.getDocument(urlDoc).promise.then(function(pdfDoc_) {
             pdfDoc = pdfDoc_;
             pageCountDisplay.textContent = pdfDoc.numPages;
@@ -227,17 +248,16 @@
         resizeCanvas();
     });
 
-    $("#clear-signature").click(function(){
+    $("#clear-signature").click(function() {
         signaturePad.clear();
     });
 
-    $("#signModal").on('hidden.bs.modal',function(){
+    $("#signModal").on('hidden.bs.modal', function() {
         $('body').addClass('modal-open');
     });
 
-    $("#add-sign").click(function(){
+    $("#add-sign").click(function() {
         if (!signaturePad.isEmpty()) {
-            console.log("add sign");
             $("#signature").val(signaturePad.toDataURL());
             submitSign();
         }
@@ -297,27 +317,50 @@
     }
     //-----------------------MODAL_SIGN
     function resizeCanvas() {
-        const ratio = Math.max(window.devicePixelRatio || 1,1);
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
         canvas.width = canvas.offsetWidth * ratio;
         canvas.height = canvas.offsetHeight * ratio;
         canvas.getContext('2d').scale(ratio, ratio);
         signaturePad.clear(); // Limpa a assinatura após redimensionar
     }
 
-    function submitSign(){
-        console.log("submiting");
+    function submitSign() {
+
+        const loader = "<div class='d-flex justify-content-center' style='width:100%;height:100%;'>\
+    <div class='spinner-border align-self-center' style='width: 7rem; height: 7rem;' role='status'>\
+        <span class='sr-only'>Loading...</span>\
+    </div>\
+</div>";
+
+        $("#pdf-container").empty();
+        $("#pdf-container").append(loader);
+        $("#signModal").modal('hide');
         var formPointSigned = new FormData($("#point-to-insert-sign")[0]);
         $.ajax({
             url: '/add-signature',
             type: 'post',
-            contentType:false,
-            processData:false,
+            contentType: false,
+            processData: false,
             data: formPointSigned,
-            success:function(response){
-                console.log("sucesso");
-                console.log(response);
+            success: function(response) {
+                $("#pdf-container").empty();
+                urlDoc = "{{ asset('storage/') }}/" + response['new_path_doc'];
+                $("#path_doc").val(response['new_path_doc']);
+
+                pdfjsLib.getDocument(urlDoc).promise.then(function(pdfDoc_) {
+                    pdfDoc = pdfDoc_;
+                    pageCountDisplay.textContent = pdfDoc.numPages;
+                    renderAllPages();
+                });
+
+                Swal.fire({
+                    icon: "success",
+                    title: "Contrato Assinado",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             },
-            error:function(error){
+            error: function(error) {
                 console.log("Erro");
                 console.log(error);
             }

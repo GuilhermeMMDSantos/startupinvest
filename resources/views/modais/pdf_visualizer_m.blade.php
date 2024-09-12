@@ -33,7 +33,8 @@
     }
 </style>
 
-<div class="modal fade" id="pdfModal" tabindex="-1" data-backdrop="static" data-keyboard="false" aria-labelledby="pdfSignModal" aria-hidden="true">
+<div class="modal fade" id="pdfModal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+    aria-labelledby="pdfSignModal" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -48,7 +49,7 @@
 
 
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="body-of-visualizer">
                 <div id="header_visualize">
                     Page: <span id="page_num">0</span> / <span id="page_count">0</span>
                 </div>
@@ -60,7 +61,8 @@
                     <input type="hidden" name="point_y" id="point_y">
                     <input type="hidden" name="signature" id="signature">
                 </form>
-                <button type="button" class="btn btn-info" id="scrollToTopBtn" style="display: none;"><i class="fa fa-arrow-up"></i></button>
+                <button type="button" class="btn btn-info" id="scrollToTopBtn" style="display: none;"><i
+                        class="fa fa-arrow-up"></i></button>
             </div>
         </div>
     </div>

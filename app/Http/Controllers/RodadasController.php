@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Laravel\Tinker\TinkerCaster;
 use setasign\Fpdi\Fpdi;
 
+
 class RodadasController extends Controller
 {
     public function showPage(Request $request)
@@ -226,6 +227,12 @@ class RodadasController extends Controller
         $public_path = public_path();
         $currentUser = Auth::user()->id;
         $currentDate = Carbon::now()->format('Ymdhs');
+        $pathContractSplited = explode('.',$pathDoc);
+        $newContractPath =  $pathContractSplited[0].'3.pdf';
+        RodadasInvestidores::where('contrato_mutou', $pathDoc)
+        ->update([
+            'contrato_mutou' => $newContractPath
+        ]);
 
         $pdf = new Fpdi();
         $pageCount = $pdf->setSourceFile($public_path . '/storage/' . $pathDoc);
@@ -241,9 +248,13 @@ class RodadasController extends Controller
 
         $pdf->Image($signaturePath, $mmX, $mmY, 50);
 
-        $outputPath = $public_path . '/storage/armazenamento/contratos/saida' . $currentDate . '.pdf';
+        $outputPath = $public_path . '/storage/'.$newContractPath;
         $pdf->Output($outputPath, 'F');
+        Storage::disk('public')->delete($pathDoc);
+       // return response()->download($outputPath);
 
-        return response()->download($outputPath);
+       return response()->json([
+        'new_path_doc' => $newContractPath 
+       ]);
     }
 }
