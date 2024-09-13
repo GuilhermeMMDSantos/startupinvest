@@ -257,4 +257,9 @@ class RodadasController extends Controller
         'new_path_doc' => $newContractPath 
        ]);
     }
+
+    public function confirmarAssinatura(Request $request)
+    {
+        $currentUser = Auth::user()->id;
+    }
 }

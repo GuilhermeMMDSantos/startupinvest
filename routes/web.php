@@ -192,3 +192,5 @@ Route::get('/rm_contrato','RodadasController@removeContrato');
 Route::get('/update_iinvest_situation','RodadasController@updateIinvestSituation');
 
 Route::get('/view_doc/{rodada}{other}','RodadasController@viewDoc')->name('view_doc');
+
+Route::get('/confirmar_assinatura','RodadasController@confirmarAssinatura');
