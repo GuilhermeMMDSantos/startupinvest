@@ -157,7 +157,7 @@
                                                     </button>
                                                     @include('modais/pdf_visualizer_m')
                                                     @include('modais/sign_m')
-                                                    @if ($investidor->status_contrato_investidor != 2)
+                                                    @if ($investidor->status_contrato_investidor != 3 && $investidor->status_contrato_startup != 2)
                                                         <button class="btn btn-primary btn-eliminar-contrato"
                                                             linker="{{ $investidor->fk_investidor }}"
                                                             style="font-size:12px;margin-top:5px;">Eliminar
@@ -179,7 +179,7 @@
                                                         <p>Assinatura do Sócio Fundador em Falta</p>
                                                         <button type="button" class="btn btn-primary" data-toggle="modal"
                                                             data-target="#pdfModal"
-                                                            data-doc="{{ $investidor->contrato_mutou }}" data-origin=2>
+                                                            data-doc="{{ $investidor->contrato_mutou }}" data-idinvestor="{{$investidor->fk_investidor}}" data-origin=2>
                                                             Assinar Contrato
                                                         </button>
                                                     @elseif($investidor->status_contrato_startup == 2)
@@ -237,6 +237,8 @@
 
             var button = $(event.relatedTarget);
             var origin = button.data('origin');
+            console.log(button.data('idinvestor'));
+           $("#id-investor").val(button.data('idinvestor'));
             if (origin == 1) {
                 $("#options-visualizer").hide();
             }

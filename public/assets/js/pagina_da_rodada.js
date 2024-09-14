@@ -122,13 +122,8 @@ $(function () {
                 'pathDoc': pathDoc
             },
             success: function (response) {
-               $("#pdfModal").modal('hide');
-               Swal.fire({
-                icon: "success",
-                title: "Contrato Assinado",
-                showConfirmButton: false,
-                timer: 1500
-            });
+                $("#pdfModal").modal('hide');
+                updateInvestSituation2(1);
             },
             error: function (error) {
                 console.log("Erro");
@@ -188,6 +183,35 @@ $(function () {
                 console.log("Erro");
                 console.log(error);
 
+            }
+        });
+    }
+
+    function updateInvestSituation2(motivo) {
+        var idInvestidor = $("#id-investor").val();
+        let rodadaId = $("#title-page").attr('val');
+        $.ajax({
+            url: '/update_iinvest_situation2',
+            type: 'get',
+            data: {
+                'idIvestidor': idInvestidor,
+                'rodadaId': rodadaId
+            },
+            success: function (response) {
+                $("#situation-container" + idInvestidor).empty();
+                $("#situation-container" + idInvestidor).append(response['html']);
+                if (motivo == 1) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Contrato Assinado",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            },
+            error: function (error) {
+                console.log(error);
+                console.log("Erro updateInvestSituation2.");
             }
         });
     }

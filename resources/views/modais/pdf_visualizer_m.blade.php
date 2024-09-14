@@ -59,6 +59,7 @@
                 <form id="point-to-insert-sign">
                     @csrf
                     <input type="hidden" name="path_doc" id="path_doc">
+                    <input type="hidden" name="id_investor" id="id-investor">
                     <input type="hidden" name="point_x" id="point_x">
                     <input type="hidden" name="point_y" id="point_y">
                     <input type="hidden" name="signature" id="signature">
