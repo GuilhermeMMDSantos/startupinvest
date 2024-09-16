@@ -15,8 +15,7 @@
                 data-doc="{{ $investidor->contrato_mutou }}" data-origin=1>
                 Ler Contrato
             </button>
-            @include('modais/pdf_visualizer_m')
-            @include('modais/sign_m')
+
             @if ($investidor->status_contrato_investidor != 3 && $investidor->status_contrato_startup != 2)
                 <button class="btn btn-primary btn-eliminar-contrato" linker="{{ $investidor->fk_investidor }}"
                     style="font-size:12px;margin-top:5px;">Eliminar
@@ -25,7 +24,7 @@
 
             @if ($investidor->status_contrato_investidor == 2)
                 <p>Investidor Discorda Com os Termos do Contrato.</p>
-                <button class="btn btn-primary" style="font-size:12px;margin-top:5px;">Abrir
+                <button class="btn btn-primary" style="font-size:12px;margin-top:5px;">Iniciar
                     Meeting</button><br>
             @elseif($investidor->status_contrato_investidor == 1)
                 <p>Assinatura do Investidor em Falta.</p>

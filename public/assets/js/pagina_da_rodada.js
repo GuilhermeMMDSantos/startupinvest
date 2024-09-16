@@ -96,6 +96,43 @@ $(function () {
     });
 
 
+    $("#btn-discordar-contrato").click(async function () {
+        const { value: text } = await Swal.fire({
+            input: "textarea",
+            inputLabel: "Message",
+            inputPlaceholder: "Escreva os pontos que descorda.",
+            inputAttributes: {
+                "aria-label": "Type your message here"
+            },
+            showCancelButton: true
+        });
+        if (text) {
+            let rodadaId = $("#title-page").attr('val');
+            let csrf_code = '{{csrf_token()}}';
+            var form = new FormData();
+            form.append('csrfmiddlewaretoken', csrf_code);
+            form.append('message', text);
+            form.append('rodadaId', rodadaId);
+            $.ajax({
+                url: '/discordar_contrato',
+                type: 'post',
+                data: form,
+                success: function (response) {
+                    updateInvestSituation1();
+                    Swal.fire({
+                        icon: "success",
+                        title: "Pontos enviados",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                },
+                error: function (error) {
+                    console.log("Discordar contrato");
+                    console.log(error);
+                }
+            });
+        }
+    });
     //---------------MODAL_VISUALIZER
 
     var scrollToTopBtn = document.getElementById('scrollToTopBtn');
@@ -123,7 +160,14 @@ $(function () {
             },
             success: function (response) {
                 $("#pdfModal").modal('hide');
-                updateInvestSituation2(1);
+                updateInvestSituation2();
+                Swal.fire({
+                    icon: "success",
+                    title: "Contrato Assinado",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                $('body').removeClass('modal-open');
             },
             error: function (error) {
                 console.log("Erro");
@@ -170,7 +214,7 @@ $(function () {
         $("#investor-invest-situation-container").empty();
         $("#investor-invest-situation-container").append(loader);
         $.ajax({
-            url: '/update_iinvest_situation',
+            url: '/update_iinvest_situation1',
             type: 'get',
             data: {
                 'rodadaId': rodadaId
@@ -187,7 +231,7 @@ $(function () {
         });
     }
 
-    function updateInvestSituation2(motivo) {
+    function updateInvestSituation2() {
         var idInvestidor = $("#id-investor").val();
         let rodadaId = $("#title-page").attr('val');
         $.ajax({
@@ -200,14 +244,6 @@ $(function () {
             success: function (response) {
                 $("#situation-container" + idInvestidor).empty();
                 $("#situation-container" + idInvestidor).append(response['html']);
-                if (motivo == 1) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Contrato Assinado",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }
             },
             error: function (error) {
                 console.log(error);

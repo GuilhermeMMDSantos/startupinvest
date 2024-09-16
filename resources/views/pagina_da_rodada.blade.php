@@ -72,16 +72,21 @@
                                                     <img src="{{ asset('assets/img/contract.png') }}"
                                                         class="w-100 h-100" />
                                                 </div>
-                                                <button>Visualizar Contrato</button><br>
+                                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                    data-target="#pdfModal" data-doc="{{ $investidor->contrato_mutou }}"
+                                                    data-origin=1>
+                                                    Ler Contrato
+                                                </button><br>
                                                 @if ($investidor->status_contrato_investidor != 2 && $investidor->status_contrato_investidor != 3)
-                                                    <button>Discordar Contrato</button>
+                                                    <button type="button" class="btn btn-primary" id="btn-discordar-contrato">Discordar
+                                                        Contrato</button>
                                                 @endif
                                                 @if ($investidor->status_contrato_investidor == 1)
                                                     <p>Assinatura do Investidor em Falta.</p>
-                                                    <button>Assinar Contrato</button>
+                                                    <button type="button" class="btn btn-primary">Assinar Contrato</button>
                                                 @elseif($investidor->status_contrato_investidor == 2)
                                                     <p>Descordou Com os Termos do Contrato</p>
-                                                    <button>Abrir Meeting</button>
+                                                    <button type="button" class="btn btn-primary">Abrir Meeting</button>
                                                 @elseif($investidor->status_contrato_investidor == 3)
                                                     <p>Assinado Pelo Investidor</p>
                                                 @endif
@@ -155,8 +160,7 @@
                                                         data-doc="{{ $investidor->contrato_mutou }}" data-origin=1>
                                                         Ler Contrato
                                                     </button>
-                                                    @include('modais/pdf_visualizer_m')
-                                                    @include('modais/sign_m')
+
                                                     @if ($investidor->status_contrato_investidor != 3 && $investidor->status_contrato_startup != 2)
                                                         <button class="btn btn-primary btn-eliminar-contrato"
                                                             linker="{{ $investidor->fk_investidor }}"
@@ -167,7 +171,7 @@
                                                     @if ($investidor->status_contrato_investidor == 2)
                                                         <p>Investidor Discorda Com os Termos do Contrato.</p>
                                                         <button class="btn btn-primary"
-                                                            style="font-size:12px;margin-top:5px;">Abrir
+                                                            style="font-size:12px;margin-top:5px;">Iniciar
                                                             Meeting</button><br>
                                                     @elseif($investidor->status_contrato_investidor == 1)
                                                         <p>Assinatura do Investidor em Falta.</p>
@@ -179,7 +183,9 @@
                                                         <p>Assinatura do Sócio Fundador em Falta</p>
                                                         <button type="button" class="btn btn-primary" data-toggle="modal"
                                                             data-target="#pdfModal"
-                                                            data-doc="{{ $investidor->contrato_mutou }}" data-idinvestor="{{$investidor->fk_investidor}}" data-origin=2>
+                                                            data-doc="{{ $investidor->contrato_mutou }}"
+                                                            data-idinvestor="{{ $investidor->fk_investidor }}"
+                                                            data-origin=2>
                                                             Assinar Contrato
                                                         </button>
                                                     @elseif($investidor->status_contrato_startup == 2)
@@ -209,7 +215,8 @@
                 @endforelse
             </div>
         </div>
-
+        @include('modais/pdf_visualizer_m')
+        @include('modais/sign_m')
     </section>
 @endsection
 
@@ -232,16 +239,15 @@
             scale = (document.getElementById('body-section').clientWidth) / 800,
             scale = scale < 1 ? scale : 1.3,
             canvasList = [];
-
-        $('#pdfModal').on('shown.bs.modal', function(event) {
-
+        $(document).on("shown.bs.modal", "#pdfModal", function(event) {
             var button = $(event.relatedTarget);
             var origin = button.data('origin');
-            console.log(button.data('idinvestor'));
-           $("#id-investor").val(button.data('idinvestor'));
-            if (origin == 1) {
+            $("#id-investor").val(button.data('idinvestor'));
+
+            if (origin == 1)
                 $("#options-visualizer").hide();
-            }
+            else if (origin == 2)
+                $("#options-visualizer").show();
             urlDoc = "{{ asset('storage/') }}/" + button.data('doc');
             $("#path_doc").val(button.data('doc'));
 
@@ -250,6 +256,7 @@
                 pageCountDisplay.textContent = pdfDoc.numPages;
                 renderAllPages();
             });
+
         });
 
         $('#pdfModal').on('scroll', onScroll);
@@ -345,10 +352,10 @@
         function submitSign() {
 
             const loader = "<div class='d-flex justify-content-center' style='width:100%;height:100%;'>\
-                        <div class='spinner-border align-self-center' style='width: 7rem; height: 7rem;' role='status'>\
-                            <span class='sr-only'>Loading...</span>\
-                        </div>\
-                    </div>";
+                                                    <div class='spinner-border align-self-center' style='width: 7rem; height: 7rem;' role='status'>\
+                                                        <span class='sr-only'>Loading...</span>\
+                                                    </div>\
+                                                </div>";
 
             $("#pdf-container").empty();
             $("#pdf-container").append(loader);
@@ -377,6 +384,8 @@
                         showConfirmButton: false,
                         timer: 1500
                     });
+
+                    $("#btn-feito").show();
                 },
                 error: function(error) {
                     console.log("Erro");

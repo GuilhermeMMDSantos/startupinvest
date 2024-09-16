@@ -28,8 +28,13 @@
         padding-top: 30px;
     }
 
+    #options-visualizer{
+        display: none;
+    }
+
     #btn-feito {
         border-radius: 20px;
+        display:none;
     }
 </style>
 

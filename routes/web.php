@@ -189,10 +189,12 @@ Route::post('/save_contrato','RodadasController@saveContrato');
 
 Route::get('/rm_contrato','RodadasController@removeContrato');
 
-Route::get('/update_iinvest_situation','RodadasController@updateIinvestSituation');
+Route::get('/update_iinvest_situation1','RodadasController@updateIinvestSituation1');
 
 Route::get('/update_iinvest_situation2','RodadasController@updateIinvestSituation2');
 
 Route::get('/view_doc/{rodada}{other}','RodadasController@viewDoc')->name('view_doc');
 
 Route::get('/confirmar_assinatura','RodadasController@confirmarAssinatura');
+
+Route::get('/discordar_contrato','RodadasController@discordarContrato');

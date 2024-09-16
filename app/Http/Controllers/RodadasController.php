@@ -13,9 +13,10 @@ use App\RodadasInvestimento;
 use Carbon\Carbon;
 use ErrorException;
 use Illuminate\Support\Facades\Storage;
-use Laravel\Tinker\TinkerCaster;
 use setasign\Fpdi\Fpdi;
-
+use App\User;
+use App\Events\SendMessage;
+use App\Notifications\Message;
 
 class RodadasController extends Controller
 {
@@ -117,13 +118,13 @@ class RodadasController extends Controller
         ]);
     }
 
-    public function updateIinvestSituation(Request $request)
+    public function updateIinvestSituation1(Request $request)
     {
         $idRodada = $request->rodadaId;
         $investidor =  RodadasInvestidores::where('fk_rodada', $idRodada)->where('fk_investidor', Auth::user()->id)->first();
         $rodada = RodadasInvestimento::where('id', $idRodada)->first();
 
-        $html = view('blocos_html/investment_situation', compact('rodada', 'investidor'))->render();
+        $html = view('blocos_html/investment_situation1', compact('rodada', 'investidor'))->render();
 
         return response()->json([
             'html' => $html
@@ -139,7 +140,7 @@ class RodadasController extends Controller
         $investidor = RodadasInvestidores::where('fk_rodada', $rodadaId)->where('fk_investidor', $idIvestidor)->first();
         $rodada = RodadasInvestimento::where('id', $rodadaId)->first();
 
-        $html = view('blocos_html/investment_situation', compact('rodada', 'investidor', 'presentUser'))->render();
+        $html = view('blocos_html/investment_situation2', compact('rodada', 'investidor', 'presentUser'))->render();
         }catch(ErrorException $e)
         {
             return response()->json([
@@ -296,5 +297,37 @@ class RodadasController extends Controller
                 ]);
         }
         return response(200);
+    }
+
+    public function discordarContrato(Request $request)
+    {
+        $rodadaId = $request->rodadaId;
+        $mensagem = $request->message;
+        $remetente = Auth::user()->id;
+        $destinatario = RodadasInvestimento::where('id', $rodadaId)->first()->fk_startup;
+        $userDestinatario = User::where('id', $destinatario)->first();
+
+        $mensagemEnviada = Mensagens::create([
+            'fk_remetente' => $remetente,
+            'fk_destinatario' => $destinatario,
+            'conteudo' => $mensagem
+        ]);
+
+
+        $messages = Mensagens::where([
+
+            ['fk_destinatario', $destinatario],
+            ['vista', 'nao']
+        ])
+            ->get();
+
+        $qtdMessageUnview = (int) count($messages);
+
+        event(new SendMessage($destinatario, $mensagemEnviada->id));
+
+        $userDestinatario->notify(new Message($qtdMessageUnview));
+
+        return response(200);
+
     }
 }
