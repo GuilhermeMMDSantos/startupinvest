@@ -121,10 +121,11 @@ class RodadasController extends Controller
     public function updateIinvestSituation1(Request $request)
     {
         $idRodada = $request->rodadaId;
+        $presentUser = Auth::user()->id;
         $investidor =  RodadasInvestidores::where('fk_rodada', $idRodada)->where('fk_investidor', Auth::user()->id)->first();
         $rodada = RodadasInvestimento::where('id', $idRodada)->first();
 
-        $html = view('blocos_html/investment_situation1', compact('rodada', 'investidor'))->render();
+        $html = view('blocos_html/investment_situation1', compact('rodada', 'investidor','presentUser'))->render();
 
         return response()->json([
             'html' => $html
@@ -313,7 +314,11 @@ class RodadasController extends Controller
             'conteudo' => $mensagem
         ]);
 
-
+        RodadasInvestidores::where('fk_rodada', $rodadaId)
+        ->where('fk_investidor', $remetente )
+        ->update([
+            'status_contrato_investidor' => 2
+        ]);
         $messages = Mensagens::where([
 
             ['fk_destinatario', $destinatario],

@@ -197,4 +197,4 @@ Route::get('/view_doc/{rodada}{other}','RodadasController@viewDoc')->name('view_
 
 Route::get('/confirmar_assinatura','RodadasController@confirmarAssinatura');
 
-Route::get('/discordar_contrato','RodadasController@discordarContrato');
+Route::post('/discordar_contrato','RodadasController@discordarContrato');

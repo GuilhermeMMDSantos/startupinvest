@@ -116,6 +116,8 @@ $(function () {
             $.ajax({
                 url: '/discordar_contrato',
                 type: 'post',
+                contentType: false,
+                processData: false,
                 data: form,
                 success: function (response) {
                     updateInvestSituation1();
