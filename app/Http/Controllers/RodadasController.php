@@ -79,7 +79,7 @@ class RodadasController extends Controller
                 ]);
             $investidor = RodadasInvestidores::where('fk_rodada', $idRodada)->where('fk_investidor', $idInvestor)->first();
             $rodada = RodadasInvestimento::where('id', $idRodada)->first();
-            $html = view('blocos_html/investment_situation', compact('rodada', 'investidor', 'presentUser'))->render();
+            $html = view('blocos_html/investment_situation2', compact('rodada', 'investidor', 'presentUser'))->render();
         } catch (ErrorException $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -105,11 +105,13 @@ class RodadasController extends Controller
                 ['fk_investidor', $idInvestor]
             ])
                 ->update([
-                    'contrato_mutou' => NULL
+                    'contrato_mutou' => NULL,
+                    'status_contrato_investidor' => 1,
+                    'status_contrato_startup' => 1
                 ]);
             $investidor = RodadasInvestidores::where('fk_rodada', $idRodada)->first();
             $rodada = RodadasInvestimento::where('id', $idRodada)->first();
-            $html = view('blocos_html/investment_situation', compact('rodada', 'investidor', 'presentUser'))->render();
+            $html = view('blocos_html/investment_situation2', compact('rodada', 'investidor', 'presentUser'))->render();
         } catch (ErrorException $e) {
             return response()->json(['error' => 'About remove Contract', 'message' => $e->getMessage()], 500);
         }
@@ -297,7 +299,9 @@ class RodadasController extends Controller
                     'status_contrato_investidor' => 3
                 ]);
         }
-        return response(200);
+        return response([
+            'tipo' => $currentUser->tipo
+        ],200);
     }
 
     public function discordarContrato(Request $request)

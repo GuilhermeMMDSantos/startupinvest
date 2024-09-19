@@ -162,7 +162,10 @@ $(function () {
             },
             success: function (response) {
                 $("#pdfModal").modal('hide');
-                updateInvestSituation2();
+                if (response['tipo'] == 'startup')
+                    updateInvestSituation2();
+                else
+                    updateInvestSituation1();
                 Swal.fire({
                     icon: "success",
                     title: "Contrato Assinado",

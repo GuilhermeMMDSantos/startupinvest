@@ -42,7 +42,9 @@ Route::get('stackholder_investidor', 'HomeController@loadInvestidoresPage')->nam
 
 Route::get('notificacoes', 'NotificationController@loadNotifications')->name('notificacao.menu')->middleware('auth');
 
-Route::get('mensagens','MessageController@index')->name('mensagens.menu')->middleware('auth');;
+Route::get('mensagens','MessageController@index')->name('mensagens.menu')->middleware('auth');
+
+Route::post('mensagens','MessageController@index')->name('mensagens_post')->middleware('auth');
 
 Route::get('/shownotification/{notificationId}','NotificationController@showOwnerNotification')->name('showownernotification')->middleware('auth');;
 

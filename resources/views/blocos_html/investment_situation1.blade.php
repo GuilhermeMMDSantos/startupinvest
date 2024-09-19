@@ -21,7 +21,7 @@
             <button type="button" class="btn btn-primary">Assinar Contrato</button>
         @elseif($investidor->status_contrato_investidor == 2)
             <p>Descordou Com os Termos do Contrato</p>
-            <button type="button" class="btn btn-primary">Abrir Meeting</button>
+            <a rule="button" href="{{route('mensagens_post',['id_other' => $rodada->fk_startup])}}" class="btn btn-primary">Iniciar Meeting</a>
         @elseif($investidor->status_contrato_investidor == 3)
             <p>Assinado Pelo Investidor</p>
         @endif

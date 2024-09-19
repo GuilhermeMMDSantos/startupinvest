@@ -16,7 +16,7 @@
                 Ler Contrato
             </button>
 
-            @if ($investidor->status_contrato_investidor != 3 && $investidor->status_contrato_startup != 2)
+            @if ($investidor->status_contrato_investidor != 3)
                 <button class="btn btn-primary btn-eliminar-contrato" linker="{{ $investidor->fk_investidor }}"
                     style="font-size:12px;margin-top:5px;">Eliminar
                     Contrato</button>
@@ -24,8 +24,7 @@
 
             @if ($investidor->status_contrato_investidor == 2)
                 <p>Investidor Discorda Com os Termos do Contrato.</p>
-                <button class="btn btn-primary" style="font-size:12px;margin-top:5px;">Iniciar
-                    Meeting</button><br>
+                <a rule="button" href="{{route('mensagens_post',['id_other' => $investidor->fk_investidor])}}" class="btn btn-primary">Iniciar Meeting</a><br>
             @elseif($investidor->status_contrato_investidor == 1)
                 <p>Assinatura do Investidor em Falta.</p>
             @elseif($investidor->status_contrato_investidor == 3)
