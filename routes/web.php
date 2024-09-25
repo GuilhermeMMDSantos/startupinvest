@@ -164,6 +164,8 @@ Route::get('/rodadas','UserController@showRodadasPage')->name('rodadas.page')->m
 
 Route::get('/rodadas_admin','AdminController@showRodadasPage')->name('rodadas.page.admin')->middleware('auth');
 
+Route::get('/rodada_page_admin/2024{id_rodada}','AdminController@showRodadaPage')->name('rodada.page.admin')->middleware('auth');
+
 Route::get('/load_estatistica_rodadas','UserController@loadEstatisticaRodadas');
 
 Route::get('/load_lista_rodadas/{page?}','UserController@loadListaRodadas')->middleware('auth');

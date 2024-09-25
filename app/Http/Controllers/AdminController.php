@@ -13,6 +13,8 @@ use App\Own\User as MyUser;
 use App\Own\Email;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use App\RodadasInvestidores;
+use App\RodadasInvestimento;
 
 class AdminController extends Controller
 {
@@ -74,14 +76,22 @@ class AdminController extends Controller
         } catch (Exception $e) {
             $user->estado = 'espera';
             $user->save();
-            return response()->json('Erro ao enviar email',500);
+            return response()->json('Erro ao enviar email', 500);
         }
 
         $user->save();
         return response()->json($senha);
     }
 
-    public function showRodadasPage(){
+    public function showRodadasPage()
+    {
         return view('Admin/rodadas_captacao_admin');
+    }
+
+    public function showRodadaPage(Request $request)
+    {
+        $investidores = RodadasInvestidores::where('fk_rodada', $request->id_rodada)->get();
+        $rodada = RodadasInvestimento::where('id', $request->id_rodada)->first();
+        return view('Admin/pagina_da_rodada_admin', compact( 'investidores', 'rodada'))->render();
     }
 }

@@ -103,7 +103,7 @@
                                                 @endif
                                             @endif
                                         @elseif($rodada->estado == 'aberta')
-                                            Investimento Captado.
+                                            Captando...
                                         @endif
                                     @elseif($investidor->status_investimento == 1)
                                         Investimento Reembolsado.
