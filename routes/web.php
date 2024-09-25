@@ -42,7 +42,9 @@ Route::get('stackholder_investidor', 'HomeController@loadInvestidoresPage')->nam
 
 Route::get('notificacoes', 'NotificationController@loadNotifications')->name('notificacao.menu')->middleware('auth');
 
-Route::get('mensagens','MessageController@index')->name('mensagens.menu')->middleware('auth');;
+Route::get('mensagens','MessageController@index')->name('mensagens.menu')->middleware('auth');
+
+Route::post('mensagens','MessageController@index')->name('mensagens_post')->middleware('auth');
 
 Route::get('/shownotification/{notificationId}','NotificationController@showOwnerNotification')->name('showownernotification')->middleware('auth');;
 
@@ -175,7 +177,7 @@ Route::get('/TESTE','PagamentosController@teste');
 Route::get('/atualizar_porcentagem_pelo_montante','PagamentosController@atualizarPorcentagemPeloMontante');
 
 
-Route::get('/view_to_assign_pdf/{doc}','RodadasController@visualizarParaAssinarPdf')->name('view_pdf');
+Route::get('/view_to_assign_pdf','RodadasController@visualizarParaAssinarPdf')->name('view_pdf');
 
 
 Route::post('/add-signature','RodadasController@addSignature')->name('pdf.add-signature');
@@ -189,6 +191,12 @@ Route::post('/save_contrato','RodadasController@saveContrato');
 
 Route::get('/rm_contrato','RodadasController@removeContrato');
 
-Route::get('/update_iinvest_situation','RodadasController@updateIinvestSituation');
+Route::get('/update_iinvest_situation1','RodadasController@updateIinvestSituation1');
+
+Route::get('/update_iinvest_situation2','RodadasController@updateIinvestSituation2');
 
 Route::get('/view_doc/{rodada}{other}','RodadasController@viewDoc')->name('view_doc');
+
+Route::get('/confirmar_assinatura','RodadasController@confirmarAssinatura');
+
+Route::post('/discordar_contrato','RodadasController@discordarContrato');

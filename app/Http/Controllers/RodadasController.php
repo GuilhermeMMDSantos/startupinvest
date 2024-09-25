@@ -13,8 +13,10 @@ use App\RodadasInvestimento;
 use Carbon\Carbon;
 use ErrorException;
 use Illuminate\Support\Facades\Storage;
-use Laravel\Tinker\TinkerCaster;
 use setasign\Fpdi\Fpdi;
+use App\User;
+use App\Events\SendMessage;
+use App\Notifications\Message;
 
 class RodadasController extends Controller
 {
@@ -75,9 +77,9 @@ class RodadasController extends Controller
                 ->update([
                     'contrato_mutou' => $path
                 ]);
-            $investidor = RodadasInvestidores::where('fk_rodada', $idRodada)->first();
+            $investidor = RodadasInvestidores::where('fk_rodada', $idRodada)->where('fk_investidor', $idInvestor)->first();
             $rodada = RodadasInvestimento::where('id', $idRodada)->first();
-            $html = view('blocos_html/investment_situation', compact('rodada', 'investidor','presentUser'))->render();
+            $html = view('blocos_html/investment_situation2', compact('rodada', 'investidor', 'presentUser'))->render();
         } catch (ErrorException $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -95,7 +97,7 @@ class RodadasController extends Controller
         $fileToRemove = public_path() . "\storage\armazenamento\contratos\contract{$presentUser}{$idRodada}{$idInvestor}*.pdf";
 
         try {
-           
+
             chmod(public_path() . '/storage/armazenamento/contratos', 0777);
             array_map("unlink", glob($fileToRemove));
             RodadasInvestidores::where([
@@ -103,11 +105,13 @@ class RodadasController extends Controller
                 ['fk_investidor', $idInvestor]
             ])
                 ->update([
-                    'contrato_mutou' => NULL
+                    'contrato_mutou' => NULL,
+                    'status_contrato_investidor' => 1,
+                    'status_contrato_startup' => 1
                 ]);
             $investidor = RodadasInvestidores::where('fk_rodada', $idRodada)->first();
             $rodada = RodadasInvestimento::where('id', $idRodada)->first();
-            $html = view('blocos_html/investment_situation', compact('rodada', 'investidor','presentUser'))->render();
+            $html = view('blocos_html/investment_situation2', compact('rodada', 'investidor', 'presentUser'))->render();
         } catch (ErrorException $e) {
             return response()->json(['error' => 'About remove Contract', 'message' => $e->getMessage()], 500);
         }
@@ -116,16 +120,39 @@ class RodadasController extends Controller
         ]);
     }
 
-    public function updateIinvestSituation(Request $request)
+    public function updateIinvestSituation1(Request $request)
     {
         $idRodada = $request->rodadaId;
+        $presentUser = Auth::user()->id;
         $investidor =  RodadasInvestidores::where('fk_rodada', $idRodada)->where('fk_investidor', Auth::user()->id)->first();
         $rodada = RodadasInvestimento::where('id', $idRodada)->first();
-        
-        $html = view('blocos_html/investment_situation', compact('rodada', 'investidor'))->render();
+
+        $html = view('blocos_html/investment_situation1', compact('rodada', 'investidor','presentUser'))->render();
 
         return response()->json([
-            'html'=>$html
+            'html' => $html
+        ]);
+    }
+
+    public function updateIinvestSituation2(Request $request)
+    {
+        try{
+        $idIvestidor = $request->idIvestidor;
+        $rodadaId = $request->rodadaId;
+        $presentUser = Auth::user()->id;
+        $investidor = RodadasInvestidores::where('fk_rodada', $rodadaId)->where('fk_investidor', $idIvestidor)->first();
+        $rodada = RodadasInvestimento::where('id', $rodadaId)->first();
+
+        $html = view('blocos_html/investment_situation2', compact('rodada', 'investidor', 'presentUser'))->render();
+        }catch(ErrorException $e)
+        {
+            return response()->json([
+                'message' => $e,
+                'teste' => 'guito'
+            ], 500);
+        }
+        return response()->json([
+            'html' => $html
         ]);
     }
 
@@ -159,23 +186,21 @@ class RodadasController extends Controller
 
         $qtdMessageUnview = (int) count($messages);
 
-        if (Auth::user()->tipo == "startup")
-        {
+        if (Auth::user()->tipo == "startup") {
             $investidor = $other;
             $startup = Auth::user()->id;
-        }else if(Auth::user()->tipo == "investidor")
-        {
+        } else if (Auth::user()->tipo == "investidor") {
             $startup = $other;
             $investidor = Auth::user()->id;
         }
 
         $rodadaInvestimento = RodadasInvestidores::where([
-            ['fk_rodada', $idRodada ],
+            ['fk_rodada', $idRodada],
             ['fk_investidor', $investidor]
         ])->first();
 
-        $urlDoc = "storage/".$rodadaInvestimento->contrato_mutou;
-        return view('pdf_visualizer', compact('urlDoc','notificacoes', 'qtdnotifications', 'qtdMessageUnview',));
+        $urlDoc = "storage/" . $rodadaInvestimento->contrato_mutou;
+        return view('pdf_visualizer', compact('urlDoc', 'notificacoes', 'qtdnotifications', 'qtdMessageUnview'));
     }
 
     public function signContract()
@@ -208,7 +233,8 @@ class RodadasController extends Controller
 
     public function visualizarParaAssinarPdf(Request $request)
     {
-        $url_pdf = 'storage/armazenamento/contratos/' . $request->doc;
+        // dd("O que está a acontecer???");
+        $url_pdf = 'storage/armazenamento/contratos/contract6602202408241028.pdf';
         return view('visualiza_pdf', compact('url_pdf'));
     }
 
@@ -216,30 +242,101 @@ class RodadasController extends Controller
 
     public function addSignature(Request $request)
     {
+        $pathDoc = $request->input('path_doc');
+        $x = $request->input('point_x');
+        $y = $request->input('point_y');
 
-        $path = $request->input('path');
-        $x = $request->input('x');
-        $y = $request->input('y');
+        $mmX = $x * 0.2646;
+        $mmY = $y * 0.2646;
+
         $signatureData = $request->input('signature');
         $public_path = public_path();
+        $currentUser = Auth::user()->id;
+        $currentDate = Carbon::now()->format('Ymdhs');
+        $pathContractSplited = explode('.', $pathDoc);
+        $newContractPath =  $pathContractSplited[0] . '3.pdf';
+        RodadasInvestidores::where('contrato_mutou', $pathDoc)
+            ->update([
+                'contrato_mutou' => $newContractPath
+            ]);
 
         $pdf = new Fpdi();
-        $pageCount = $pdf->setSourceFile($public_path . '/storage/armazenamento/contratos/doc.pdf');
+        $pageCount = $pdf->setSourceFile($public_path . '/storage/' . $pathDoc);
         $template = $pdf->importPage(1);
         $pdf->AddPage();
         $pdf->useTemplate($template);
-
-        $signaturePath = $public_path . '/storage/armazenamento/contratos/signature.png';
+        $signName = 'signature' . $currentUser . "_" . $currentDate . ".png";
+        $signaturePath = $public_path . '/storage/armazenamento/contratos/' . $signName;
         list($type, $signatureData) = explode(';', $signatureData);
         list(, $signatureData)      = explode(',', $signatureData);
         $signatureData = base64_decode($signatureData);
         file_put_contents($signaturePath, $signatureData);
 
-        $pdf->Image($signaturePath, $x, $y, 50); // Adjust size and position as needed
+        $pdf->Image($signaturePath, $mmX, $mmY, 50);
 
-        $outputPath = $public_path . '/storage/armazenamento/contratos/doc_two.pdf';
+        $outputPath = $public_path . '/storage/' . $newContractPath;
         $pdf->Output($outputPath, 'F');
+        Storage::disk('public')->delete($pathDoc);
+        // return response()->download($outputPath);
 
-        return response()->download($outputPath);
+        return response()->json([
+            'new_path_doc' => $newContractPath
+        ]);
+    }
+
+    public function confirmarAssinatura(Request $request)
+    {
+        $currentUser = Auth::user();
+        $pathDoc = $request->pathDoc;
+        if ($currentUser->tipo == 'startup') {
+            RodadasInvestidores::where('contrato_mutou', $pathDoc)
+                ->update([
+                    'status_contrato_startup' => 2
+                ]);
+        } else if ($currentUser->tipo == 'investidor') {
+            RodadasInvestidores::where('contrato_mutou', $pathDoc)
+                ->update([
+                    'status_contrato_investidor' => 3
+                ]);
+        }
+        return response([
+            'tipo' => $currentUser->tipo
+        ],200);
+    }
+
+    public function discordarContrato(Request $request)
+    {
+        $rodadaId = $request->rodadaId;
+        $mensagem = $request->message;
+        $remetente = Auth::user()->id;
+        $destinatario = RodadasInvestimento::where('id', $rodadaId)->first()->fk_startup;
+        $userDestinatario = User::where('id', $destinatario)->first();
+
+        $mensagemEnviada = Mensagens::create([
+            'fk_remetente' => $remetente,
+            'fk_destinatario' => $destinatario,
+            'conteudo' => $mensagem
+        ]);
+
+        RodadasInvestidores::where('fk_rodada', $rodadaId)
+        ->where('fk_investidor', $remetente )
+        ->update([
+            'status_contrato_investidor' => 2
+        ]);
+        $messages = Mensagens::where([
+
+            ['fk_destinatario', $destinatario],
+            ['vista', 'nao']
+        ])
+            ->get();
+
+        $qtdMessageUnview = (int) count($messages);
+
+        event(new SendMessage($destinatario, $mensagemEnviada->id));
+
+        $userDestinatario->notify(new Message($qtdMessageUnview));
+
+        return response(200);
+
     }
 }

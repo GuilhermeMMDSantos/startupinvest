@@ -14,13 +14,13 @@ use App\Notifications\Message;
 
 class MessageController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $presentUser = Auth::user()->id;
         $notifications = Notifications::where('fk_user_distination', $presentUser)
             ->where('status', 'nao_visto')
             ->get();
-
+        $userIdPostRequest = $request->id_other;
         $qtdnotifications = (int)count($notifications);
 
         $code = Auth::user()->id;
@@ -34,7 +34,7 @@ class MessageController extends Controller
 
         $qtdMessageUnview = (int) count($messages);
 
-        return view('message', compact('qtdnotifications', 'qtdMessageUnview', 'code'));
+        return view('message', compact('qtdnotifications', 'qtdMessageUnview', 'code', 'userIdPostRequest'));
     }
 
 
