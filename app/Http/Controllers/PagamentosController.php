@@ -14,18 +14,22 @@ use App\Own\ClassRodadas;
 use App\RodadasInvestidores;
 use App\Events\AtualizarEstadoRodada;
 use App\Startups;
+use App\Services\PaymentService;
 
 class PagamentosController extends Controller
 {
 
-  public function index()
-  {
+  private $paymentService;
 
-    return view('Admin.pagamentos');
+  public function __construct(PaymentService $serviceInject)
+  {
+    $this->paymentService = $serviceInject;
   }
 
-
-
+  public function index()
+  {
+    return view('Admin.pagamentos');
+  }
 
   public function loadFormInvestirPaypal(Request $request)
   {
@@ -185,5 +189,10 @@ class PagamentosController extends Controller
     $y = (($x * $rodada->oferta_acoes)/100).'';
     $z = preg_replace("/(^0+(?=\d))|(,?0+$)/",'',number_format($y,12,',','.'));
     return response()->json(['porcentagem' => $z]);
+  }
+
+  public function createOrdersFromAppToStartup(Request $request){
+    $emailTo = $request->email;
+    $amount = $request->amount;
   }
 }
