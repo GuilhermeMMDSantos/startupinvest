@@ -15,15 +15,18 @@ use App\RodadasInvestidores;
 use App\Events\AtualizarEstadoRodada;
 use App\Startups;
 use App\Services\PaymentService;
+use App\Services\RodadaService;
 
 class PagamentosController extends Controller
 {
 
   private $paymentService;
+  private $rodadaService;
 
-  public function __construct(PaymentService $serviceInject)
+  public function __construct(PaymentService $paymentService, RodadaService $rodadaService)
   {
-    $this->paymentService = $serviceInject;
+    $this->paymentService = $paymentService;
+    $this->rodadaService = $rodadaService;
   }
 
   public function index()
@@ -59,7 +62,7 @@ class PagamentosController extends Controller
       ->first();
     $itemNumber = $request->codigoStartup;
     $itemName = $user->startup->nome;
-    $montante = str_replace(',', '.', str_replace('.', '', $request->montante))+0.0;
+    $montante = str_replace(',', '.', str_replace('.', '', $request->montante)) + 0.0;
     $idPayer = $request->payer;
     $currency = "USD";
 
@@ -111,7 +114,7 @@ class PagamentosController extends Controller
   {
     $orderId = $request->order_id;
     $codigostartup = $request->codigoStartup;
-    $porcentagemPeloMontante = str_replace(',', '.', str_replace('.', '', $request->porcentagemPeloMontante))+0.0;
+    $porcentagemPeloMontante = str_replace(',', '.', str_replace('.', '', $request->porcentagemPeloMontante)) + 0.0;
     $user =  User::where('code_user', $request->codigoStartup)
       ->first();
 
@@ -182,17 +185,48 @@ class PagamentosController extends Controller
   {
     $idRodada = $request->rodada_id;
     $valorMontante =  str_replace(',', '.', str_replace('.', '', $request->valorMontante)) + 0.0;
-    
+
 
     $rodada = RodadasInvestimento::where('id', $idRodada)->first();
     $x = 100 * $valorMontante / $rodada->valor_objetivo;
-    $y = (($x * $rodada->oferta_acoes)/100).'';
-    $z = preg_replace("/(^0+(?=\d))|(,?0+$)/",'',number_format($y,12,',','.'));
+    $y = (($x * $rodada->oferta_acoes) / 100) . '';
+    $z = preg_replace("/(^0+(?=\d))|(,?0+$)/", '', number_format($y, 12, ',', '.'));
     return response()->json(['porcentagem' => $z]);
   }
 
-  public function createOrdersFromAppToStartup(Request $request){
-    $emailTo = $request->email;
-    $amount = $request->amount;
+  public function createOrdersFromAppToStartup(Request $request)
+  {
+    $idRodada = $request->idRodada;
+    $rodadaInvestimento = RodadasInvestimento::where('id', $idRodada)->first();
+
+    if (!$this->rodadaService->checkCloseRodadaStatus($rodadaInvestimento))
+    {
+      return response()->json([
+        'message' => 'Rodada Não está fechada'
+      ], 500);
+    }
+
+    $emailTo = $rodadaInvestimento->startup->user->email;
+    $amount = $rodadaInvestimento->valor_objetivo;
+
+    try {
+      $response = $this->paymentService->createPayment($emailTo, $amount);
+      return response()->json([
+        'orderId' => $response->result->id
+      ]);
+    } catch (Exception $e) {
+      return response()->json([
+        'message' => $e->getMessage()
+      ], 500);
+    }
+  }
+
+  public function capturePaymentFromAppToStartup($orderId){
+    try{
+      $response = $this->paymentService->capturePayment($orderId);
+      return response()->json($response);
+    }catch(Exception $e){
+      return response()->json(['message' => $e->getMessage()], 500);
+    }
   }
 }

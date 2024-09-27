@@ -37,8 +37,13 @@
 
             </div>
         </div>
-
-
+        @if ($rodada->estado == 'fechada')
+            <div class="card mb-4">
+                <div class="card-body d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary" id="btn-send-amount-to-startup" value="{{$rodada->id}}">Transferir Montante</button>
+                </div>
+            </div>
+        @endif
         <h5 style="color:#818182;">Investidores na Rodada</h5>
         <div class="container-fluid">
             <div class="row">
@@ -65,9 +70,7 @@
                                     <p><span class="badge badge-primary">Situação</span></p>
                                     <div id="situation-container{{ $investidor->fk_investidor }}"
                                         class="situation-container">
-                                        @if ($rodada->estado == 'fechada')
-                                            <button type="button" class="btn btn-primary">Transferir Montante</button>
-                                        @endif
+
                                     </div>
                                 </div>
                             </div>

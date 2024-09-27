@@ -202,3 +202,7 @@ Route::get('/view_doc/{rodada}{other}','RodadasController@viewDoc')->name('view_
 Route::get('/confirmar_assinatura','RodadasController@confirmarAssinatura');
 
 Route::post('/discordar_contrato','RodadasController@discordarContrato');
+
+Route::get('/create_orders_payment_to_startup','RodadasController@createOrdersFromAppToStartup')->middleware('auth.ajax');;
+
+Route::get('/create_payment_to_startup','RodadasController@capturePaymentFromAppToStartup')->middleware('auth.ajax');
