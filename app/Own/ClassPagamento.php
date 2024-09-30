@@ -45,15 +45,6 @@ class ClassPagamento
         $this->token =  $this->callCurl('token');
     }
 
-    /*  public function setInvoce($data)
-    {
-        $this->getToken();
-        $this->url = env("PAYPAL_URL_PAYMENT");
-        $this->dataPost = $data;
-
-        return $this->callCurl('invoice');
-    }*/
-
     public function setOrder($data)
     {
         $this->getToken();

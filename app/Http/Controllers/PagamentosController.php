@@ -194,39 +194,20 @@ class PagamentosController extends Controller
     return response()->json(['porcentagem' => $z]);
   }
 
-  public function createOrdersFromAppToStartup(Request $request)
+  public function sendPayout(Request $request)
   {
     $idRodada = $request->idRodada;
-    $rodadaInvestimento = RodadasInvestimento::where('id', $idRodada)->first();
-
-    if (!$this->rodadaService->checkCloseRodadaStatus($rodadaInvestimento))
-    {
-      return response()->json([
-        'message' => 'Rodada Não está fechada'
-      ], 500);
-    }
-
-    $emailTo = $rodadaInvestimento->startup->user->email;
-    $amount = $rodadaInvestimento->valor_objetivo;
+    $rodada = RodadasInvestimento::where('id',$idRodada)->first();
+    
+    $recipientEmail = $rodada->startup->user->email;
+    $amount = $rodada->valor_objetivo_sem_taxa; // o paypal automaticamente desconta na conta o valor do amount + 0,25 USD
 
     try {
-      $response = $this->paymentService->createPayment($emailTo, $amount);
-      return response()->json([
-        'orderId' => $response->result->id
-      ]);
-    } catch (Exception $e) {
-      return response()->json([
-        'message' => $e->getMessage()
-      ], 500);
-    }
-  }
-
-  public function capturePaymentFromAppToStartup($orderId){
-    try{
-      $response = $this->paymentService->capturePayment($orderId);
-      return response()->json($response);
-    }catch(Exception $e){
-      return response()->json(['message' => $e->getMessage()], 500);
+      $response = $this->paymentService->createPayout($recipientEmail, $amount, $idRodada);
+      $this->rodadaService->updateRodadaStatus($rodada, 'sucedida');
+      return response()->json(['status' => 'success', 'data' => $response], 200);
+    } catch (\Exception $e) {
+      return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     }
   }
 }

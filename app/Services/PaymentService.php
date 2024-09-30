@@ -8,6 +8,10 @@ use PayPalCheckoutSdk\Core\SandboxEnvironment;
 use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
 use PayPalCheckoutSdk\Orders\OrdersCaptureRequest;
 
+use PaypalPayoutsSDK\Payouts\PayoutsPostRequest;
+use PayPalHttp\HttpException;
+
+
 class PaymentService
 {
 
@@ -19,21 +23,25 @@ class PaymentService
         $this->client = new PayPalHttpClient($environment);
     }
 
-    public function createPayment($emailTo, $amount)
+    public function createPayout($recipientEmail, $amount, $rodadaId)
     {
-        $request = new OrdersCreateRequest();
-        $request->prefer('return=representation');
+        $request = new PayoutsPostRequest();
         $request->body = [
-            'intent' => 'CAPTURE',
-            'purchase_units' => [
+            "sender_batch_header" => [
+                "sender_batch_id" => uniqid(),
+                "email_subject" => "Rodada ".$rodadaId."na startupInveste, Bem Sucedida",
+                "email_message" => "Recebeu o montante da Captação!",
+            ],
+            "items" => [
                 [
-                    'amount' => [
-                        'currency_code' => 'USD',
-                        'value' => $amount
+                    "recipient_type" => "EMAIL",
+                    "amount" => [
+                        "value" => number_format($amount, 2, '.', ''),
+                        "currency" => "USD",
                     ],
-                    'payee' => [
-                        'email_address' => $emailTo
-                    ]
+                    "note" => "Rodada ".$rodadaId." na startupInveste, Bem Sucedida",
+                    "sender_item_id" => uniqid(),
+                    "receiver" => $recipientEmail,
                 ]
             ]
         ];
@@ -41,19 +49,8 @@ class PaymentService
         try {
             $response = $this->client->execute($request);
             return $response;
-        } catch (Exception $e) {
-            throw new Exception('Erro ao criar pedido.');
-        }
-    }
-
-    public function capturePayment($orderId)
-    {
-        $request = new OrdersCaptureRequest($orderId);
-        try {
-            $response = $this->client->execute($request);
-            return $response;
-        } catch (Exception $e) {
-            throw new Exception('Erro ao confirmar pagamento.');
+        } catch (HttpException $ex) {
+            throw new \Exception($ex->getMessage());
         }
     }
 }

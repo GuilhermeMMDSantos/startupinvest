@@ -1,5 +1,10 @@
 $(function () {
-    $("#btn-send-amount-to-startup").click(function () {
+    var loader = "<div class='d-flex flex-column justify-content-center align-items-center' style='min-height:240px;'>\
+    <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
+    </div>\
+</div>";
+
+    $("#container-btn-send-amount").on('click', '#btn-send-amount-to-startup', function () {
         Swal.fire({
             title: "Transferir Investimento",
             text: "Confirma que deseja transferir investimento para startup!",
@@ -11,52 +16,46 @@ $(function () {
             confirmButtonText: "Sim, Tranferir."
         }).then((result) => {
             if (result.isConfirmed) {
-
                 var idRodada = $(this).attr('value');
 
+                $("#container-btn-send-amount").empty();
+                $("#container-btn-send-amount").append(loader);
                 $.ajax({
-                    url: '/create_orders_payment_to_startup',
+                    url: '/payouts',
                     type: 'get',
                     data: {
                         'idRodada': idRodada
                     },
                     success: function (response) {
-                        if (capturePayment(response['orderId'])) {
-                            Swal.fire({
-                                title: "Transferido!",
-                                text: "Investimento Realizado.",
-                                allowOutsideClick: false,
-                                icon: "success"
-                            });
-                        }
-                        else {
-                            Swal.fire({
-                                title: "Atenção!",
-                                text: "Erro ao processar transferência.",
-                                allowOutsideClick: false,
-                                icon: "error"
-                            });
-                        }
+                        Swal.fire({
+                            title: "Transferido!",
+                            text: "Investimento Realizado.",
+                            allowOutsideClick: false,
+                            icon: "success"
+                        });
+                        $("#container-btn-send-amount").empty();
+                        $("#container-btn-send-amount").hide();
+                        $("#title-page").html("Rodada <i\
+                style='font-size:20px;margin-right:2px;color:#818182;'>•</i><span\
+                style='font-size:15px;font-weight:bold;color:#818182;'> sucedida</span>");
                     },
-                    error: function (response) { }
+                    error: function (response) {
+                        Swal.fire({
+                            title: "Atenção!",
+                            text: "Erro ao processar transferência.",
+                            allowOutsideClick: false,
+                            icon: "error"
+                        });
+                        var rodadaId = $("#title-page").attr('val');
+                        $("#container-btn-send-amount").empty();
+                        $("#container-btn-send-amount").append("<div class='card-body d-flex justify-content-center'>\
+                    <button type='button' class='btn btn-primary' id='btn-send-amount-to-startup' value="+rodadaId+">Transferir Montante</button>\
+                </div>");
+                        console.log(response);
+                    }
                 });
             }
         });
     });
 
-    function capturePayment(orderId) {
-        $.ajax({
-            url: '/create_payment_to_startup',
-            type: 'get',
-            data: {
-                'orderId': orderId
-            },
-            success: function (response) {
-                return (1);
-            },
-            error: function (error) {
-                return (0);
-            }
-        });
-    }
 });

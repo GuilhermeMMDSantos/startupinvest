@@ -38,7 +38,7 @@
             </div>
         </div>
         @if ($rodada->estado == 'fechada')
-            <div class="card mb-4">
+            <div class="card mb-4" id="container-btn-send-amount">
                 <div class="card-body d-flex justify-content-center">
                     <button type="button" class="btn btn-primary" id="btn-send-amount-to-startup" value="{{$rodada->id}}">Transferir Montante</button>
                 </div>
