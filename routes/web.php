@@ -202,3 +202,5 @@ Route::get('/view_doc/{rodada}{other}','RodadasController@viewDoc')->name('view_
 Route::get('/confirmar_assinatura','RodadasController@confirmarAssinatura');
 
 Route::post('/discordar_contrato','RodadasController@discordarContrato');
+
+Route::get('/payouts','PagamentosController@sendPayout')->middleware('auth.ajax');;

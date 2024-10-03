@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthAjax
@@ -17,12 +17,19 @@ class AuthAjax
      */
     public function handle($request, Closure $next)
     {
+        if(!$request->json())
+        {
+            return response()->json([
+                'error' => 'Invalid request type.'
+            ], 400);
+        }
 
-        dd($request);
-        /* if (! $request->expectsJson()) {
-            return route('home');
-        }*/
-
+        if (!Auth::check())
+        {
+            return response()->json([
+                'error' => 'Unautorized'
+            ], 401);
+        }
         return $next($request);
     }
 }

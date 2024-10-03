@@ -14,18 +14,25 @@ use App\Own\ClassRodadas;
 use App\RodadasInvestidores;
 use App\Events\AtualizarEstadoRodada;
 use App\Startups;
+use App\Services\PaymentService;
+use App\Services\RodadaService;
 
 class PagamentosController extends Controller
 {
 
-  public function index()
-  {
+  private $paymentService;
+  private $rodadaService;
 
-    return view('Admin.pagamentos');
+  public function __construct(PaymentService $paymentService, RodadaService $rodadaService)
+  {
+    $this->paymentService = $paymentService;
+    $this->rodadaService = $rodadaService;
   }
 
-
-
+  public function index()
+  {
+    return view('Admin.pagamentos');
+  }
 
   public function loadFormInvestirPaypal(Request $request)
   {
@@ -55,7 +62,7 @@ class PagamentosController extends Controller
       ->first();
     $itemNumber = $request->codigoStartup;
     $itemName = $user->startup->nome;
-    $montante = str_replace(',', '.', str_replace('.', '', $request->montante))+0.0;
+    $montante = str_replace(',', '.', str_replace('.', '', $request->montante)) + 0.0;
     $idPayer = $request->payer;
     $currency = "USD";
 
@@ -107,7 +114,7 @@ class PagamentosController extends Controller
   {
     $orderId = $request->order_id;
     $codigostartup = $request->codigoStartup;
-    $porcentagemPeloMontante = str_replace(',', '.', str_replace('.', '', $request->porcentagemPeloMontante))+0.0;
+    $porcentagemPeloMontante = str_replace(',', '.', str_replace('.', '', $request->porcentagemPeloMontante)) + 0.0;
     $user =  User::where('code_user', $request->codigoStartup)
       ->first();
 
@@ -178,12 +185,29 @@ class PagamentosController extends Controller
   {
     $idRodada = $request->rodada_id;
     $valorMontante =  str_replace(',', '.', str_replace('.', '', $request->valorMontante)) + 0.0;
-    
+
 
     $rodada = RodadasInvestimento::where('id', $idRodada)->first();
     $x = 100 * $valorMontante / $rodada->valor_objetivo;
-    $y = (($x * $rodada->oferta_acoes)/100).'';
-    $z = preg_replace("/(^0+(?=\d))|(,?0+$)/",'',number_format($y,12,',','.'));
+    $y = (($x * $rodada->oferta_acoes) / 100) . '';
+    $z = preg_replace("/(^0+(?=\d))|(,?0+$)/", '', number_format($y, 12, ',', '.'));
     return response()->json(['porcentagem' => $z]);
+  }
+
+  public function sendPayout(Request $request)
+  {
+    $idRodada = $request->idRodada;
+    $rodada = RodadasInvestimento::where('id',$idRodada)->first();
+    
+    $recipientEmail = $rodada->startup->user->email;
+    $amount = $rodada->valor_objetivo_sem_taxa; // o paypal automaticamente desconta na conta o valor do amount + 0,25 USD
+
+    try {
+      $response = $this->paymentService->createPayout($recipientEmail, $amount, $idRodada);
+      $this->rodadaService->updateRodadaStatus($rodada, 'sucedida');
+      return response()->json(['status' => 'success', 'data' => $response], 200);
+    } catch (\Exception $e) {
+      return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    }
   }
 }
