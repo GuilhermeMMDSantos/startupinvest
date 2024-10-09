@@ -277,7 +277,7 @@ class RodadasController extends Controller
         $outputPath = $public_path . '/storage/' . $newContractPath;
         $pdf->Output($outputPath, 'F');
         Storage::disk('public')->delete($pathDoc);
-        // return response()->download($outputPath);
+      
 
         return response()->json([
             'new_path_doc' => $newContractPath
