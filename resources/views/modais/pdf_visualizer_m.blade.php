@@ -58,13 +58,14 @@
             </div>
             <div class="modal-body" id="body-of-visualizer">
                 <div id="header_visualize">
-                    Page: <span id="page_num">0</span> / <span id="page_count">0</span>
+                   <!-- Page: <span id="page_num">0</span> / <span id="page_count">0</span>-->
                 </div>
                 <div id="pdf-container"></div>
                 <form id="point-to-insert-sign">
                     @csrf
                     <input type="hidden" name="path_doc" id="path_doc">
                     <input type="hidden" name="id_investor" id="id-investor">
+                    <input type="hidden" name="page_sign" id="page-sign">
                     <input type="hidden" name="point_x" id="point_x">
                     <input type="hidden" name="point_y" id="point_y">
                     <input type="hidden" name="signature" id="signature">

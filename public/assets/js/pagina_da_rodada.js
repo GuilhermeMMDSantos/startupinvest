@@ -184,7 +184,7 @@ $(function () {
 
     $("#pdf-container").on('click', '.clik-area', function (event) {
         $("#signModal").modal('show');
-        getPointToSign(event);
+        getPointToSign(event, $(this));
         $(".pdf-page").removeClass('clik-area');
 
     });
@@ -257,13 +257,29 @@ $(function () {
         });
     }
     //---------------MODAL_VISUALIZER
-    function getPointToSign(event) {
+    function getPointToSign(event, object) {
         const viewer = document.getElementById('pdf-container');
         const rect = viewer.getBoundingClientRect();
+        const pageNumber  = object.attr('data-page-number');
         const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
+
+        //Como o valor de y está a ser calculado do top até a area de assinatura.
+        var heightFromTop = 0;
+        for (var i = 1; i < pageNumber ; i++)
+        {
+            var page = document.querySelector(`[data-page-number = "${i}"]`);
+            if (page)
+            {
+                heightFromTop = heightFromTop + page.clientHeight;
+            }
+        }
+
+        if(pageNumber > 1)
+            heightFromTop += 65; 
+        const y = event.clientY - rect.top - heightFromTop;
         $("#point_x").val(x);
         $("#point_y").val(y);
+        $("#page-sign").val(pageNumber);
     }
     //-----------------------------------------
 

@@ -17,6 +17,7 @@ use setasign\Fpdi\Fpdi;
 use App\User;
 use App\Events\SendMessage;
 use App\Notifications\Message;
+use Illuminate\Support\Facades\Log;
 
 class RodadasController extends Controller
 {
@@ -127,7 +128,7 @@ class RodadasController extends Controller
         $investidor =  RodadasInvestidores::where('fk_rodada', $idRodada)->where('fk_investidor', Auth::user()->id)->first();
         $rodada = RodadasInvestimento::where('id', $idRodada)->first();
 
-        $html = view('blocos_html/investment_situation1', compact('rodada', 'investidor','presentUser'))->render();
+        $html = view('blocos_html/investment_situation1', compact('rodada', 'investidor', 'presentUser'))->render();
 
         return response()->json([
             'html' => $html
@@ -136,16 +137,15 @@ class RodadasController extends Controller
 
     public function updateIinvestSituation2(Request $request)
     {
-        try{
-        $idIvestidor = $request->idIvestidor;
-        $rodadaId = $request->rodadaId;
-        $presentUser = Auth::user()->id;
-        $investidor = RodadasInvestidores::where('fk_rodada', $rodadaId)->where('fk_investidor', $idIvestidor)->first();
-        $rodada = RodadasInvestimento::where('id', $rodadaId)->first();
+        try {
+            $idIvestidor = $request->idIvestidor;
+            $rodadaId = $request->rodadaId;
+            $presentUser = Auth::user()->id;
+            $investidor = RodadasInvestidores::where('fk_rodada', $rodadaId)->where('fk_investidor', $idIvestidor)->first();
+            $rodada = RodadasInvestimento::where('id', $rodadaId)->first();
 
-        $html = view('blocos_html/investment_situation2', compact('rodada', 'investidor', 'presentUser'))->render();
-        }catch(ErrorException $e)
-        {
+            $html = view('blocos_html/investment_situation2', compact('rodada', 'investidor', 'presentUser'))->render();
+        } catch (ErrorException $e) {
             return response()->json([
                 'message' => $e,
                 'teste' => 'guito'
@@ -238,15 +238,14 @@ class RodadasController extends Controller
         return view('visualiza_pdf', compact('url_pdf'));
     }
 
-
-
     public function addSignature(Request $request)
     {
         $pathDoc = $request->input('path_doc');
         $x = $request->input('point_x');
         $y = $request->input('point_y');
+        $pageToSign =  $request->input('page_sign');
 
-        $mmX = $x * 0.2646;
+        $mmX = $x * 0.2646; // conversão de px para milimetro
         $mmY = $y * 0.2646;
 
         $signatureData = $request->input('signature');
@@ -262,22 +261,24 @@ class RodadasController extends Controller
 
         $pdf = new Fpdi();
         $pageCount = $pdf->setSourceFile($public_path . '/storage/' . $pathDoc);
-        $template = $pdf->importPage(1);
-        $pdf->AddPage();
-        $pdf->useTemplate($template);
-        $signName = 'signature' . $currentUser . "_" . $currentDate . ".png";
-        $signaturePath = $public_path . '/storage/armazenamento/contratos/' . $signName;
-        list($type, $signatureData) = explode(';', $signatureData);
-        list(, $signatureData)      = explode(',', $signatureData);
-        $signatureData = base64_decode($signatureData);
-        file_put_contents($signaturePath, $signatureData);
-
-        $pdf->Image($signaturePath, $mmX, $mmY, 50);
-
+        for ($i = 1; $i <= $pageCount; $i++) {
+            $template = $pdf->importPage($i);
+            $pdf->AddPage();
+            $pdf->useTemplate($template);
+            if ($i == $pageToSign) {
+                $signName = 'signature' . $currentUser . "_" . $currentDate . ".png";
+                $signaturePath = $public_path . '/storage/armazenamento/contratos/' . $signName;
+                list($type, $signatureData) = explode(';', $signatureData);
+                list(, $signatureData)      = explode(',', $signatureData);
+                $signatureData = base64_decode($signatureData);
+                file_put_contents($signaturePath, $signatureData);
+                $pdf->Image($signaturePath, $mmX, $mmY, 50);
+            }
+        }
         $outputPath = $public_path . '/storage/' . $newContractPath;
         $pdf->Output($outputPath, 'F');
         Storage::disk('public')->delete($pathDoc);
-      
+
 
         return response()->json([
             'new_path_doc' => $newContractPath
@@ -301,7 +302,7 @@ class RodadasController extends Controller
         }
         return response([
             'tipo' => $currentUser->tipo
-        ],200);
+        ], 200);
     }
 
     public function discordarContrato(Request $request)
@@ -319,10 +320,10 @@ class RodadasController extends Controller
         ]);
 
         RodadasInvestidores::where('fk_rodada', $rodadaId)
-        ->where('fk_investidor', $remetente )
-        ->update([
-            'status_contrato_investidor' => 2
-        ]);
+            ->where('fk_investidor', $remetente)
+            ->update([
+                'status_contrato_investidor' => 2
+            ]);
         $messages = Mensagens::where([
 
             ['fk_destinatario', $destinatario],
@@ -337,6 +338,5 @@ class RodadasController extends Controller
         $userDestinatario->notify(new Message($qtdMessageUnview));
 
         return response(200);
-
     }
 }

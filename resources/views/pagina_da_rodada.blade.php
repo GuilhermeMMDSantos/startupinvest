@@ -238,10 +238,10 @@
         var urlDoc = null;
         var pdfDoc = null,
             pdfContainer = document.getElementById('pdf-container'),
-            pageNumDisplay = document.getElementById('page_num'),
-            pageCountDisplay = document.getElementById('page_count'),
+            //pageNumDisplay = document.getElementById('page-sign'),
+           // pageCountDisplay = document.getElementById('page_count'),
             scale = (document.getElementById('body-section').clientWidth) / 800,
-            scale = scale < 1 ? scale : 1.3,
+            scale = scale < 1 ? scale : 1.2,
             canvasList = [];
         $(document).on("shown.bs.modal", "#pdfModal", function(event) {
             var button = $(event.relatedTarget);
@@ -257,7 +257,8 @@
 
             pdfjsLib.getDocument(urlDoc).promise.then(function(pdfDoc_) {
                 pdfDoc = pdfDoc_;
-                pageCountDisplay.textContent = pdfDoc.numPages;
+                //pageCountDisplay.textContent = pdfDoc.numPages;
+               // pageNumDisplay.value = 1;
                 renderAllPages();
             });
 
@@ -294,12 +295,16 @@
         //-----------------------END_MODAL_SIGN
 
         function renderPage(num) {
+            if(num > pdfDoc.numPages)
+                return false;
+
             pdfDoc.getPage(num).then(function(page) {
                 var viewport = page.getViewport({
                     scale: scale
                 });
                 var canvas = document.createElement('canvas');
                 canvas.className = 'pdf-page';
+                canvas.setAttribute('data-page-number', num);
                 var ctx = canvas.getContext('2d');
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
@@ -311,6 +316,7 @@
                 page.render(renderContext).promise.then(function() {
                     pdfContainer.appendChild(canvas);
                     canvasList.push(canvas);
+                    renderPage(num + 1);
                 });
             });
         }
@@ -328,15 +334,13 @@
 
         function onScroll() {
             const currentPage = getVisiblePageNumber();
-            pageNumDisplay.textContent = currentPage;
+           // pageNumDisplay.value = currentPage;
         }
 
         function renderAllPages() {
             pdfContainer.innerHTML = '';
             canvasList = [];
-            for (var i = 1; i <= pdfDoc.numPages; i++) {
-                renderPage(i);
-            }
+            renderPage(1);
         }
 
         function calculateScale() {
@@ -365,6 +369,9 @@
             $("#pdf-container").append(loader);
             $("#signModal").modal('hide');
             var formPointSigned = new FormData($("#point-to-insert-sign")[0]);
+            console.log("Page To Sign: "+formPointSigned.get('page_sign'));
+            console.log("mmx: "+formPointSigned.get('point_x'));
+            console.log("mmy: "+formPointSigned.get('point_y'));
             $.ajax({
                 url: '/add-signature',
                 type: 'post',
@@ -378,7 +385,7 @@
 
                     pdfjsLib.getDocument(urlDoc).promise.then(function(pdfDoc_) {
                         pdfDoc = pdfDoc_;
-                        pageCountDisplay.textContent = pdfDoc.numPages;
+                        //pageCountDisplay.textContent = pdfDoc.numPages;
                         renderAllPages();
                     });
 
