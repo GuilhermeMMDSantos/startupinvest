@@ -197,8 +197,8 @@ class PagamentosController extends Controller
   public function sendPayout(Request $request)
   {
     $idRodada = $request->idRodada;
-    $rodada = RodadasInvestimento::where('id',$idRodada)->first();
-    
+    $rodada = RodadasInvestimento::where('id', $idRodada)->first();
+
     $recipientEmail = $rodada->startup->user->email;
     $amount = $rodada->valor_objetivo_sem_taxa; // o paypal automaticamente desconta na conta o valor do amount + 0,25 USD
 
@@ -208,6 +208,44 @@ class PagamentosController extends Controller
       return response()->json(['status' => 'success', 'data' => $response], 200);
     } catch (\Exception $e) {
       return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    }
+  }
+
+  public function showTestePage(){
+    return view('paymentTestePage');
+  }
+
+  public function sendAmountForInvest(Request $request)
+  {
+    //$rodadaId = $request->rodadaId;
+    
+    $amount = $request->amount;
+
+    try {
+      
+      $aprovalLink = $this->paymentService->createPayment(5000);
+      return redirect()->away($aprovalLink);
+    } catch (Exception $e) {
+      return redirect()->back()->with('error', $e);
+    }
+  }
+
+  public function getAprovalInvest()
+  {
+    $paymentId = request('paymentId');
+    $payerId = request('PayerID');
+
+    if (empty($paymentId) || empty($payerId)) {
+      return redirect()->route('paymentTeste')->with('error', 'Ocorreu um erro durante o pagamento');
+    }
+
+    try {
+      $response = $this->paymentService->capturePayment($paymentId, $payerId);
+      if ($response) {
+        return redirect()->route('payteste')->with('success', 'Pagamento bem-sucedido');
+      }
+    } catch (Exception $e) {
+      return redirect()->route('payteste')->with('error', $e->getMessage());
     }
   }
 }

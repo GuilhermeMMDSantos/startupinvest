@@ -203,4 +203,10 @@ Route::get('/confirmar_assinatura','RodadasController@confirmarAssinatura');
 
 Route::post('/discordar_contrato','RodadasController@discordarContrato');
 
-Route::get('/payouts','PagamentosController@sendPayout')->middleware('auth.ajax');;
+Route::get('/payouts','PagamentosController@sendPayout')->middleware('auth.ajax');
+
+Route::get('/payteste', 'PagamentosController@showTestePage')->name('payteste');
+
+Route::post('/createP', 'PagamentosController@sendAmountForInvest')->name('paypal.pay');
+
+Route::get('/captureP', 'PagamentosController@getAprovalInvest')->name('paypal.status');
