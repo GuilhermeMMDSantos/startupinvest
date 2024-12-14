@@ -238,16 +238,15 @@ class RodadasController extends Controller
         return view('visualiza_pdf', compact('url_pdf'));
     }
 
-
-
     public function addSignature(Request $request)
     {
         $pathDoc = $request->input('path_doc');
         $x = $request->input('point_x');
         $y = $request->input('point_y');
+        $pageToSign =  $request->input('page_sign');
 
-        $mmX = $x * 0.2646;
-        $mmY = $y * 0.2646;
+        $mmX = ($x * 210) / 714; // conversão de px para milimetro para resolucao do meu pc. 714px = 210mm
+        $mmY = (($y * 210) / 714) - 13; //particularidade:devo fazer compensacao para o conto inferior esquerdo da assinatura começar a ser desenhada no ponto clicado, senão começaria pelo canto superior esquerdo
 
         $signatureData = $request->input('signature');
         $public_path = public_path();
@@ -255,29 +254,34 @@ class RodadasController extends Controller
         $currentDate = Carbon::now()->format('Ymdhs');
         $pathContractSplited = explode('.', $pathDoc);
         $newContractPath =  $pathContractSplited[0] . '3.pdf';
-        RodadasInvestidores::where('contrato_mutou', $pathDoc)
-            ->update([
-                'contrato_mutou' => $newContractPath
-            ]);
-
+        $rodadaInvestidor = RodadasInvestidores::where('contrato_mutou', $pathDoc)->first();
+        $rodadaInvestidor->update([
+            'contrato_mutou' => $newContractPath
+        ]);
+        $signaturePath = null;
         $pdf = new Fpdi();
         $pageCount = $pdf->setSourceFile($public_path . '/storage/' . $pathDoc);
-        $template = $pdf->importPage(1);
-        $pdf->AddPage();
-        $pdf->useTemplate($template);
-        $signName = 'signature' . $currentUser . "_" . $currentDate . ".png";
-        $signaturePath = $public_path . '/storage/armazenamento/contratos/' . $signName;
-        list($type, $signatureData) = explode(';', $signatureData);
-        list(, $signatureData)      = explode(',', $signatureData);
-        $signatureData = base64_decode($signatureData);
-        file_put_contents($signaturePath, $signatureData);
-
-        $pdf->Image($signaturePath, $mmX, $mmY, 50);
-
+        for ($i = 1; $i <= $pageCount; $i++) {
+            $template = $pdf->importPage($i);
+            $pdf->AddPage();
+            $pdf->useTemplate($template);
+            if ($i == $pageToSign) {
+                $signName = 'signature' . $currentUser . "_" . $currentDate . ".png";
+                $signaturePath = $public_path . '/storage/armazenamento/contratos/' . $signName;
+                list($type, $signatureData) = explode(';', $signatureData);
+                list(, $signatureData)      = explode(',', $signatureData);
+                $signatureData = base64_decode($signatureData);
+                file_put_contents($signaturePath, $signatureData);
+                $pdf->Image($signaturePath, $mmX, $mmY, 50);
+            }
+        }
         $outputPath = $public_path . '/storage/' . $newContractPath;
         $pdf->Output($outputPath, 'F');
-        Storage::disk('public')->delete($pathDoc);
-        // return response()->download($outputPath);
+
+        if ($rodadaInvestidor->contrato_mutou_original != $pathDoc)
+            Storage::disk('public')->delete($pathDoc);
+        Storage::disk('public')->delete('/armazenamento/contratos/' . $signName);
+
 
         return response()->json([
             'new_path_doc' => $newContractPath
