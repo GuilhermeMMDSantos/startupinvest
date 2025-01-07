@@ -10,11 +10,9 @@ body {
 
 #content-intro-startup {
   display: flex;
-  padding-bottom: 15px;
-  border-bottom: 2px solid #e9ecef;
-  background: #f8f9fa;
-  padding-left: 5px;
-  padding-top: 5px;
+  align-items: center;
+
+  padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e0e0e0; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 #content-finalidades-investimento li {

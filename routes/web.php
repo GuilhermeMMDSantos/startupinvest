@@ -210,3 +210,6 @@ Route::get('/payteste', 'PagamentosController@showTestePage')->name('payteste');
 Route::post('/createP', 'PagamentosController@sendAmountForInvest')->name('paypal.pay');
 
 Route::get('/captureP', 'PagamentosController@getAprovalInvest')->name('paypal.status');
+
+Route::get('/get_avaluation', 'userController@getAvaluation')->middleware('auth.ajax');;
+Route::get('/ia', 'StartupGrowthController@predict');

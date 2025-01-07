@@ -36,6 +36,8 @@ use App\Events\AbrirRodada;
 use App\Events\AnularRodada;
 use App\Own\Traits\UserTrait;
 use App\RodadasInvestidores;
+use App\SaidaDoModelo;
+
 use Illuminate\Database\Eloquent\Builder;
 use ErrorException;
 
@@ -129,10 +131,10 @@ class UserController extends Controller
 
 
         $user = User::where('code_user', $codeUser)->first();
-
         $idUser = $user->id;
-
+        $userType = $user->tipo;
         $code = Auth::user()->id;
+        $currentTypeUser = Auth::user()->tipo;
         $presentUser =  $code;
         $myProfile = ($user->id ==  $presentUser);
 
@@ -153,7 +155,7 @@ class UserController extends Controller
 
         $qtdMessageUnview = (int) count($messages);
 
-        if ($user->tipo == 'startup') {
+        if ($userType == 'startup') {
 
             $rodadaId = null;
 
@@ -173,13 +175,22 @@ class UserController extends Controller
 
             $codigoStartup = $codeUser;
 
-            $returnHtml = view('perfil_startup', compact('idUser', 'code', 'startup', 'qtdnotifications', 'qtdMessageUnview', 'rodadaId', 'myProfile', 'codigoStartup'));
-        } else if ($user->tipo == 'investidor') {
+            $returnHtml = view('perfil_startup', compact('idUser', 'code', 'startup', 'qtdnotifications', 'qtdMessageUnview', 'rodadaId', 'myProfile', 'codigoStartup', 'userType', 'currentTypeUser'));
+        } else if ($userType == 'investidor') {
 
             $investidor = Investidores::where('fk_user', $user->id)
                 ->first();
             $codigoInvestidor = $codeUser;
-            $returnHtml = view('perfil_investidor', compact('idUser', 'code', 'investidor', 'qtdnotifications', 'qtdMessageUnview', 'myProfile', 'codeUser', 'codigoInvestidor'));
+
+            $rodadas = RodadasInvestidores::whereHas('rodada', function ($query) {
+
+                $query->where('estado', 'fechada');
+            })
+                ->where('fk_investidor', $investidor->fk_user)
+                ->where('status_investimento', 3)
+                ->get();
+
+            $returnHtml = view('perfil_investidor', compact('idUser', 'code', 'investidor', 'qtdnotifications', 'qtdMessageUnview', 'myProfile', 'codeUser', 'codigoInvestidor', 'rodadas'));
         }
 
         return $returnHtml;
@@ -198,6 +209,37 @@ class UserController extends Controller
         $returnHtml = view('modais/forms/form_edit_intro_startup', compact('user', 'setores', 'fases'))->render();
 
         return response()->json($returnHtml);
+    }
+
+    public function getAvaluation(Request $request)
+    {
+        $avaliacaoPositivo = null;
+        $avaliacaoNegativo = null;
+
+        $user = User::with('startup')
+            ->where('code_user', $request->codeStartup)
+            ->first();
+
+        $rodada = RodadasInvestimento::where('fk_startup', $user->id)
+            ->where('estado', 'aberta')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if (!empty($rodada)) {
+            $avaliacaoPositivo = SaidaDoModelo::where('id_rodada', $rodada->id)
+                ->where('classificacao', 'strengths')
+                ->get();
+
+            $avaliacaoNegativo = SaidaDoModelo::where('id_rodada', $rodada->id)
+                ->where('classificacao', 'weaknesses')
+                ->get();
+        }
+        
+        $html = view('blocos_html/avaliacao_da_rede_neural', compact('rodada', 'avaliacaoPositivo', 'avaliacaoNegativo'))->render();
+        
+        return response()->json([
+            'html' => $html
+        ]);
     }
 
     public function loadTmpImg(Request $request)
@@ -758,9 +800,9 @@ class UserController extends Controller
             ->update([
                 'estado' => 'anulada'
             ]);
-        
+
         RodadasInvestidores::where('fk_rodada', $request->rodada_id)->update([
-            'status_investimento'=> 2
+            'status_investimento' => 2
         ]);
 
         PermissoesVerPitch::where('fk_startup', $idUser)
@@ -1230,7 +1272,7 @@ class UserController extends Controller
 
         $qtdMessageUnview = (int) count($messages);
 
-        return view('rodadas_captacao', compact( 'qtdnotifications', 'qtdMessageUnview'));
+        return view('rodadas_captacao', compact('qtdnotifications', 'qtdMessageUnview'));
     }
 
     public function loadEstatisticaRodadas()

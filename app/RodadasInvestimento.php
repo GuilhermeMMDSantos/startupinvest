@@ -16,7 +16,8 @@ class RodadasInvestimento extends Model
         'max_investidores',
         'valor_minimo_investimento',
         'data_limite',
-        'estado'
+        'estado',
+        'potencial_de_crescimento'
     ];
 
 

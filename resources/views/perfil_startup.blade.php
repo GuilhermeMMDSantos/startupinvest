@@ -25,6 +25,16 @@
         </div>
     </div>
 
+    
+    @if($startup->estado_busca_invest == 'sim' && $currentTypeUser != 'startup')
+    <div class="row" id="content-avalutation">
+        <div class="d-flex justify-content-center " style="width:100%;height:400px;">
+            <div class="spinner-border align-self-center" style="width: 7rem; height: 7rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+    @endif
 
     <div class="row" style="background:#e9ecefa6;margin-top:30px;">
         <div class="col-sm-12">
@@ -119,6 +129,7 @@
 
         loadIntroducaoStartup();
         loadOferta();
+        loadAvaluationContent();
         loadInvestorsTable();
         loadMembrosEquipa();
 
@@ -130,7 +141,7 @@
             if ($(this).attr('name') == 'meta')
                 show_valor_a_acrescer(valor);
         });
-        $(".my-currency-format").keypress(function(e){
+        $(".my-currency-format").keypress(function(e) {
             if (!(e.key >= 0 && e.key <= 9) && e.key != "Backspace")
                 e.preventDefault();
         });
@@ -363,7 +374,7 @@
                         type: 'GET',
                         data: {
                             '_token': '{{csrf_token()}}',
-                            'rodada_id':'{{$rodadaId}}'
+                            'rodada_id': '{{$rodadaId}}'
                         },
                         success: function(response) {
                             loadIntroducaoStartup();
@@ -1527,8 +1538,7 @@
                 $("#alert-data-angariacao").html("O tempo para angariação deve ser de (1) uma semana no mínimo");
                 $("#termino-oferta").addClass("is-invalid");
                 find_error = 1;
-            }
-            else if(new Date(new Date(myForm.get('termino')).toDateString()) - new Date(new Date().toDateString()) > 16070400000) //milisegundos = 6meses com 31 dias cada
+            } else if (new Date(new Date(myForm.get('termino')).toDateString()) - new Date(new Date().toDateString()) > 16070400000) //milisegundos = 6meses com 31 dias cada
             {
                 $("#alert-data-angariacao").html("O tempo para angariação deve ser de (6) seis meses no máximo");
                 $("#termino-oferta").addClass("is-invalid");
@@ -1563,6 +1573,29 @@
             if (find_error)
                 return false;
             return true;
+        }
+
+        function loadAvaluationContent()
+        {
+            var codeStartup = "{{$codigoStartup}}";
+            
+            $.ajax({
+                url:'/get_avaluation',
+                type:'get',
+                data:
+                {
+                    "codeStartup": codeStartup
+                },
+                success:function(response)
+                {
+                    $("#content-avalutation").empty();
+                    $("#content-avalutation").append(response['html']);
+                },
+                error:function(error){
+                    console.log("Erro ao obter avaliação");
+                    console.log(error);
+                }
+            });
         }
     });
 </script>
