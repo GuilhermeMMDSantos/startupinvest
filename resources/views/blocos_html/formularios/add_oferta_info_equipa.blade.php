@@ -1,0 +1,78 @@
+<div id="step-5" class="step">
+    <h3>Informações da Equipe</h3>
+    <div class="form-group">
+        <label for="tamanho_equipe">Qual é o tamanho da equipe?</label>
+        <input type="number" class="form-control" id="tamanho_equipe"
+            name="tamanho_equipe">
+    </div>
+    <div class="form-group">
+        <label for="qtd_tecnico">Quantos técnicos a equipe possui?</label>
+        <input type="number" class="form-control" id="qtd_tecnico" name="qtd_tecnico">
+    </div>
+    <div class="form-group">
+        <label for="qtd_licenciados">Quantos licenciados a equipe possui?</label>
+        <input type="number" class="form-control" id="qtd_licenciados"
+            name="qtd_licenciados">
+    </div>
+    <div class="form-group">
+        <label for="qtd_mestres">Quantos membros da equipe possuem mestrado?</label>
+        <input type="number" class="form-control" id="qtd_mestres" name="qtd_mestres"
+            value="{{ old('qtd_mestres') }}">
+    </div>
+
+    <div class="form-group">
+        <label for="qtd_doutores">Quantos membros da equipe possuem doutorado?</label>
+        <input type="number" class="form-control" id="qtd_doutores" name="qtd_doutores"
+            value="{{ old('qtd_doutores') }}">
+    </div>
+
+    <div class="form-group">
+        <label for="qtd_exp_gestao">Quantos membros da equipe têm experiência em
+            gestão?</label>
+        <input type="number" class="form-control" id="qtd_exp_gestao" name="qtd_exp_gestao"
+            value="{{ old('qtd_exp_gestao') }}">
+    </div>
+
+    <div class="form-group">
+        <label for="qtd_exp_contabilidade">Quantos membros da equipe têm experiência em
+            contabilidade?</label>
+        <input type="number" class="form-control" id="qtd_exp_contabilidade"
+            name="qtd_exp_contabilidade" value="{{ old('qtd_exp_contabilidade') }}">
+    </div>
+
+    <div class="form-group">
+        <label for="qtd_exp_tecnica">Quantos membros da equipe têm experiência técnica?</label>
+        <input type="number" class="form-control" id="qtd_exp_tecnica"
+            name="qtd_exp_tecnica" value="{{ old('qtd_exp_tecnica') }}">
+    </div>
+    <div class="form-group">
+        <label for="media_experiencia">Qual é a média de experiência da sua equipe?</label>
+        <input type="number" class="form-control" id="media_experiencia"
+            name="media_experiencia" value="{{ old('media_experiencia') }}">
+    </div>
+    <div class="form-group">
+        <label for="tempo_trabalho_juntos">Há quanto tempo sua equipe trabalha junta?</label>
+        <input type="number" class="form-control" id="tempo_trabalho_juntos"
+            name="tempo_trabalho_juntos" value="{{ old('tempo_trabalho_juntos') }}">
+    </div>
+    <div class="form-group">
+        <label for="horas_trabalho_semana">Quantas horas sua equipe trabalha por semana, em
+            média?</label>
+        <input type="number" class="form-control" id="horas_trabalho_semana"
+            name="horas_trabalho_semana" value="{{ old('horas_trabalho_semana') }}">
+    </div>
+    <div class="form-group">
+        <label for="porcentagem_tempo_projeto">Qual a porcentagem do tempo da sua equipe é
+            dedicada ao projeto?</label>
+        <input type="number" class="form-control" id="porcentagem_tempo_projeto"
+            name="porcentagem_tempo_projeto" value="{{ old('porcentagem_tempo_projeto') }}">
+    </div>
+    <div class="form-group">
+        <label for="numero_reunioes_semana">Quantas reuniões sua equipe realiza por
+            semana?</label>
+        <input type="number" class="form-control" id="numero_reunioes_semana"
+            name="numero_reunioes_semana" value="{{ old('numero_reunioes_semana') }}">
+    </div>
+    <button type="button" class="btn btn-secondary prev-step">Voltar</button>
+    <button type="button" class="btn btn-primary next-step">Próximo</button>
+</div>

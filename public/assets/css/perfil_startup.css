@@ -239,6 +239,74 @@ body {
   display: none;
 }
 
+/*FORMULÁRIO CADASTRO DA RODADA*/
+
+.form-rodada-container .progress-container {
+  margin-bottom: 20px;
+}
+
+.form-rodada-container .progress-bar {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.form-rodada-container .step {
+  display: none;
+}
+
+.form-rodada-container .step.active {
+    display: block;
+}
+
+.form-rodada-container .step.left {
+  animation: slideLeft 0.5s;
+}
+
+.form-rodada-container .step.right {
+  animation: slideRight 0.5s;
+}
+
+.form-rodada-container .progress-steps {
+  font-weight: bold;
+  color: #6c757d;
+}
+
+.form-rodada-container .step-number {
+  font-size: 1.2rem;
+  color: #6c757d;
+  transition: color 0.3s ease-in-out;
+}
+
+
+.form-rodada-container .step-number.current {
+  color: #007bff;
+}
+@keyframes slideLeft {
+  from {
+      transform: translateX(100%);
+      opacity: 0;
+  }
+  to {
+      transform: translateX(0);
+      opacity: 1;
+  }
+}
+
+@keyframes slideRight {
+  from {
+      transform: translateX(-100%);
+      opacity: 0;
+  }
+  to {
+      transform: translateX(0);
+      opacity: 1;
+  }
+}
+/*RESPONSE*/
+
 @media (max-width: 1024px) {
   #popup-chat-container {
     display: none;

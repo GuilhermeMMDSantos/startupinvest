@@ -9,76 +9,91 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body form-rodada-container">
 
-                <form enctype="multipart/form-data" id="form-criar-oferta">
+                <div class="progress-container">
+                    <div class="progress" style="height: 25px; background-color: #e9ecef; border-radius: 50px;">
+                        <div class="progress-bar" role="progressbar"
+                            style="width: 0%; background-color: #007bff; transition: width 0.5s ease-in-out;"
+                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+                    <div class="progress-steps d-flex justify-content-between mt-2">
+                        <span class="step-number">Folha 1</span>
+                        <span class="step-number">Folha 2</span>
+                        <span class="step-number">Folha 3</span>
+                        <span class="step-number">Folha 4</span>
+                        <span class="step-number">Folha 5</span>
+                    </div>
+                </div>
+
+                <form action="#" method="POST">
                     @csrf
 
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label for="meta-oferta">Meta à captar</label>
-                            <div class="input-group mb-2">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" for="meta-oferta">Kz</label>
-                                </div>
-                                <input type="text" class="form-control my-currency-format mt-0" name="meta" id="meta-oferta" >
-                            </div>
-                            <span style="margin-top:-5px;font-size: .875em;color: #dc3545;display:block;" id="alert-meta" class="alert-adicionar-oferta"></span>
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            <label for="porcentagem-oferta">Acções à oferecer</label>
-
-                            <div class="input-group mb-2">
-                                <div class="input-group-prepend">
-                                    <label for="porcentagem-oferta" class="input-group-text">%</label>
-                                </div>
-                                <input type="text" class="form-control my-currency-format mt-0" name="porcentagem" id="porcentagem-oferta">
-                            </div>
-                            <span style="margin-top:-5px;font-size: .875em;color: #dc3545;display:block;" id="alert-porcentagem" class="alert-adicionar-oferta"></span>
-                        </div>
+                    <div class="form-steps mt-4">
+                        @include('blocos_html/formularios/add_oferta_info_mercado')
+                        @include('blocos_html/formularios/add_oferta_info_indicadores_economicos')
+                        @include('blocos_html/formularios/add_oferta_info_cliente')
+                        @include('blocos_html/formularios/add_oferta_receita_dispesas')
+                        @include('blocos_html/formularios/add_oferta_vantagem_competitiva')
+                        @include('blocos_html/formularios/add_oferta_info_equipa')
+                        @include('blocos_html/formularios/add_oferta_historico_investimento')
+                        @include('blocos_html/formularios/add_oferta_dados_captacao')
                     </div>
-
-                    <div class="row">
-                        <div class="col-12 col-sm-6" style="padding-top:10px;">
-                            <label for="montante-acrescer">+Taxa de Captação</label>
-                            <div class="input-group mb-2">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" for="montante-acrescer">Kz</label>
-                                </div>
-                                <input type="text" class="form-control  mt-0" name="montante_acrescer" id="montante-acrescer" value="0,00"  readonly>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-sm-6" style="padding-top:10px;">
-                            <label for="max-investidores">Número máximo de investidores</label>
-                            <input type="number" class="form-control" name="max_investidores" id="max-investidores" min='1' value="1">
-                            <span style="margin-top:1px;font-size: .875em;color: #dc3545;display:block;" id="alert-n-investidor" class="alert-adicionar-oferta"></span>
-                        </div>
-                    </div>
-
-
-                    <div class="row">
-                        <div class="col-12 col-sm-6" style="padding-top:10px;">
-                            <label for="input-pitch-video">Pitch (Video - <span id="pitch-label-tamanho">max.64MB</span>)</label>
-                            <input class="form-control" accept=".MP4,.MKV" type="file" id="input-pitch-video" name="pitch_video">
-                            <span style="margin-top:1px;font-size: .875em;color: #dc3545;display:block;" id="alert-pitch" class="alert-adicionar-oferta"></span>
-                        </div>
-
-                        <div class="col-12 col-sm-6" style="padding-top:10px;">
-                            <label for="termino-oferta">Término da Angariação</label>
-                            <input type="date" class="form-control" name="termino" id="termino-oferta">
-                            <span style="margin-top:1px;font-size: .875em;color: #dc3545;display:block;" id="alert-data-angariacao" class="alert-adicionar-oferta"></span>
-                        </div>
-                    </div>
-
                 </form>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="btn-publicar-oferta">
-                    <span class="spinner-border spinner-border-sm" id="btn-spinner-oferta" role="status" aria-hidden="true"></span>
+                    <span class="spinner-border spinner-border-sm" id="btn-spinner-oferta" role="status"
+                        aria-hidden="true"></span>
                     <span>Publicar</span>
                 </button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let currentStep = 1;
+
+        const steps = document.querySelectorAll('.step');
+        const progressBar = document.querySelector('.progress-bar');
+        const progressSteps = document.querySelectorAll('.step-number');
+
+        const showStep = (step) => {
+            steps.forEach((el, index) => {
+                el.classList.toggle('active', index + 1 === step);
+            });
+
+            const progressPercentage = (step - 1) * 50;
+            progressBar.style.width = `${progressPercentage}%`;
+            progressBar.setAttribute('aria-valuenow', progressPercentage);
+
+            progressSteps.forEach((el, index) => {
+                el.classList.toggle('current', index + 1 === step);
+            });
+        };
+
+        document.querySelectorAll('.next-step').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                if (currentStep < steps.length) {
+                    currentStep++;
+                    showStep(currentStep);
+                }
+            });
+        });
+
+        document.querySelectorAll('.prev-step').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                if (currentStep > 1) {
+                    currentStep--;
+                    showStep(currentStep);
+                }
+            });
+        });
+
+        showStep(currentStep);
+    });
+</script>
