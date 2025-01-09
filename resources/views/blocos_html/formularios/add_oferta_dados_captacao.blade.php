@@ -1,7 +1,7 @@
-<div id="step-2" class="step">
-    <h3>Histórico de Investimento</h3>
-    <form enctype="multipart/form-data" id="form-criar-oferta">
-        @csrf
+<div id="step-8" class="step">
+    <h3>Dados Rodada</h3>
+   <!-- <form enctype="multipart/form-data" id="form-criar-oferta">
+        @ csrf-->
 
         <div class="row">
             <div class="col-sm-6">
@@ -69,7 +69,7 @@
         </div>
 
 
-    </form>
+    <!--</form>-->
     <button type="button" class="btn btn-secondary prev-step">Voltar</button>
     <button type="submit" class="btn btn-success">Finalizar</button>
 </div>

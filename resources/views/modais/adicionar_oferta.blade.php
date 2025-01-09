@@ -27,7 +27,7 @@
                     </div>
                 </div>
 
-                <form action="#" method="POST">
+                <form method="POST" enctype="multipart/form-data" id="form-criar-oferta">
                     @csrf
 
                     <div class="form-steps mt-4">

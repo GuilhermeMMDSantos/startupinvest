@@ -86,8 +86,6 @@
 
 @endsection
 @section('scripts_base_inicio')
-<script src="https://www.paypal.com/sdk/js?components=card-fields&client-id=AZyNcOI3rX2NQ92uaU7RpNBW0f0N9SvQM_4FjtpkUaNij05CTlVLN1dj6E1J1mteOqUJXNtRtPE5y7QJ"></script>
-<script src="{{asset('assets/js/teste.js')}}"></script>
 <script type="text/javascript">
     $.ajaxSetup({
         headers: {
@@ -295,7 +293,7 @@
             $(".alert-adicionar-oferta").html('');
             $('.is-invalid').removeClass("is-invalid");
         })
-
+/*
         $("#btn-publicar-oferta").click(function() {
 
             let myForm = new FormData($("#form-criar-oferta")[0]);
@@ -351,6 +349,7 @@
             });
 
         });
+        */
 
         $("#content-intro-startup").on('click', '#btn-anular-ivestimento', function() {
 

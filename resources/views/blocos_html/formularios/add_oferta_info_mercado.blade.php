@@ -19,7 +19,7 @@
 
     <div class="form-group">
         <label for="mercado_b2c">O Qual o modelo de negócio?</label>
-        <select class="form-control" id="mercado_b2c" name="mercado_b2c">
+        <select class="form-control" id="modelo_negocio" name="modelo_negocio">
             <option value="1">B2C</option>
             <option value="2">B2B</option>
             <option value="3">B2B2C</option>
