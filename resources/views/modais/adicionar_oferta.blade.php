@@ -94,6 +94,8 @@
             });
         });
 
+        $('[data-toggle="tooltip"]').tooltip();
+
         showStep(currentStep);
     });
 </script>

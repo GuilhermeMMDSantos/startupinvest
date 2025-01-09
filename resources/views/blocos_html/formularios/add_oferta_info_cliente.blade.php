@@ -1,12 +1,12 @@
 <div id="step-3" class="step">
     <h3>Informações dos Clientes</h3>
     <div class="form-group">
-        <label for="taxa_retencao_clientes">Qual é a taxa de retenção de clientes?</label>
+        <label for="taxa_retencao_clientes">Qual é a taxa de retenção de clientes(%)?</label>
         <input type="number" step="0.01" class="form-control" id="taxa_retencao_clientes"
             name="taxa_retencao_clientes">
     </div>
     <div class="form-group">
-        <label for="crescimento_base_clientes">Qual é o crescimento da base de
+        <label for="crescimento_base_clientes">Qual é a taxa de crescimento mensal da base de
             clientes?</label>
         <input type="number" step="0.01" class="form-control" id="crescimento_base_clientes"
             name="crescimento_base_clientes">
