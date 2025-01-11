@@ -1,7 +1,6 @@
 @extends('inicio_base')
 @section('stylesheets_base_inicio')
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/perfil_startup.css')}}" />
-<link rel="stylesheet" type="text/css" href="{{asset('assets/css/cardfields.css')}}" />
 @endsection
 
 @section('contentBody_base_inicio')
@@ -350,6 +349,55 @@
 
         });
         */
+
+        $("#btn-publicar-oferta").click(function() {
+            var formPublicarOferta = new FormData($("#form-criar-oferta")[0]);
+
+            $("#btn-spinner-oferta").css({
+                'display': 'inline-block'
+            });
+
+            $.ajax({
+                url: '/criar_oferta',
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                data: myForm,
+                success: function(response) {
+                    if (response['status'] == 200) {
+                        loadOferta();
+                        $("#btn-buscar-investimento").hide();
+
+                        Swal.fire({
+                            icon: "success",
+                            title: "Oferta Publicada",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+
+                        $("#btn-anular-ivestimento").show();
+                        $("#modal-adicionar-oferta").modal('hide');
+                    } else {
+                        if (response[0]["meta"]) {
+                            $("#meta-oferta").addClass("is-invalid");
+                            $("#alert-meta").html(response[0]["meta"]);
+                        }
+                        if (response[0]["porcentagem"]) {
+                            $("#porcentagem-oferta").addClass("is-invalid");
+                            $("#alert-porcentagem").html(response[0]["porcentagem"]);
+                        }
+                        $("#btn-spinner-oferta").css({
+                            'display': 'none'
+                        });
+                    }
+
+                },
+                error: function(error) {
+                    console.log("ERRO AO CADASTRAR OFERTA");
+                    console.log(error);
+                }
+            });
+        });
 
         $("#content-intro-startup").on('click', '#btn-anular-ivestimento', function() {
 

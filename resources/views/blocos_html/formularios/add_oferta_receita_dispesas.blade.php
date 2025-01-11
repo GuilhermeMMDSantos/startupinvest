@@ -44,21 +44,21 @@
     </div>
     <div class="form-group">
         <label for="possiveis_fontes_de_receita">Qual a fonte de receita</label>
-        <div style="display:flex; gap:10px; margin-top:8px; flex-wrap:wrap;">
+        <div>
             <div>
-                <input type="checkbox" id="form-oferta-font-receita-produto" value="1">
+                <input type="checkbox" id="form-oferta-font-receita-produto" name="fontes_receita[]" value="1">
                 <label for="form-oferta-font-receita-produto">Produto</label>
             </div>
             <div>
-                <input type="checkbox" id="form-oferta-font-receita-assinatura" value="2">
+                <input type="checkbox" id="form-oferta-font-receita-assinatura" name="fontes_receita[]" value="2">
                 <label for="form-oferta-font-receita-assinatura"> Assinatura</label>
             </div>
             <div>
-                <input type="checkbox" id="form-oferta-font-receita-publicidade" value="3">
+                <input type="checkbox" id="form-oferta-font-receita-publicidade" name="fontes_receita[]" value="3">
                 <label for="form-oferta-font-receita-publicidade">Publicidade</label>
             </div>
             <div>
-                <input type="checkbox" id="form-oferta-font-receita-outra" value="4">
+                <input type="checkbox" id="form-oferta-font-receita-outra" name="fontes_receita[]" value="4">
                 <label for="form-oferta-font-receita-outra">Outra</label>
             </div>
         </div>
@@ -88,6 +88,8 @@
             name="despesas_operacionais_variaveis">
     </div>
 
-    <button type="button" class="btn btn-secondary prev-step">Voltar</button>
-    <button type="button" class="btn btn-primary next-step">Próximo</button>
+    <div class="d-flex" style="justify-content: flex-end;gap:10px; margin-top:40px !important;">
+        <button type="button" class="btn btn-secondary prev-step">Voltar</button>
+        <button type="button" class="btn btn-primary next-step">Próximo</button>
+    </div>
 </div>

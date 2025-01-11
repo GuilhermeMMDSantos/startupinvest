@@ -17,6 +17,12 @@ use setasign\Fpdi\Fpdi;
 use App\User;
 use App\Events\SendMessage;
 use App\Notifications\Message;
+use App\Startups;
+use App\Services\RodadaService;
+use App\Events\AnularRodada;
+use App\Events\AbrirRodada;
+use App\PermissoesVerPitch;
+use App\EntradaDoModelo;
 
 class RodadasController extends Controller
 {
@@ -54,6 +60,92 @@ class RodadasController extends Controller
             $investidores = RodadasInvestidores::where('fk_rodada', $request->id_rodada)->get();
         $rodada = RodadasInvestimento::where('id', $request->id_rodada)->first();
         return view('pagina_da_rodada', compact('notificacoes', 'qtdnotifications', 'qtdMessageUnview', 'investidores', 'rodada', 'investidor', 'presentUser'))->render();
+    }
+
+
+
+    public function cadastrarOferta(Request $request, RodadaService $rodadaService)
+    {
+
+        try {
+            $entradaModelo = $rodadaService->getEntradaModelo($request);
+            EntradaDoModelo::create($entradaModelo);
+            $meta =  str_replace(',', '.', str_replace('.', '', $request->meta));
+            $taxa = str_replace(',', '.', str_replace('.', '', $request->montante_acrescer));
+            $metaComATaxa = $meta + $taxa;
+            $porcentagem = str_replace(',', '.', str_replace('.', '', $request->porcentagem));
+            $dataTermino = $request->termino;
+            $maxInvestidores = $request->max_investidores;
+            $pitchFile = $request->file('pitch_video');
+
+            $getErros = $this->validarMetaPorcentagem($meta, $porcentagem);
+            if ($getErros != null)
+                return response()->json(['status' => 500, $getErros]);
+
+            $extensaoPitch = $pitchFile->extension();
+            $userId = Auth::user()->id;
+            $nomePitch = "pitch_{$userId}.{$extensaoPitch}";
+
+            $uploadFicheiro = $request->file('pitch_video')->storeAs('armazenamento/startups/pitch', $nomePitch);
+
+            RodadasInvestimento::create([
+                'fk_startup' => $userId,
+                'valor_objetivo' => $metaComATaxa + 0.0,
+                'valor_objetivo_sem_taxa' => $meta + 0.0,
+                'oferta_acoes' => $porcentagem + 0.0,
+                'max_investidores' => $maxInvestidores,
+                'valor_minimo_investimento' => ($metaComATaxa / $maxInvestidores),
+                'data_limite' => $dataTermino,
+                'estado' => 'aberta'
+            ]);;
+
+
+
+            Startups::where('fk_user', $userId)
+                ->update([
+                    'estado_busca_invest' => 'sim',
+                    'pitch_deck' => $uploadFicheiro
+                ]);
+
+
+            event(new AbrirRodada());
+
+            return response()->json(['status' => 200]);
+        } catch (ErrorException $e) {
+            return response()->json(['status' => 500], ['message' => $e->getMessage()]);
+        }
+    }
+
+    public function anularOferta(Request $request)
+    {
+        $idUser = Auth::user()->id;
+
+        Startups::where('fk_user', $idUser)
+            ->update([
+                'estado_busca_invest' => 'nao'
+            ]);
+
+        RodadasInvestimento::where('fk_startup', $idUser)
+            ->where('estado', 'aberta')
+            ->update([
+                'estado' => 'anulada'
+            ]);
+
+        RodadasInvestidores::where('fk_rodada', $request->rodada_id)->update([
+            'status_investimento' => 2
+        ]);
+
+        PermissoesVerPitch::where('fk_startup', $idUser)
+            ->update([
+                'estado' => 'vencido'
+            ]);
+
+
+        $filesForDelete = public_path() . '/storage/armazenamento/startups/pitch/pitch_' . $idUser . '*';
+        chmod(public_path() . '/storage/armazenamento/startups/pitch/', 0777); // Caso o sistema seja hospedado num linux server
+        array_map("unlink", glob($filesForDelete));
+
+        event(new AnularRodada());
     }
 
     public function saveContrato(Request $request)
@@ -127,7 +219,7 @@ class RodadasController extends Controller
         $investidor =  RodadasInvestidores::where('fk_rodada', $idRodada)->where('fk_investidor', Auth::user()->id)->first();
         $rodada = RodadasInvestimento::where('id', $idRodada)->first();
 
-        $html = view('blocos_html/investment_situation1', compact('rodada', 'investidor','presentUser'))->render();
+        $html = view('blocos_html/investment_situation1', compact('rodada', 'investidor', 'presentUser'))->render();
 
         return response()->json([
             'html' => $html
@@ -136,16 +228,15 @@ class RodadasController extends Controller
 
     public function updateIinvestSituation2(Request $request)
     {
-        try{
-        $idIvestidor = $request->idIvestidor;
-        $rodadaId = $request->rodadaId;
-        $presentUser = Auth::user()->id;
-        $investidor = RodadasInvestidores::where('fk_rodada', $rodadaId)->where('fk_investidor', $idIvestidor)->first();
-        $rodada = RodadasInvestimento::where('id', $rodadaId)->first();
+        try {
+            $idIvestidor = $request->idIvestidor;
+            $rodadaId = $request->rodadaId;
+            $presentUser = Auth::user()->id;
+            $investidor = RodadasInvestidores::where('fk_rodada', $rodadaId)->where('fk_investidor', $idIvestidor)->first();
+            $rodada = RodadasInvestimento::where('id', $rodadaId)->first();
 
-        $html = view('blocos_html/investment_situation2', compact('rodada', 'investidor', 'presentUser'))->render();
-        }catch(ErrorException $e)
-        {
+            $html = view('blocos_html/investment_situation2', compact('rodada', 'investidor', 'presentUser'))->render();
+        } catch (ErrorException $e) {
             return response()->json([
                 'message' => $e,
                 'teste' => 'guito'
@@ -305,7 +396,7 @@ class RodadasController extends Controller
         }
         return response([
             'tipo' => $currentUser->tipo
-        ],200);
+        ], 200);
     }
 
     public function discordarContrato(Request $request)
@@ -323,10 +414,10 @@ class RodadasController extends Controller
         ]);
 
         RodadasInvestidores::where('fk_rodada', $rodadaId)
-        ->where('fk_investidor', $remetente )
-        ->update([
-            'status_contrato_investidor' => 2
-        ]);
+            ->where('fk_investidor', $remetente)
+            ->update([
+                'status_contrato_investidor' => 2
+            ]);
         $messages = Mensagens::where([
 
             ['fk_destinatario', $destinatario],
@@ -341,6 +432,5 @@ class RodadasController extends Controller
         $userDestinatario->notify(new Message($qtdMessageUnview));
 
         return response(200);
-
     }
 }

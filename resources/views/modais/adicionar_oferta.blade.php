@@ -1,8 +1,8 @@
 <div class="modal fade" id="modal-adicionar-oferta" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
 
 
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document"  style="height:500px !important;">
+        <div class="modal-content"  style="height:100%; overflow-y: auto;">
             <div class="modal-header">
                 <h5 class="modal-title" style="font-size:14px;">Criar Oferta</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -24,6 +24,9 @@
                         <span class="step-number">Folha 3</span>
                         <span class="step-number">Folha 4</span>
                         <span class="step-number">Folha 5</span>
+                        <span class="step-number">Folha 6</span>
+                        <span class="step-number">Folha 7</span>
+                        <span class="step-number">Folha 8</span>
                     </div>
                 </div>
 
@@ -43,13 +46,13 @@
                 </form>
 
             </div>
-            <div class="modal-footer">
+            <!--<div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="btn-publicar-oferta">
                     <span class="spinner-border spinner-border-sm" id="btn-spinner-oferta" role="status"
                         aria-hidden="true"></span>
                     <span>Publicar</span>
                 </button>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>
@@ -67,7 +70,7 @@
                 el.classList.toggle('active', index + 1 === step);
             });
 
-            const progressPercentage = (step - 1) * 50;
+            const progressPercentage = (step - 1) * 15;
             progressBar.style.width = `${progressPercentage}%`;
             progressBar.setAttribute('aria-valuenow', progressPercentage);
 

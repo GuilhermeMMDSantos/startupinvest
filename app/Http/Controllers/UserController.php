@@ -32,14 +32,11 @@ use App\Notifications\Notificao;
 use App\Mensagens;
 use App\Events\SendMessage;
 use App\Notifications\Message;
-use App\Events\AbrirRodada;
-use App\Events\AnularRodada;
 use App\Own\Traits\UserTrait;
 use App\RodadasInvestidores;
 use App\SaidaDoModelo;
 
 use Illuminate\Database\Eloquent\Builder;
-use ErrorException;
 
 class UserController extends Controller
 {
@@ -47,9 +44,6 @@ class UserController extends Controller
 
     public function loadStartups(Request $request)
     {
-
-
-
         $dataAtual = Carbon::now()->format('Y-m-d H:m:s');
         $faseDesenvolvimento = $request->faseDesenvolvimento;
         $setorEconomico = $request->setorEconomico;
@@ -234,9 +228,9 @@ class UserController extends Controller
                 ->where('classificacao', 'weaknesses')
                 ->get();
         }
-        
+
         $html = view('blocos_html/avaliacao_da_rede_neural', compact('rodada', 'avaliacaoPositivo', 'avaliacaoNegativo'))->render();
-        
+
         return response()->json([
             'html' => $html
         ]);
@@ -738,84 +732,6 @@ class UserController extends Controller
         $html = view('blocos_html/content_membros_equipa', compact('membrosEquipa', 'myprofile'))->render();
 
         return response()->json($html);
-    }
-
-    public function cadastrarOferta(Request $request)
-    {
-
-        $meta =  str_replace(',', '.', str_replace('.', '', $request->meta));
-        $taxa = str_replace(',', '.', str_replace('.', '', $request->montante_acrescer));
-        $metaComATaxa = $meta + $taxa;
-        $porcentagem = str_replace(',', '.', str_replace('.', '', $request->porcentagem));
-        $dataTermino = $request->termino;
-        $maxInvestidores = $request->max_investidores;
-        $pitchFile = $request->file('pitch_video');
-
-        $getErros = $this->validarMetaPorcentagem($meta, $porcentagem);
-        if ($getErros != null)
-            return response()->json(['status' => 500, $getErros]);
-
-        $extensaoPitch = $pitchFile->extension();
-        $userId = Auth::user()->id;
-        $nomePitch = "pitch_{$userId}.{$extensaoPitch}";
-
-        $uploadFicheiro = $request->file('pitch_video')->storeAs('armazenamento/startups/pitch', $nomePitch);
-
-        RodadasInvestimento::create([
-            'fk_startup' => $userId,
-            'valor_objetivo' => $metaComATaxa + 0.0,
-            'valor_objetivo_sem_taxa' => $meta + 0.0,
-            'oferta_acoes' => $porcentagem + 0.0,
-            'max_investidores' => $maxInvestidores,
-            'valor_minimo_investimento' => ($metaComATaxa / $maxInvestidores),
-            'data_limite' => $dataTermino,
-            'estado' => 'aberta'
-        ]);;
-
-
-
-        Startups::where('fk_user', $userId)
-            ->update([
-                'estado_busca_invest' => 'sim',
-                'pitch_deck' => $uploadFicheiro
-            ]);
-
-
-        event(new AbrirRodada());
-
-        return response()->json(['status' => 200]);
-    }
-
-    public function anularOferta(Request $request)
-    {
-        $idUser = Auth::user()->id;
-
-        Startups::where('fk_user', $idUser)
-            ->update([
-                'estado_busca_invest' => 'nao'
-            ]);
-
-        RodadasInvestimento::where('fk_startup', $idUser)
-            ->where('estado', 'aberta')
-            ->update([
-                'estado' => 'anulada'
-            ]);
-
-        RodadasInvestidores::where('fk_rodada', $request->rodada_id)->update([
-            'status_investimento' => 2
-        ]);
-
-        PermissoesVerPitch::where('fk_startup', $idUser)
-            ->update([
-                'estado' => 'vencido'
-            ]);
-
-
-        $filesForDelete = public_path() . '/storage/armazenamento/startups/pitch/pitch_' . $idUser . '*';
-        chmod(public_path() . '/storage/armazenamento/startups/pitch/', 0777); // Caso o sistema seja hospedado num linux server
-        array_map("unlink", glob($filesForDelete));
-
-        event(new AnularRodada());
     }
 
     public function getIntroducaoInvestidor(Request $request)

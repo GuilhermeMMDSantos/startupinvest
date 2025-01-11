@@ -8,13 +8,12 @@
     <div class="form-group">
         <label for="participacao_mercado_concorrentes">Qual é a participação de mercado dos
             concorrentes(%)?</label>
-        <input type="number" step="0.01" class="form-control"
-            id="participacao_mercado_concorrentes" name="participacao_mercado_concorrentes">
+        <input type="number" step="0.01" class="form-control" id="participacao_mercado_concorrentes"
+            name="participacao_mercado_concorrentes">
     </div>
     <div class="form-group">
         <label for="numero_concorrentes_diretos">Quantos concorrentes diretos existem?</label>
-        <input type="number" class="form-control" id="numero_concorrentes_diretos"
-            name="numero_concorrentes_diretos">
+        <input type="number" class="form-control" id="numero_concorrentes_diretos" name="numero_concorrentes_diretos">
     </div>
 
     <div class="form-group">
@@ -27,8 +26,9 @@
     </div>
     <div class="form-group">
         <label for="tamanho_mercado_alvo">Qual é o tamanho do mercado-alvo (em milhões)?</label>
-        <input type="number" step="0.01" class="form-control" id="tamanho_mercado_alvo"
-            name="tamanho_mercado_alvo">
+        <input type="number" step="0.01" class="form-control" id="tamanho_mercado_alvo" name="tamanho_mercado_alvo">
     </div>
-    <button type="button" class="btn btn-primary next-step">Próximo</button>
+    <div class="d-flex" style="flex-direction: row-reverse; margin-top:40px !important;">
+        <button type="button" class="btn btn-primary next-step">Próximo</button>
+    </div>
 </div>

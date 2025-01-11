@@ -94,9 +94,9 @@ Route::post('/add_membro_equipa','UserController@adicionarMembroEquipa');
 
 Route::get('/eliminar_membro_startup','UserController@eliminarMembroStartup');
 
-Route::post('/criar_oferta','UserController@cadastrarOferta');
+Route::post('/criar_oferta','RodadasController@cadastrarOferta');
 
-Route::get('/anular_oferta','UserController@anularOferta');
+Route::get('/anular_oferta','RodadasController@anularOferta');
 
 
 Route::get('/get_experiencia_investidor','UserController@getExperienciasDoInvestidor');

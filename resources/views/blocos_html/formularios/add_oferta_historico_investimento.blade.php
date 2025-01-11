@@ -12,17 +12,21 @@
     <div class="form-group">
         <label for="participou_incubacao">Participou de algum programa de
             incubação ou aceleração?</label>
-        <div style="display:flex; gap:10px; margin-top:8px; flex-wrap:wrap;">
+        <div>
             <div>
-                <input type="radio" name="participacao_aceleradora" id="form-oferta-participacao_aceleradora-sim" value="1">
+                <input type="radio" name="participacao_aceleradora" id="form-oferta-participacao_aceleradora-sim"
+                    value="1">
                 <label for="form-oferta-participacao_aceleradora-sim">Sim</label>
             </div>
             <div>
-                <input type="radio" name="participacao_aceleradora" id="form-oferta-participacao_aceleradora-nao" value="0">
+                <input type="radio" name="participacao_aceleradora" id="form-oferta-participacao_aceleradora-nao"
+                    value="0">
                 <label for="form-oferta-participacao_aceleradora-nao">Não</label>
             </div>
         </div>
     </div>
-    <button type="button" class="btn btn-secondary prev-step">Voltar</button>
-    <button type="button" class="btn btn-primary next-step">Próximo</button>
+    <div class="d-flex" style="justify-content: flex-end; gap:10px;margin-top:40px !important;">
+        <button type="button" class="btn btn-secondary prev-step">Voltar</button>
+        <button type="button" class="btn btn-primary next-step">Próximo</button>
+    </div>
 </div>

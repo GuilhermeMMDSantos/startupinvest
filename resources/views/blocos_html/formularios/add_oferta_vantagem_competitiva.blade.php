@@ -1,21 +1,33 @@
 <div id="step-5" class="step">
     <h3>Vantagem Competitiva</h3>
-    
+
     <div class="form-group">
         <label>Factores exclusivos</label>
-        <select class="form-control">
-            <option value="1">Propriedade intelectual</option>
-            <option value="2">Tecnologia exclusiva</option>
-            <option value="3">Acesso exclusivo a canais de
-                distribuição</option>
-        </select>
+
+
+        <div>
+            <div>
+                <input type="checkbox" id="vantagem-propriedade-intelectual" name="vantagem_competitiva[]" value='1'>
+                <label for="vantagem-propriedade-intelectual">Propriedade intelectual</label>
+            </div>
+            <div>
+                <input type="checkbox" id="vantagem-tecnologia-exclusiva" name="vantagem_competitiva[]" value='2'>
+                <label for="vantagem-tecnologia-exclusiva">Tecnologia exclusiva</label>
+            </div>
+            <div>
+                <input type="checkbox" id="vantagem-canal-distribuicao" name="vantagem_competitiva[]" value='3'>
+                <label for="vantagem-canal-distribuicao">Acesso exclusivo a canais de
+                    distribuição</label>
+            </div>
+        </div>
     </div>
 
     <div class="form-group">
         <label for="grau_automacao">Qual o grau de automação nas operações (%)?</label>
-        <input type="number" class="form-control" id="grau_automacao" name="grau_automacao"
-            value="{{ old('grau_automacao') }}">
+        <input type="number" class="form-control" id="grau_automacao" name="grau_automacao">
     </div>
-    <button type="button" class="btn btn-secondary prev-step">Voltar</button>
-    <button type="button" class="btn btn-primary next-step">Próximo</button>
+    <div class="d-flex" style="justify-content: flex-end; gap:10px;margin-top:40px !important;">
+        <button type="button" class="btn btn-secondary prev-step">Voltar</button>
+        <button type="button" class="btn btn-primary next-step">Próximo</button>
+    </div>
 </div>

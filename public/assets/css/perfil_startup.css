@@ -261,27 +261,26 @@ body {
     display: block;
 }
 
-.form-rodada-container .step.left {
+.form-rodada-container .step .left {
   animation: slideLeft 0.5s;
 }
 
-.form-rodada-container .step.right {
+.form-rodada-container .step .right {
   animation: slideRight 0.5s;
 }
 
 .form-rodada-container .progress-steps {
-  font-weight: bold;
   color: #6c757d;
 }
 
 .form-rodada-container .step-number {
-  font-size: 1.2rem;
+  font-size: 0.5rem;
   color: #6c757d;
   transition: color 0.3s ease-in-out;
 }
 
 
-.form-rodada-container .step-number.current {
+.form-rodada-container .step-number .current {
   color: #007bff;
 }
 @keyframes slideLeft {
