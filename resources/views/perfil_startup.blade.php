@@ -362,7 +362,7 @@
                 type: 'POST',
                 contentType: false,
                 processData: false,
-                data: myForm,
+                data: formPublicarOferta,
                 success: function(response) {
                     if (response['status'] == 200) {
                         loadOferta();
@@ -378,14 +378,16 @@
                         $("#btn-anular-ivestimento").show();
                         $("#modal-adicionar-oferta").modal('hide');
                     } else {
-                        if (response[0]["meta"]) {
+                       /* if (response[0]["meta"]) {
                             $("#meta-oferta").addClass("is-invalid");
                             $("#alert-meta").html(response[0]["meta"]);
                         }
                         if (response[0]["porcentagem"]) {
                             $("#porcentagem-oferta").addClass("is-invalid");
                             $("#alert-porcentagem").html(response[0]["porcentagem"]);
-                        }
+                        }*/
+                       console.log("STATUS DIFERENTE DE 200");
+                       console.log(response['message']);
                         $("#btn-spinner-oferta").css({
                             'display': 'none'
                         });

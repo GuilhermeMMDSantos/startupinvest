@@ -23,6 +23,8 @@ use App\Events\AnularRodada;
 use App\Events\AbrirRodada;
 use App\PermissoesVerPitch;
 use App\EntradaDoModelo;
+use App\SaidaDoModelo;
+use App\Services\MachineLearningService;
 
 class RodadasController extends Controller
 {
@@ -64,12 +66,12 @@ class RodadasController extends Controller
 
 
 
-    public function cadastrarOferta(Request $request, RodadaService $rodadaService)
+    public function cadastrarOferta(Request $request, RodadaService $rodadaService, MachineLearningService $mpl)
     {
 
         try {
             $entradaModelo = $rodadaService->getEntradaModelo($request);
-            EntradaDoModelo::create($entradaModelo);
+            $saidaModelo = $mpl->predictGrowth(array_values($entradaModelo));
             $meta =  str_replace(',', '.', str_replace('.', '', $request->meta));
             $taxa = str_replace(',', '.', str_replace('.', '', $request->montante_acrescer));
             $metaComATaxa = $meta + $taxa;
@@ -88,7 +90,7 @@ class RodadasController extends Controller
 
             $uploadFicheiro = $request->file('pitch_video')->storeAs('armazenamento/startups/pitch', $nomePitch);
 
-            RodadasInvestimento::create([
+            $currentRodadaSaved = RodadasInvestimento::create([
                 'fk_startup' => $userId,
                 'valor_objetivo' => $metaComATaxa + 0.0,
                 'valor_objetivo_sem_taxa' => $meta + 0.0,
@@ -96,10 +98,29 @@ class RodadasController extends Controller
                 'max_investidores' => $maxInvestidores,
                 'valor_minimo_investimento' => ($metaComATaxa / $maxInvestidores),
                 'data_limite' => $dataTermino,
-                'estado' => 'aberta'
-            ]);;
+                'estado' => 'aberta',
+                'potencial_de_crescimento' => $saidaModelo->growth_potential
+            ]);
 
+            $entradaModelo['id_rodada'] = $currentRodadaSaved->id;
+            EntradaDoModelo::create($entradaModelo);
+            foreach ($saidaModelo->weaknesses as $index => $value) {
+                SaidaDoModelo::create([
+                    'id_rodada' => $currentRodadaSaved->id,
+                    'variavel' => $index,
+                    'valor' => $value,
+                    'classificacao' => 'weaknesses'
+                ]);
+            }
 
+            foreach ($saidaModelo->strengths as $index => $value) {
+                SaidaDoModelo::create([
+                    'id_rodada' => $currentRodadaSaved->id,
+                    'variavel' => $index,
+                    'valor' => $value,
+                    'classificacao' => 'strengths'
+                ]);
+            }
 
             Startups::where('fk_user', $userId)
                 ->update([

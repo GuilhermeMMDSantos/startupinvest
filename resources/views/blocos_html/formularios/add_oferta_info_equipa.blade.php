@@ -71,6 +71,11 @@
         <input type="number" class="form-control" id="numero_reunioes_semana" name="numero_reunioes_semana"
             value="">
     </div>
+    <div class="form-group">
+        <label for="numero_eventos">Quantidade de Eventos que a startup já participou?</label>
+        <input type="number" class="form-control" id="numero_eventos" name="eventos_setor"
+            value="">
+    </div>
     <div class="d-flex" style="justify-content: flex-end;gap:10px; margin-top:40px !important;">
         <button type="button" class="btn btn-secondary prev-step">Voltar</button>
         <button type="button" class="btn btn-primary next-step">Próximo</button>

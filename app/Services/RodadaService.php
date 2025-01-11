@@ -98,7 +98,7 @@ class RodadaService
         'horas_trabalho_semana' => $request->horas_trabalho_semana,
         'porcentagem_tempo_projeto' => $request->porcentagem_tempo_projeto,
         'numero_reunioes_semana' => $request->numero_reunioes_semana,
-        'eventos_setor' => 5,
+        'eventos_setor' => $request->eventos_setor,
         'tamanho_equipe' => $request->tamanho_equipe,
         'rodadas_investimento' => $request->rodadas_investimento,
         'maior_valor_captado' => $request->maior_valor_captado,
