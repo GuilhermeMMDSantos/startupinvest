@@ -21,7 +21,7 @@
     <div class="form-group">
         <label for="recorrencia_compra">Com que frequência seus clientes compram novamente de
             você(%)?</label>
-        <input type="text" class="form-control" id="recorrencia_compra" name="recorrencia_compra" value="">
+        <input type="text" class="form-control" id="recorrencia_compra" name="recorrencia_compra" >
     </div>
     <div class="d-flex" style="justify-content: flex-end;gap:10px; margin-top:40px !important;">
         <button type="button" class="btn btn-secondary prev-step">Voltar</button>

@@ -24,10 +24,10 @@ class MachineLearningService
                 ],
             ]);
 
-            $data = json_decode($response->getBody(), true);
+            $data = json_decode($response->getBody());
             return $data;
         } catch (\Exception $e) {
-            return $e; // Lide com erros de conexão ou resposta inválida
+            return $e; 
         }
     }
 }

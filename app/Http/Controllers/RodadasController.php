@@ -80,9 +80,12 @@ class RodadasController extends Controller
             $maxInvestidores = $request->max_investidores;
             $pitchFile = $request->file('pitch_video');
 
-            $getErros = $this->validarMetaPorcentagem($meta, $porcentagem);
+            $getErros = $rodadaService->validarDadosDaRodada($request);
             if ($getErros != null)
-                return response()->json(['status' => 500, $getErros]);
+                return response()->json(['status' => 400, 'message' => $getErros], 200);
+            $getErros = $rodadaService->validarMetaPorcentagem($meta, $porcentagem);
+            if ($getErros != null)
+                return response()->json(['status' => 400, 'message' => $getErros], 200);
 
             $extensaoPitch = $pitchFile->extension();
             $userId = Auth::user()->id;
@@ -131,9 +134,9 @@ class RodadasController extends Controller
 
             event(new AbrirRodada());
 
-            return response()->json(['status' => 200]);
+            return response()->json(['status' => 200], 200);
         } catch (ErrorException $e) {
-            return response()->json(['status' => 500], ['message' => $e->getMessage()]);
+            return response()->json(['message' => $e->getMessage()], 500);
         }
     }
 

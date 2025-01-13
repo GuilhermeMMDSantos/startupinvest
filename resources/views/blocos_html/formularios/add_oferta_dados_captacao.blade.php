@@ -44,8 +44,8 @@
 
         <div class="col-12 col-sm-6" style="padding-top:10px;">
             <label for="max-investidores">Número máximo de investidores</label>
-            <input type="number" class="form-control" name="max_investidores" id="max-investidores" min='1'
-                value="1">
+            <input type="number" class="form-control" name="max_investidores" id="max-investidores" min='2'
+                value="2">
             <span style="margin-top:1px;font-size: .875em;color: #dc3545;display:block;" id="alert-n-investidor"
                 class="alert-adicionar-oferta"></span>
         </div>

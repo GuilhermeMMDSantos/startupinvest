@@ -9,6 +9,7 @@ class EntradaDoModelo extends Model
     protected $table = 'entrada_do_modelo';
 
     protected $fillable = [
+        'id_rodada',
         'taxa_crescimento_mercado',
         'participacao_mercado_concorrentes',
         'numero_concorrentes_diretos',
