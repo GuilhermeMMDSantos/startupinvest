@@ -25,6 +25,7 @@ use App\PermissoesVerPitch;
 use App\EntradaDoModelo;
 use App\SaidaDoModelo;
 use App\Services\MachineLearningService;
+use Illuminate\Validation\ValidationException;
 
 class RodadasController extends Controller
 {
@@ -70,71 +71,76 @@ class RodadasController extends Controller
     {
 
         try {
-            $entradaModelo = $rodadaService->getEntradaModelo($request);
-            $saidaModelo = $mpl->predictGrowth(array_values($entradaModelo));
-            $meta =  str_replace(',', '.', str_replace('.', '', $request->meta));
-            $taxa = str_replace(',', '.', str_replace('.', '', $request->montante_acrescer));
-            $metaComATaxa = $meta + $taxa;
-            $porcentagem = str_replace(',', '.', str_replace('.', '', $request->porcentagem));
-            $dataTermino = $request->termino;
-            $maxInvestidores = $request->max_investidores;
-            $pitchFile = $request->file('pitch_video');
 
-            $getErros = $rodadaService->validarDadosDaRodada($request);
-            if ($getErros != null)
-                return response()->json(['status' => 400, 'message' => $getErros], 200);
-            $getErros = $rodadaService->validarMetaPorcentagem($meta, $porcentagem);
-            if ($getErros != null)
-                return response()->json(['status' => 400, 'message' => $getErros], 200);
+            DB::transaction(function () use ($request, $rodadaService, $mpl) {
+                $entradaModelo = $rodadaService->getEntradaModelo($request);
+                $saidaModelo = $mpl->predictGrowth(array_values($entradaModelo));
+                $meta =  str_replace(',', '.', str_replace('.', '', $request->meta));
+                $taxa = str_replace(',', '.', str_replace('.', '', $request->montante_acrescer));
+                $metaComATaxa = $meta + $taxa;
+                $porcentagem = str_replace(',', '.', str_replace('.', '', $request->porcentagem));
+                $dataTermino = $request->termino;
+                $maxInvestidores = $request->max_investidores;
+                $pitchFile = $request->file('pitch_video');
 
-            $extensaoPitch = $pitchFile->extension();
-            $userId = Auth::user()->id;
-            $nomePitch = "pitch_{$userId}.{$extensaoPitch}";
+                $getErros = $rodadaService->validarDadosDaRodada($request);
+                if ($getErros != null)
+                    throw ValidationException::withMessages(['message' => $getErros]);
+                $getErros = $rodadaService->validarMetaPorcentagem($meta, $porcentagem);
+                if ($getErros != null)
+                    throw ValidationException::withMessages(['message' => $getErros]);
 
-            $uploadFicheiro = $request->file('pitch_video')->storeAs('armazenamento/startups/pitch', $nomePitch);
+                $extensaoPitch = $pitchFile->extension();
+                $userId = Auth::user()->id;
+                $nomePitch = "pitch_{$userId}.{$extensaoPitch}";
 
-            $currentRodadaSaved = RodadasInvestimento::create([
-                'fk_startup' => $userId,
-                'valor_objetivo' => $metaComATaxa + 0.0,
-                'valor_objetivo_sem_taxa' => $meta + 0.0,
-                'oferta_acoes' => $porcentagem + 0.0,
-                'max_investidores' => $maxInvestidores,
-                'valor_minimo_investimento' => ($metaComATaxa / $maxInvestidores),
-                'data_limite' => $dataTermino,
-                'estado' => 'aberta',
-                'potencial_de_crescimento' => $saidaModelo->growth_potential
-            ]);
+             
 
-            $entradaModelo['id_rodada'] = $currentRodadaSaved->id;
-            EntradaDoModelo::create($entradaModelo);
-            foreach ($saidaModelo->weaknesses as $index => $value) {
-                SaidaDoModelo::create([
-                    'id_rodada' => $currentRodadaSaved->id,
-                    'variavel' => $index,
-                    'valor' => $value,
-                    'classificacao' => 'weaknesses'
-                ]);
-            }
-
-            foreach ($saidaModelo->strengths as $index => $value) {
-                SaidaDoModelo::create([
-                    'id_rodada' => $currentRodadaSaved->id,
-                    'variavel' => $index,
-                    'valor' => $value,
-                    'classificacao' => 'strengths'
-                ]);
-            }
-
-            Startups::where('fk_user', $userId)
-                ->update([
-                    'estado_busca_invest' => 'sim',
-                    'pitch_deck' => $uploadFicheiro
+                $currentRodadaSaved = RodadasInvestimento::create([
+                    'fk_startup' => $userId,
+                    'valor_objetivo' => $metaComATaxa + 0.0,
+                    'valor_objetivo_sem_taxa' => $meta + 0.0,
+                    'oferta_acoes' => $porcentagem + 0.0,
+                    'max_investidores' => $maxInvestidores,
+                    'valor_minimo_investimento' => ($metaComATaxa / $maxInvestidores),
+                    'data_limite' => $dataTermino,
+                    'estado' => 'aberta',
+                    'potencial_de_crescimento' => $saidaModelo->growth_potential
                 ]);
 
+                $entradaModelo['id_rodada'] = $currentRodadaSaved->id;
+                EntradaDoModelo::create($entradaModelo);
+                foreach ($saidaModelo->weaknesses as $index => $value) {
+                    SaidaDoModelo::create([
+                        'id_rodada' => $currentRodadaSaved->id,
+                        'variavel' => $index,
+                        'valor' => $value,
+                        'classificacao' => 'weaknesses'
+                    ]);
+                }
 
-            event(new AbrirRodada());
+                foreach ($saidaModelo->strengths as $index => $value) {
+                    SaidaDoModelo::create([
+                        'id_rodada' => $currentRodadaSaved->id,
+                        'variavel' => $index,
+                        'valor' => $value,
+                        'classificacao' => 'strengths'
+                    ]);
+                }
+                $uploadFicheiro = $request->file('pitch_video')->storeAs('armazenamento/startups/pitch', $nomePitch);
+                Startups::where('fk_user', $userId)
+                    ->update([
+                        'estado_busca_invest' => 'sim',
+                        'pitch_deck' => $uploadFicheiro
+                    ]);
 
-            return response()->json(['status' => 200], 200);
+
+                event(new AbrirRodada());
+
+                return response()->json(null, 200);
+            });
+        } catch (ValidationException $e) {
+            return response()->json([$e->errors()], 422);
         } catch (ErrorException $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }

@@ -3,11 +3,11 @@
     <div class="form-group">
         <label for="rodadas_investimento">Quantas rodadas de investimento a startup
             participou?</label>
-        <input type="number" class="form-control" id="rodadas_investimento" name="rodadas_investimento" value="">
+        <input type="number" class="form-control" id="rodadas_investimento" name="rodadas_investimento" required>
     </div>
     <div class="form-group">
         <label for="maior_valor_captado">Qual o maior valor captado até agora?</label>
-        <input type="number" class="form-control" id="maior_valor_captado" name="maior_valor_captado">
+        <input type="number" class="form-control" id="maior_valor_captado" name="maior_valor_captado" required>
     </div>
     <div class="form-group">
         <label for="participou_incubacao">Participou de algum programa de
@@ -20,7 +20,7 @@
             </div>
             <div>
                 <input type="radio" name="participacao_aceleradora" id="form-oferta-participacao_aceleradora-nao"
-                    value="0">
+                    value="0" checked>
                 <label for="form-oferta-participacao_aceleradora-nao">Não</label>
             </div>
         </div>

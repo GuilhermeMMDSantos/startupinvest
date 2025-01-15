@@ -1,7 +1,6 @@
 <div id="step-8" class="step">
     <h3>Dados Rodada</h3>
-    <!-- <form enctype="multipart/form-data" id="form-criar-oferta">
-        @ csrf-->
+    
 
     <div class="row">
         <div class="col-sm-6">
@@ -10,7 +9,7 @@
                 <div class="input-group-prepend">
                     <label class="input-group-text" for="meta-oferta">Kz</label>
                 </div>
-                <input type="text" class="form-control my-currency-format mt-0" name="meta" id="meta-oferta">
+                <input type="text" class="form-control my-currency-format mt-0" name="meta" id="meta-oferta" required>
             </div>
             <span style="margin-top:-5px;font-size: .875em;color: #dc3545;display:block;" id="alert-meta"
                 class="alert-adicionar-oferta"></span>
@@ -23,7 +22,7 @@
                     <label for="porcentagem-oferta" class="input-group-text">%</label>
                 </div>
                 <input type="text" class="form-control my-currency-format mt-0" name="porcentagem"
-                    id="porcentagem-oferta">
+                    id="porcentagem-oferta" required>
             </div>
             <span style="margin-top:-5px;font-size: .875em;color: #dc3545;display:block;" id="alert-porcentagem"
                 class="alert-adicionar-oferta"></span>
@@ -45,7 +44,7 @@
         <div class="col-12 col-sm-6" style="padding-top:10px;">
             <label for="max-investidores">Número máximo de investidores</label>
             <input type="number" class="form-control" name="max_investidores" id="max-investidores" min='2'
-                value="2">
+                value="2" required>
             <span style="margin-top:1px;font-size: .875em;color: #dc3545;display:block;" id="alert-n-investidor"
                 class="alert-adicionar-oferta"></span>
         </div>
@@ -69,7 +68,7 @@
     </div>
 
 
-    <!--</form>-->
+    
     <div class="d-flex" style="justify-content: flex-end; gap:10px;margin-top:40px !important;">
         <button type="button" class="btn btn-secondary prev-step">Voltar</button>
         <button type="button" class="btn btn-success" id="btn-publicar-oferta">

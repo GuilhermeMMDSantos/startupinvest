@@ -111,15 +111,15 @@
         destinatarioMessageChat = "{{ $startup->fk_user }}";
 
         var loader = "<div class='d-flex flex-column justify-content-center align-items-center' style='min-height:240px;'>\
-                                <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
-                                </div>\
-                            </div>";
+                                            <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
+                                            </div>\
+                                        </div>";
 
         var loaderComParagrafo = "<div class='d-flex flex-column justify-content-center align-items-center' style='min-height:240px;'>\
-                            <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
-                            </div>\
-                            <p>Processando...</p>\
-                        </div>";
+                                        <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
+                                        </div>\
+                                        <p>Processando...</p>\
+                                    </div>";
 
 
         $(function() {
@@ -288,67 +288,11 @@
                 });
                 $('#modal-adicionar-oferta input').val('');
                 $("#modal-adicionar-oferta input[type='text']").val('0,00');
-                $("#max-investidores").val(1);
+                $("#max-investidores").val(2);
                 $(".alert-adicionar-oferta").html('');
                 $('.is-invalid').removeClass("is-invalid");
             })
-            /*
-                    $("#btn-publicar-oferta").click(function() {
-
-                        let myForm = new FormData($("#form-criar-oferta")[0]);
-
-                        $("#btn-spinner-oferta").css({
-                            'display': 'inline-block'
-                        });
-                        if (!check_empty_field(myForm)) {
-                            $("#btn-spinner-oferta").css({
-                                'display': 'none'
-                            });
-                            return false;
-                        }
-                        $.ajax({
-                            url: '/criar_oferta',
-                            type: 'POST',
-                            contentType: false,
-                            processData: false,
-                            data: myForm,
-                            success: function(response) {
-                                if (response['status'] == 200) {
-                                    loadOferta();
-                                    $("#btn-buscar-investimento").hide();
-
-                                    Swal.fire({
-                                        icon: "success",
-                                        title: "Oferta Publicada",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-
-                                    $("#btn-anular-ivestimento").show();
-                                    $("#modal-adicionar-oferta").modal('hide');
-                                } else {
-                                    if (response[0]["meta"]) {
-                                        $("#meta-oferta").addClass("is-invalid");
-                                        $("#alert-meta").html(response[0]["meta"]);
-                                    }
-                                    if (response[0]["porcentagem"]) {
-                                        $("#porcentagem-oferta").addClass("is-invalid");
-                                        $("#alert-porcentagem").html(response[0]["porcentagem"]);
-                                    }
-                                    $("#btn-spinner-oferta").css({
-                                        'display': 'none'
-                                    });
-                                }
-
-                            },
-                            error: function(error) {
-                                console.log("ERRO AO CADASTRAR OFERTA");
-                                console.log(error);
-                            }
-                        });
-
-                    });
-                    */
+            
 
             $("#btn-publicar-oferta").click(function() {
                 var formPublicarOferta = new FormData($("#form-criar-oferta")[0]);
@@ -364,45 +308,46 @@
                     processData: false,
                     data: formPublicarOferta,
                     success: function(response) {
-                        if (response['status'] == 200) {
-                        loadOferta();
-                        $("#btn-buscar-investimento").hide();
 
+                        $("#btn-buscar-investimento").hide();
+                        loadOferta();
+                        $("#btn-anular-ivestimento").show();
+                        $("#modal-adicionar-oferta").modal('hide');
                         Swal.fire({
                             icon: "success",
                             title: "Oferta Publicada",
                             showConfirmButton: false,
                             timer: 1500
                         });
-
-                        $("#btn-anular-ivestimento").show();
-                        $("#modal-adicionar-oferta").modal('hide');
-                    }else{
-                         
-                        console.log(response['message'][0]);
-                        document.querySelector('#modal-adicionar-oferta').setAttribute('inert',
-                            '');
-                        Swal.fire({
-                            icon: "warning",
-                            title: "Erro ao publicar oferta",
-                            html:"Contacte o suporte",
-                            confirmButtonText: "Entendido",
-                            showConfirmButton: true,
-                        }).then(() => {
-                            document.querySelector('#modal-adicionar-oferta')
-                                .removeAttribute('inert');
-                        });
-
                         $("#btn-spinner-oferta").css({
                             'display': 'none'
                         });
-                    }
-                       
-
                     },
                     error: function(error) {
                         console.log("Erro ao cadastrar oferta");
-                        console.log(error);
+                        if (error.status === 422) {
+                        var message = '';
+                        for(msg in error.responseJSON[0].message)
+                        {
+                            message += error.responseJSON[0].message[msg]+'\n';
+                        }
+                            document.querySelector('#modal-adicionar-oferta').setAttribute('inert','');
+                            Swal.fire({
+                                icon: "warning",
+                                title: "Erro ao publicar oferta",
+                                html: message,
+                                confirmButtonText: "Entendido",
+                                showConfirmButton: true,
+                            }).then(() => {
+                                document.querySelector('#modal-adicionar-oferta').removeAttribute('inert');
+                            });
+
+                            $("#btn-spinner-oferta").css({
+                                'display': 'none'
+                            });
+                        }else{
+                            console.log(error.responseText);
+                        }
                     }
                 });
             });
