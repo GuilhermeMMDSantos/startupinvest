@@ -53,15 +53,15 @@
 
     <div class="row">
         <div class="col-12 col-sm-6" style="padding-top:10px;">
-            <label for="input-pitch-video">Pitch (Video - <span id="pitch-label-tamanho">max.64MB</span>)</label>
-            <input class="form-control" accept=".MP4,.MKV" type="file" id="input-pitch-video" name="pitch_video">
+            <label for="input-pitch-video">Pitch (<span id="input-pitch-video-alert"> Com Duração Max de 15min</span>)</label>
+            <input class="form-control" accept=".MP4,.MKV" type="file" id="input-pitch-video" name="pitch_video" required>
             <span style="margin-top:1px;font-size: .875em;color: #dc3545;display:block;" id="alert-pitch"
                 class="alert-adicionar-oferta"></span>
         </div>
 
         <div class="col-12 col-sm-6" style="padding-top:10px;">
             <label for="termino-oferta">Término da Angariação</label>
-            <input type="date" class="form-control" name="termino" id="termino-oferta">
+            <input type="date" class="form-control" name="termino" id="termino-oferta" required>
             <span style="margin-top:1px;font-size: .875em;color: #dc3545;display:block;" id="alert-data-angariacao"
                 class="alert-adicionar-oferta"></span>
         </div>

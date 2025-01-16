@@ -71,7 +71,7 @@ class RodadasController extends Controller
     {
 
         try {
-
+            
             DB::transaction(function () use ($request, $rodadaService, $mpl) {
                 $entradaModelo = $rodadaService->getEntradaModelo($request);
                 $saidaModelo = $mpl->predictGrowth(array_values($entradaModelo));

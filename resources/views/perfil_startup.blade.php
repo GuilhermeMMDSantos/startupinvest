@@ -24,7 +24,7 @@
 
 
         @if ($startup->estado_busca_invest == 'sim' && $currentTypeUser != 'startup')
-            <div class="row" id="content-avalutation">
+            <div class="row" id="content-avalutation" style=" margin-top:25px;">
                 <div class="d-flex justify-content-center " style="width:100%;height:400px;">
                     <div class="spinner-border align-self-center" style="width: 7rem; height: 7rem;" role="status">
                         <span class="sr-only">Loading...</span>
@@ -111,15 +111,15 @@
         destinatarioMessageChat = "{{ $startup->fk_user }}";
 
         var loader = "<div class='d-flex flex-column justify-content-center align-items-center' style='min-height:240px;'>\
-                                            <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
-                                            </div>\
-                                        </div>";
+                                                <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
+                                                </div>\
+                                            </div>";
 
         var loaderComParagrafo = "<div class='d-flex flex-column justify-content-center align-items-center' style='min-height:240px;'>\
-                                        <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
-                                        </div>\
-                                        <p>Processando...</p>\
-                                    </div>";
+                                            <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
+                                            </div>\
+                                            <p>Processando...</p>\
+                                        </div>";
 
 
         $(function() {
@@ -292,9 +292,15 @@
                 $(".alert-adicionar-oferta").html('');
                 $('.is-invalid').removeClass("is-invalid");
             })
-            
 
-            $("#btn-publicar-oferta").click(function() {
+
+            $("#btn-publicar-oferta").click(async function() {
+                if (! await validateFormPublicarRodada()) {
+                    $("#btn-spinner-oferta").css({
+                        'display': 'none'
+                    });
+                    return false;
+                }
                 var formPublicarOferta = new FormData($("#form-criar-oferta")[0]);
 
                 $("#btn-spinner-oferta").css({
@@ -326,12 +332,12 @@
                     error: function(error) {
                         console.log("Erro ao cadastrar oferta");
                         if (error.status === 422) {
-                        var message = '';
-                        for(msg in error.responseJSON[0].message)
-                        {
-                            message += error.responseJSON[0].message[msg]+'\n';
-                        }
-                            document.querySelector('#modal-adicionar-oferta').setAttribute('inert','');
+                            var message = '';
+                            for (msg in error.responseJSON[0].message) {
+                                message += error.responseJSON[0].message[msg] + '\n';
+                            }
+                            document.querySelector('#modal-adicionar-oferta').setAttribute(
+                                'inert', '');
                             Swal.fire({
                                 icon: "warning",
                                 title: "Erro ao publicar oferta",
@@ -339,14 +345,18 @@
                                 confirmButtonText: "Entendido",
                                 showConfirmButton: true,
                             }).then(() => {
-                                document.querySelector('#modal-adicionar-oferta').removeAttribute('inert');
+                                document.querySelector('#modal-adicionar-oferta')
+                                    .removeAttribute('inert');
                             });
 
                             $("#btn-spinner-oferta").css({
                                 'display': 'none'
                             });
-                        }else{
+                        } else {
                             console.log(error.responseText);
+                            $("#btn-spinner-oferta").css({
+                                'display': 'none'
+                            });
                         }
                     }
                 });

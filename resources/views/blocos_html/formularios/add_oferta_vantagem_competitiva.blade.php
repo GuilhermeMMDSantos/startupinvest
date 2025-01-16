@@ -20,7 +20,7 @@
                     distribuição</label>
             </div>
             <div>
-                <input type="checkbox" id="vantagem-nenhuma"  value='4' checked>
+                <input type="checkbox" id="vantagem-nenhuma" name="vantagem_competitiva[]"  value='4' checked>
                 <label for="vantagem-nenhuma">Nenhuma</label>
             </div>
         </div>

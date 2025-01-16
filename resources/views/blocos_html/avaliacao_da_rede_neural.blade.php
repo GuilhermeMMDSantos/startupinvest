@@ -1,23 +1,31 @@
 @if (!empty($rodada))
     <div class="col-sm-12">
-        <div class="card shadow-lg mb-4">
+        <div class="card shadow-lg mb-4 border-0">
+            
             <div class="card-body">
-                <h1 class="card-title" style="font-size:20px;">Avaliação</h1>
-                <h4>Potencial de Crescimento da Startup: {{ $rodada->potencial_de_crescimento }}</h4>
+                <h4 >Potencial de Crescimento da Startup</h4>
+                <h2 class="text-center font-weight-bold {{ $rodada->potencial_de_crescimento >= 50 ? 'text-success' : 'text-danger' }}">
+                    {{ $rodada->potencial_de_crescimento }}%
+                </h2>
 
-                <div class="mt-4">
+                <div class="mt-4 text-center">
                     @if ($rodada->potencial_de_crescimento >= 50)
-                        <p class='text-success'>Este negócio apresenta grande potencial de crescimento. Considere
-                            investir!</p>
+                        <p class="text-success font-weight-bold">
+                             Este negócio apresenta grande potencial de crescimento. Considere investir!
+                        </p>
                     @else
-                        <p class='text-danger'>Este negócio apresenta riscos consideráveis. Avalie cuidadosamente antes
-                            de investir.</p>
+                        <p class="text-danger font-weight-bold">
+                            <i class="fas fa-exclamation-triangle"></i> Este negócio apresenta riscos consideráveis. Avalie cuidadosamente antes de investir.
+                        </p>
                     @endif
                 </div>
 
-                <div class="row">
+                <hr>
+                <h5 class="font-weight-bold mt-4">Pontos Fracos Identificados</h5>
+
+                <div class="row mt-3">
                     @php
-                        $weakPoints = [
+                        $weakPoints =  [
                             'Taxa_crescimento_mercado' =>
                                 'Uma baixa taxa de crescimento do mercado indica que a startup pode ter dificuldades em expandir, pois está atuando em um setor que cresce lentamente.',
                             'Participacao_mercado_concorrentes' =>
@@ -67,26 +75,29 @@
                         $unidades = [
                             'Taxa_crescimento_mercado' => '%',
                             'Participacao_mercado_concorrentes' => '%',
-                            'Taxa_desemprego' => '%',
                             'Taxa_inflacao' => '%',
-                            'ROI' => '%',
-                            'Taxa_retencao_clientes' => '%',
-                            'Crescimento_base_clientes' => '%',
-                            'Crescimento_base_clientes' => '%',
                             'CAC' => 'Kz',
+                           
                         ];
                     @endphp
 
                     @foreach ($avaliacaoNegativo as $avaluation)
-                        @php $message = $weakPoints[$avaluation->variavel] ?? 'Buscando...'; @endphp
-                        <div class='col-sm-12'>
-                            <p><strong>{{ $avaluation->variavel }}:</strong>
-                                {{ $avaluation->valor }}{{ $unidades[$avaluation->variavel] }}</p>
-                            <p class="badge badge-warning">{{ $message }}</p>
+                        @php 
+                            $message = $weakPoints[$avaluation->variavel] ?? 'Sem detalhes adicionais disponíveis.';
+                        @endphp
+                        <div class="col-sm-6 mb-3">
+                            <div class="p-3 border rounded bg-light shadow-sm">
+                                <h6><strong>{{ $avaluation->variavel }}:</strong> 
+                                    {{ $avaluation->valor }}
+                                    @if (array_key_exists($avaluation->variavel, $unidades))
+                                        {{ $unidades[$avaluation->variavel] }}
+                                    @endif
+                                </h6>
+                                <p style="background-color:#e9ecef !important;border-radius:2px; padding:10px;">{{ $message }}</p>
+                            </div>
                         </div>
                     @endforeach
                 </div>
-
             </div>
         </div>
     </div>

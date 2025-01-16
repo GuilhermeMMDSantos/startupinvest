@@ -14,6 +14,11 @@ use App\Mail\EmailSenha;
 |
 */
 
+Route::get('/javascript-disabled', function () {
+    return view('javascript-disabled');
+})->name('javascript.disabled');
+
+
 Route::get('paineladmin', 'AdminController@index')->name('admin.stackholders');
 
 
