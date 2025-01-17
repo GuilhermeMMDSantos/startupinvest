@@ -25,7 +25,7 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="tamanho_mercado_alvo">Qual é o tamanho do mercado-alvo (em milhões)?</label>
+        <label for="tamanho_mercado_alvo">Qual é o tamanho do mercado-alvo (KZ)?</label>
         <input type="number" step="0.01" class="form-control" id="tamanho_mercado_alvo" name="tamanho_mercado_alvo" required>
     </div>
     <div class="d-flex" style="flex-direction: row-reverse; margin-top:40px !important;">

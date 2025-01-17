@@ -27,6 +27,12 @@
     <link href="{{ asset('assets/css/bootstrap-select.min.css') }}" type="text/css" rel="stylesheet">
     <link href="{{ asset('assets/css/config.css') }}" type="text/css" rel="stylesheet">
     <link href="{{ asset('assets/css/custom.css') }}" type="text/css" rel="stylesheet">
+    <style>
+        body {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+    </style>
     @yield('stylesheets')
 
 </head>

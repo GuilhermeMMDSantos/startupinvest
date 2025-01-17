@@ -35,7 +35,7 @@ use App\Notifications\Message;
 use App\Own\Traits\UserTrait;
 use App\RodadasInvestidores;
 use App\SaidaDoModelo;
-
+use App\EntradaDoModelo;
 use Illuminate\Database\Eloquent\Builder;
 
 class UserController extends Controller
@@ -207,7 +207,6 @@ class UserController extends Controller
 
     public function getAvaluation(Request $request)
     {
-        $avaliacaoPositivo = null;
         $avaliacaoNegativo = null;
 
         $user = User::with('startup')
@@ -220,16 +219,17 @@ class UserController extends Controller
             ->first();
 
         if (!empty($rodada)) {
-            $avaliacaoPositivo = SaidaDoModelo::where('id_rodada', $rodada->id)
-                ->where('classificacao', 'strengths')
-                ->get();
 
-            $avaliacaoNegativo = SaidaDoModelo::where('id_rodada', $rodada->id)
-                ->where('classificacao', 'weaknesses')
-                ->get();
+            
+            $atributosAvalicaoNegativa = SaidaDoModelo::where('id_rodada', $rodada->id)
+            ->where('classificacao', 'weaknesses')
+            ->pluck('variavel')
+            ->toArray();
+            
+            $entradaModelo = EntradaDoModelo::where('id_rodada',  $rodada->id)->first();
         }
 
-        $html = view('blocos_html/avaliacao_da_rede_neural', compact('rodada', 'avaliacaoPositivo', 'avaliacaoNegativo'))->render();
+        $html = view('blocos_html/avaliacao_da_rede_neural', compact('rodada','atributosAvalicaoNegativa', 'entradaModelo'))->render();
 
         return response()->json([
             'html' => $html

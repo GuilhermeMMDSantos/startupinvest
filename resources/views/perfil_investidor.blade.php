@@ -170,7 +170,7 @@
   <!-- Portfólio -->
   <div class="portfolio-container">
     <header>
-      <h1>Portfólio</h1>
+      <h1>Portifólio</h1>
       <h6>Startups investidas na plataforma</h6>
     </header>
     <section id="portifolio-investidor-body">

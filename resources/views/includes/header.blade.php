@@ -1,5 +1,5 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/includes_header.css') }}" />
-<header class=" container-fluid" id="header" style="position:fixed;top:0;z-index:10;">
+<header class=" container-fluid" id="header" style="position:fixed;top:0;z-index:10;max-width:1400px;">
     <div class="row" id="headMenu">
 
         <div class="col-sm-5 col-lg-5 logo" style="padding-top:12px;">
@@ -10,8 +10,6 @@
         <nav class="col-lg-6 menu" style="padding-top:7px;padding-bottom:7px;">
 
             <ul>
-
-
 
                 <li class="liMenu" style="position: relative !important;">
                     <a href="{{ route('notificacao.menu') }}" class="anchorMenu">

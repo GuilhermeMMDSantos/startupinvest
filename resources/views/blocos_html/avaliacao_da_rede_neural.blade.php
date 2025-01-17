@@ -3,8 +3,7 @@
         <div class="card shadow-lg mb-4 border-0">
             
             <div class="card-body">
-                <h4 >Potencial de Crescimento da Startup</h4>
-                <h2 class="text-center font-weight-bold {{ $rodada->potencial_de_crescimento >= 50 ? 'text-success' : 'text-danger' }}">
+                <h2 class="text-center font-weight-bold {{ $rodada->potencial_de_crescimento >= 50 ? 'text-success': ''}}" @if( $rodada->potencial_de_crescimento < 50) style="color:#dc3545d4;" @endif>
                     {{ $rodada->potencial_de_crescimento }}%
                 </h2>
 
@@ -14,14 +13,14 @@
                              Este negócio apresenta grande potencial de crescimento. Considere investir!
                         </p>
                     @else
-                        <p class="text-danger font-weight-bold">
-                            <i class="fas fa-exclamation-triangle"></i> Este negócio apresenta riscos consideráveis. Avalie cuidadosamente antes de investir.
+                        <p class="font-weight-bold" style="color:#dc3545d4;">
+                             Este negócio apresenta riscos consideráveis. Avalie cuidadosamente antes de investir.
                         </p>
                     @endif
                 </div>
 
                 <hr>
-                <h5 class="font-weight-bold mt-4">Pontos Fracos Identificados</h5>
+                <h5 class="font-weight-bold mt-4 text-center" style="color:#818182;">Pontos Fracos Identificados</h5>
 
                 <div class="row mt-3">
                     @php
@@ -75,27 +74,67 @@
                         $unidades = [
                             'Taxa_crescimento_mercado' => '%',
                             'Participacao_mercado_concorrentes' => '%',
+                            'Tamanho_mercado_alvo' => 'KZ',
                             'Taxa_inflacao' => '%',
-                            'CAC' => 'Kz',
-                           
+                            'Taxas_juros' => '%',
+                            'Taxa_desemprego' => '%',
+                            'Taxa_retencao_clientes' => '%',
+                            'Crescimento_base_clientes' => '%',
+                            'Ticket_medio' => 'KZ',
+                            'LTV' => 'KZ',
+                            'CAC' => 'KZ',
+                            'ROI' => '%',
+                            'Despesas_operacionais_fixas' => 'KZ',
+                            'Margem_bruta' => '%',
+                           'Ciclo_vida_cliente' => '%',
+                           'Taxa_adocao_inicial' => '%',
+                       'Recorrencia_compra' => '%',
+                           'Tempo_medio_ciclo_vendas' => 'dia(s)',
+                           'Taxa_crescimento_receita' => '%',
+                           'Duracao_media_ciclo_vendas' => 'dia(s)',
+                           'Receita_Vendas'=> 'KZ',
+                          'Margem_liquida'=> '%',
+                          'Despesas_operacionais_variaveis'=> 'KZ',
+                          'Grau_automacao'=> '%',
+                         'Media_experiencia'=> 'ano(s)',
+                         'Tempo_trabalho_juntos'=> 'ano(s)',
+                         'Horas_trabalho_semana'=> 'H',
+                         'Porcentagem_tempo_projeto'=> '%',
+                         'Maior_valor_captado'=> 'KZ',
+                        ];
+
+                        $alias = [
+                            'Receita_Assinatura',
+                            'Receita_Publicidade',
+                           'Receita_Outra',
+                           'Mercado_B2C',
+                           'Mercado_B2B',
+                           'Mercado_B2B2C',
+                           'Receita_Vendas',
+                           'Receita_Assinatura',
+                           'Receita_Publicidade',
+                           'Receita_Outra'
                         ];
                     @endphp
 
-                    @foreach ($avaliacaoNegativo as $avaluation)
+                    @foreach ($atributosAvalicaoNegativa as $atributo)
                         @php 
-                            $message = $weakPoints[$avaluation->variavel] ?? 'Sem detalhes adicionais disponíveis.';
+                            $message = array_key_exists($atributo, $weakPoints) ? $weakPoints[$atributo] : 'Sem detalhes adicionais disponíveis.';
                         @endphp
+                        @if(!in_array($atributo, $alias))
                         <div class="col-sm-6 mb-3">
                             <div class="p-3 border rounded bg-light shadow-sm">
-                                <h6><strong>{{ $avaluation->variavel }}:</strong> 
-                                    {{ $avaluation->valor }}
-                                    @if (array_key_exists($avaluation->variavel, $unidades))
-                                        {{ $unidades[$avaluation->variavel] }}
+                                <h6><strong>{{ $atributo }}:</strong> 
+                                    @php $attrName = strtolower($atributo);  @endphp
+                                    {{ $entradaModelo->$attrName }}
+                                    @if (array_key_exists($atributo, $unidades))
+                                        {{ $unidades[$atributo] }}
                                     @endif
                                 </h6>
                                 <p style="background-color:#e9ecef !important;border-radius:2px; padding:10px;">{{ $message }}</p>
                             </div>
                         </div>
+                        @endif
                     @endforeach
                 </div>
             </div>

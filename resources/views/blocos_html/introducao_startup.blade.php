@@ -17,7 +17,7 @@
     
     <p style="font-size: 1rem; color: #555; line-height: 1.5; margin-top: 10px;">
         {{ str_replace('##', ' ', $startup->pitch_elevator) }}<br>
-        @if($startup->estado_busca_invest == 'sim' && $tipoUser=='investidor')Avaliado com: <span style="font-size:20px;color:#ca9227;font-weight:bold;">{{number_format($rodada->potencial_de_crescimento,2,',','.')}}%</span> de Potencial de Crescimento <a href="#" style="font-size:12px;">Detalhes</a>@endif
+        @if($startup->estado_busca_invest == 'sim' && $tipoUser=='investidor')Avaliado com: <span style="font-size:20px;color:#ca9227;font-weight:bold;">{{number_format($rodada->potencial_de_crescimento,2,',','.')}}%</span> de Potencial de Crescimento @endif
     </p>
 
     <div style="text-align:right;;margin-top:-13px;" id="btn-startup-intoducao">

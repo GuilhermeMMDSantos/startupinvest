@@ -21,7 +21,7 @@ class EntradaDoModelo extends Migration
             $table->boolean('mercado_b2c')->nullable();
             $table->boolean('mercado_b2b')->nullable();
             $table->boolean('mercado_b2b2c')->nullable();
-            $table->float('tamanho_mercado_alvo')->nullable();
+            $table->double('tamanho_mercado_alvo')->nullable();
             $table->float('taxa_inflacao')->nullable();
             $table->float('taxas_juros')->nullable();
             $table->float('taxa_desemprego')->nullable();
