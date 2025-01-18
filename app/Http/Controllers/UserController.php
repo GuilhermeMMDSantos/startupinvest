@@ -757,7 +757,7 @@ class UserController extends Controller
 
         if (Auth::user()->tipo == "startup") {
 
-            //$this->verificarValidadePermissoesPitch(Auth::user()->id, $investidor->fk_user);
+            $this->verificarValidadePermissoesPitch(Auth::user()->id, $investidor->fk_user);
             $permissoesVerPitch = PermissoesVerPitch::where('fk_startup', Auth::user()->id)
                 ->where('fk_investidor', $investidor->fk_user)
                 ->where('fk_rodada', $rodadaId)
@@ -1149,10 +1149,9 @@ class UserController extends Controller
 
         $rodadas = RodadasInvestidores::whereHas('rodada', function ($query) {
 
-            $query->where('estado', 'fechada');
+            $query->where('estado', 'sucedida');
         })
             ->where('fk_investidor', $investidor->fk_user)
-            ->where('contrato_mutou_aprovacao', 'aprovado')
             ->get();
         $html = view('blocos_html/startups_portifolio_investidor', compact('rodadas'))->render();
 
