@@ -6,9 +6,9 @@
     <h1>{{ $investidor->nome_completo }}</h1>
     <span>Investidor • Pessoa Física</span>
     <div id="container-btn-introducao-investidor" class="mt-3">
-      @if($myProfile != true)
+      @if($myProfile != true && $permissoesVerPitch != null && $permissoesVerPitch->estado == 'espera')
       <button id="btn-pode-assistir-pitch" class="btn btn-outline-secondary">Permitir ver pitch</button>
-      @elseif(isset($permissoesVerPitch) && $permissoesVerPitch->estado == 'ativo')
+      @elseif($myProfile != true && $permissoesVerPitch != null && ($permissoesVerPitch->estado == 'ativo' || $permissoesVerPitch->estado == 'livre'))
       <span>Solicitação atendida</span>
       @endif
     </div>

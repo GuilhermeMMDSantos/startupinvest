@@ -18,7 +18,7 @@ class PermissoesVerPitch extends Model
     protected $fillable = [
         'fk_startup',
         'fk_investidor',
-        'data_permissao',
+        'data_permissao',//Valor padrão deve ser NULL
         'estado', /* espera, ativo, expirada, livre; 
         24h após a solicitacao(created_at) o estado espera torna-se expirada. 
         24h após a data de permissao o ativo torna-se expirado. quando expirado. Pode ser novamente solicitada(cria nova tupla na BD). 
