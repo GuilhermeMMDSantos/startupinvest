@@ -167,7 +167,7 @@ class RodadasController extends Controller
 
         PermissoesVerPitch::where('fk_startup', $idUser)
             ->update([
-                'estado' => 'vencido'
+                'estado' => 'expirado'
             ]);
 
 

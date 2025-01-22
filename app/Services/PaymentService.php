@@ -2,26 +2,9 @@
 
 namespace App\Services;
 
+use GuzzleHttp\Client;
 use Exception;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalCheckoutSdk\Core\SandboxEnvironment;
-
-use PaypalPayoutsSDK\Payouts\PayoutsPostRequest;
-use PayPalHttp\HttpException;
-
-use PayPal\Api\Payer;
-use PayPal\Api\Item;
-use PayPal\Api\ItemList;
-use PayPal\Api\Amount;
-use PayPal\Api\Transaction;
-use PayPal\Api\RedirectUrls;
-use PayPal\Api\Payment;
-use PayPal\Api\PaymentExecution;
-use PayPal\Rest\ApiContext;
-use PayPal\Auth\OAuthTokenCredential;
-use PayPal\Exception\PayPalConnectionException;
-
-
+use Illuminate\Validation\ValidationException;
 class PaymentService
 {
 
@@ -29,104 +12,49 @@ class PaymentService
 
     public function __construct()
     {
-        $environment = new SandboxEnvironment(config('services.paypal.client_id'), config('services.paypal.secret'));
-        $this->client = new PayPalHttpClient($environment);
+        $this->client = new Client(['base_uri' => 'http://localhost:3000',]);
     }
 
-    public function createPayout($recipientEmail, $amount, $rodadaId)
+    public function createRefPayment()
     {
-        $request = new PayoutsPostRequest();
-        $request->body = [
-            "sender_batch_header" => [
-                "sender_batch_id" => uniqid(),
-                "email_subject" => "Rodada " . $rodadaId . "na startupInveste, Bem Sucedida",
-                "email_message" => "Recebeu o montante da Captação!",
-            ],
-            "items" => [
-                [
-                    "recipient_type" => "EMAIL",
-                    "amount" => [
-                        "value" => number_format($amount, 2, '.', ''),
-                        "currency" => "USD",
-                    ],
-                    "note" => "Rodada " . $rodadaId . " na startupInveste, Bem Sucedida",
-                    "sender_item_id" => uniqid(),
-                    "receiver" => $recipientEmail,
-                ]
-            ]
-        ];
-
         try {
-            $response = $this->client->execute($request);
-            return $response;
-        } catch (HttpException $ex) {
-            throw new \Exception($ex->getMessage());
+            $idRef = $this->client->post('/reference_ids');
+            $response = $this->client->put("/references/{$idRef}");
+            $status = $response->getStatusCode();
+            if ($status != 204)
+                throw new Exception("Requisição para criar referência, não sucedida.");
+            return $idRef;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
     }
 
-    private function getApiContext()
+    public function checkInvestmentRules($rodada, $amount, $porcentage)
     {
-        $apiContext = new ApiContext(new OAuthTokenCredential(config('services.paypal.client_id'), config('services.paypal.secret')));
-        return $apiContext;
-    }
-
-    public function createPayment($amountValue)
-    {
-      
-        $payer = new Payer();
-        $payer->setPaymentMethod('paypal');
-
-        $item = new Item();
-        $item->setName('Startup')
-            ->setCurrency('USD')
-            ->setQuantity(1)
-            ->setPrice($amountValue);
-
-        $itemList = new ItemList();
-        $itemList->setItems([$item]);
-       
-        $amount = new Amount();
+        $messages = [];
+        $haveMessage = false;
         
-        $amount->setCurrency('USD')
-            ->setTotal($amountValue);
-            
-        $transaction = new Transaction();
-        $transaction->setAmount($amount)
-            ->setItemList($itemList)
-            ->setDescription('Pagamento para App Laravel');
-           
-        $redirectUrls = new RedirectUrls();
-        $redirectUrls->setReturnUrl(route('paypal.status')) // URL de retorno após pagamento
-            ->setCancelUrl(route('paypal.status'));
-
-        $payment = new Payment();
-        $payment->setIntent('sale')
-            ->setPayer($payer)
-            ->setRedirectUrls($redirectUrls)
-            ->setTransactions([$transaction]);
-        
-        try{
-            $payment->create($this->getApiContext());
-            return ($payment->getApprovalLink());
-        }catch(PayPalConnectionException $e)
+        if ($porcentage <= 0)
         {
-            throw new Exception($e);
+            $haveMessage = true;
+            $messages['porcentagem'] = 'Valor de porcentagem não pode ser menor que 0.';
         }
-    }
-
-    public function capturePayment($paymentId, $payerId)
-    {
-        $payment = Payment::get($paymentId, $this->getApiContext());
-        $execution = new PaymentExecution();
-        $execution->setPayerId($payerId);
-
-        try{
-            $result = $payment->execute($execution, $this->getApiContext());
-            if ($result->getState() == 'approved')
-                return (1);
-        }catch(PayPalConnectionException $e)
+        if ($amount < $rodada->valor_minimo_investimento)
         {
-            throw new Exception($e);
+            $haveMessage = true;
+            $messages['montante.2'] = 'Investidor não pode investir valor menor que o valor mínimo para a rodada.).';
         }
+        if ($amount == $rodada->valor_objetivo)
+        {
+            $haveMessage = true;
+            $messages['montante.3'] = 'Investidor não pode investir todo valor que a startup busca.';
+        }
+        if($rodada->valor_objetivo - ($rodada->valor_obtido + $amount) < $rodada->valor_minimo_investimento)
+        {
+            $haveMessage = true;
+            $messages['montante.4'] = 'O valor que o investidor deseja investir deve garantir que o restante necessário para atingir a meta da startup não seja inferior ao valor mínimo permitido na rodada, exceto se o restante for zero.';
+        }
+        if ($haveMessage)
+            throw ValidationException::withMessages($messages);
     }
 }

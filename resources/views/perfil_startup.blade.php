@@ -111,15 +111,15 @@
         destinatarioMessageChat = "{{ $startup->fk_user }}";
 
         var loader = "<div class='d-flex flex-column justify-content-center align-items-center' style='min-height:240px;'>\
-                                                <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
-                                                </div>\
-                                            </div>";
+                                                                        <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
+                                                                        </div>\
+                                                                    </div>";
 
         var loaderComParagrafo = "<div class='d-flex flex-column justify-content-center align-items-center' style='min-height:240px;'>\
-                                            <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
-                                            </div>\
-                                            <p>Processando...</p>\
-                                        </div>";
+                                                                    <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
+                                                                    </div>\
+                                                                    <p>Processando...</p>\
+                                                                </div>";
 
 
         $(function() {
@@ -162,6 +162,48 @@
                         console.log(erro);
                     }
                 });
+            });
+
+            $("#investment-form").submit(function(e) {
+                e.eventDefault();
+
+                $("#btn-spinner-investir").css({
+                    'display': 'inline-block'
+                });
+                let form = new FormData($(this)[0]);
+                form.append('rodada', @json($rodadaId));
+                $.ajax({
+                    url: "/set_reference_payment",
+                    type: "POST",
+                    data: form,
+                    success: function(response) {
+                        $("#modal-investir").modal('hide');
+                        Swal.fire({
+                            icon: "success",
+                            title: "Referência Bancária Gerada",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        loadIntroducaoStartup();
+                        loadOferta();
+                    },
+                    error: function(error) {
+                        console.log("Erro ao Gerar Referência");
+                        if (error.status == 422) {
+                            Swal.fire({
+                                icon: "warning",
+                                title: "Avalie os Valores de Entrada.",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        } else
+                            console.log(error.responseText);
+                    }
+                });
+                $("#btn-spinner-investir").css({
+                    'display': 'none'
+                });
+                return false;
             });
 
             $('#modal-editar-introducao-startup').on('show.bs.modal', function(event) {
@@ -230,7 +272,23 @@
                 $("#btn-spinner-investir").css({
                     'display': 'none'
                 });
-            })
+            });
+
+            $("#modal-investir").on('show.bs.modal', function(e) {
+                var round = @json($rodada);
+                console.log(round);
+                if (round) {
+                    if (round.valor_objetivo !== null && round.valor_obtido !== null) {
+                        let numero = round.valor_objetivo - round.valor_obtido;
+                        let numeroFormatado = new Intl.NumberFormat('pt-BR', {
+                            style: 'decimal',
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                        }).format(numero);
+                        $("#remaining-amount").val(numeroFormatado + " AOA");
+                    }
+                }
+            });
 
             $("#btn-aceitar-eliminar-membro").click(function() {
                 let idMembroDaStartup = $(this).prop('info');
@@ -295,7 +353,7 @@
 
 
             $("#btn-publicar-oferta").click(async function() {
-                if (! await validateFormPublicarRodada()) {
+                if (!await validateFormPublicarRodada()) {
                     $("#btn-spinner-oferta").css({
                         'display': 'none'
                     });

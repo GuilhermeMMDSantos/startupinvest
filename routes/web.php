@@ -216,5 +216,6 @@ Route::post('/createP', 'PagamentosController@sendAmountForInvest')->name('paypa
 
 Route::get('/captureP', 'PagamentosController@getAprovalInvest')->name('paypal.status');
 
-Route::get('/get_avaluation', 'userController@getAvaluation')->middleware('auth.ajax');;
-Route::get('/ia', 'StartupGrowthController@predict');
+Route::get('/get_avaluation', 'userController@getAvaluation')->middleware('auth.ajax');
+
+Route::get('/set_reference_payment', 'PagamentosController@setRefPayment' )->middleware('auth.ajax');

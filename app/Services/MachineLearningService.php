@@ -11,7 +11,7 @@ class MachineLearningService
     public function __construct()
     {
         $this->client = new Client([
-            'base_uri' => 'http://127.0.0.1:5000', // Endereço local da API Python
+            'base_uri' => 'http://127.0.0.1:5000',
         ]);
     }
 

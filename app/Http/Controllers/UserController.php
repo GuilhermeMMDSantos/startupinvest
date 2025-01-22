@@ -36,6 +36,7 @@ use App\Own\Traits\UserTrait;
 use App\RodadasInvestidores;
 use App\SaidaDoModelo;
 use App\EntradaDoModelo;
+use App\ReferenciasPagamento;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -170,7 +171,7 @@ class UserController extends Controller
 
             $codigoStartup = $codeUser;
 
-            $returnHtml = view('perfil_startup', compact('idUser', 'code', 'startup', 'qtdnotifications', 'qtdMessageUnview', 'rodadaId', 'myProfile', 'codigoStartup', 'userType', 'currentTypeUser'));
+            $returnHtml = view('perfil_startup', compact('idUser', 'code', 'startup', 'qtdnotifications', 'qtdMessageUnview', 'rodadaId', 'myProfile', 'codigoStartup', 'userType', 'currentTypeUser', 'rodada'));
         } else if ($userType == 'investidor') {
 
             $investidor = Investidores::where('fk_user', $user->id)
@@ -362,6 +363,7 @@ class UserController extends Controller
         $havePermissionToWatchPitch = false;
         $referencaPagamento = [];
         $participanteNaRodada = null;
+        $paymentReference = null;
         $idRodada = 0;
 
         $startup = Startups::whereHas('user', function ($query) use ($codeUser) {
@@ -388,6 +390,10 @@ class UserController extends Controller
                     ->update([
                         "estado_busca_invest" => 'nao'
                     ]);
+                PermissoesVerPitch::where('fk_rodada', $idRodada)
+                    ->update([
+                        'estado' => 'expirado'
+                    ]);
             }
         }
 
@@ -411,11 +417,18 @@ class UserController extends Controller
 
 
 
-            if (!empty($permissao))
+
+            if (!empty($permissao)) {
                 $havePermissionToWatchPitch = true;
+                if ($participanteNaRodada == null) {
+                    $paymentReference = ReferenciasPagamento::where('fk_rodada_investimento', $idRodada)
+                        ->where('fk_investidor', Auth::user()->id)
+                        ->first()->referencia;
+                }
+            }
         }
 
-        $returnHtml = view('blocos_html/content_oferta', compact('rodada', 'startup', 'havePermissionToWatchPitch', 'myprofile', 'participanteNaRodada'))->render();
+        $returnHtml = view('blocos_html/content_oferta', compact('rodada', 'startup', 'havePermissionToWatchPitch', 'myprofile', 'participanteNaRodada', 'paymentReference'))->render();
 
         return response()->json([
             'html' =>    $returnHtml
@@ -764,12 +777,13 @@ class UserController extends Controller
                 ->where('estado', 'aberta')
                 ->orderBy('created_at', 'desc')
                 ->first();
-
-            $permissoesVerPitch = PermissoesVerPitch::where('fk_startup', Auth::user()->id)
-                ->where('fk_investidor', $investidor->fk_user)
-                ->where('fk_rodada', $rodada->id)
-                ->whereIn('estado', ['espera', 'ativo'])
-                ->first();
+            if ($rodada) {
+                $permissoesVerPitch = PermissoesVerPitch::where('fk_startup', Auth::user()->id)
+                    ->where('fk_investidor', $investidor->fk_user)
+                    ->where('fk_rodada', $rodada->id)
+                    ->whereIn('estado', ['espera', 'ativo'])
+                    ->first();
+            }
         }
 
 
@@ -990,12 +1004,12 @@ class UserController extends Controller
             if ($permissao->tempo_espera > 2 && $permissao->estado == 'espera') {
                 PermissoesVerPitch::where('id', $permissao->id)
                     ->update([
-                        'estado' => 'ignorado'
+                        'estado' => 'expirado'
                     ]);
             } else if ($permissao->tempo_ativo > 2 && $permissao->estado == 'ativo') {
                 PermissoesVerPitch::where('id', $permissao->id)
                     ->update([
-                        'estado' => 'vencido'
+                        'estado' => 'expirado'
                     ]);
             }
         }
