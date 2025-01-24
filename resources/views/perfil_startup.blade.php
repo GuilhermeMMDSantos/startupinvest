@@ -147,6 +147,7 @@
 
                 let rodada_id = "{{ $rodadaId }}";
                 let valorMontante = $(this).val();
+                console.log(valorMontante);
                 $.ajax({
                     url: "/atualizar_porcentagem_pelo_montante",
                     type: "get",
@@ -155,6 +156,7 @@
                         'valorMontante': valorMontante
                     },
                     success: function(response) {
+                        console.log(response);
                         $("#porcentagem-por-valor").val(response['porcentagem']);
                     },
                     error: function(erro) {
@@ -164,18 +166,19 @@
                 });
             });
 
-            $("#investment-form").submit(function(e) {
-                e.eventDefault();
-
+            $("#investment-form").submit(function (e) {
+                e.preventDefault();
                 $("#btn-spinner-investir").css({
                     'display': 'inline-block'
                 });
                 let form = new FormData($(this)[0]);
                 form.append('rodada', @json($rodadaId));
                 $.ajax({
-                    url: "/set_reference_payment",
-                    type: "POST",
-                    data: form,
+                    url:"/set_reference_payment",
+                    type:"POST",
+                    processData: false,
+                    contentType: false,
+                    data:form,
                     success: function(response) {
                         $("#modal-investir").modal('hide');
                         Swal.fire({
@@ -192,12 +195,14 @@
                         if (error.status == 422) {
                             Swal.fire({
                                 icon: "warning",
-                                title: "Avalie os Valores de Entrada.",
+                                title: "Valor de Entrada Não Respeitam os Parâmetros de Investimento.",
                                 showConfirmButton: false,
                                 timer: 1500
                             });
-                        } else
-                            console.log(error.responseText);
+                            console.log(error);
+                        } else{
+                            console.log(error);
+                        }
                     }
                 });
                 $("#btn-spinner-investir").css({
@@ -276,7 +281,6 @@
 
             $("#modal-investir").on('show.bs.modal', function(e) {
                 var round = @json($rodada);
-                console.log(round);
                 if (round) {
                     if (round.valor_objetivo !== null && round.valor_obtido !== null) {
                         let numero = round.valor_objetivo - round.valor_obtido;

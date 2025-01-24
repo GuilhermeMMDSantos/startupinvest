@@ -23,17 +23,17 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="remaining-amount" class="font-weight-bold">Participação societária a adquirir:</label>
-                        <input type="text" class="form-control" id="porcentagem-por-valor" name="porcentagem_por_valor" value="0.0%" disabled>
+                        <label for="remaining-amount" class="font-weight-bold">Participação societária a adquirir (%):</label>
+                        <input type="text" class="form-control" id="porcentagem-por-valor" name="porcentagem_por_valor" disabled>
                     </div>
 
-                    <div>
+                    <div class="alert alert-info" role="alert">
                         <p>Investimento Coletivo. Investidor não pode investir todo valor que a startup busca.</p>
                         <p>Investidor não pode investir valor menor que o valor mínimo para a rodada.</p>
                         <p>O valor que o investidor deseja investir deve garantir que o restante necessário para atingir a meta da startup não seja inferior ao valor mínimo permitido na rodada, exceto se o restante for zero.</p>
                     </div>
                     <div class="form-group text-center">
-                        <button type="submit" class="btn btn-primary btn-block">
+                        <button class="btn btn-primary btn-block" id="btn-generate-reference">
                             <span class="spinner-border spinner-border-sm" id="btn-spinner-investir" role="status" aria-hidden="true"></span>
                             Gerar Referência de Pagamento
                         </button>

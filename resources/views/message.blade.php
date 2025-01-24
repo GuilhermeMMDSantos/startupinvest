@@ -50,10 +50,6 @@
 
             loadMeetings();
 
-
-
-
-
             $("#tolkeed-to-body").on("click", ".meeting", function() {
                 var idUser = $(this).attr("guito");
                 userIdClicked = idUser;

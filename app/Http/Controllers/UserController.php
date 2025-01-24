@@ -311,25 +311,15 @@ class UserController extends Controller
         if (!empty($rodada))
             $rodadaId = $rodada->id;
 
-
-        $alreadySendRequestForSeePitch =  false;
-
-
-
         $permissoesVerPitch = PermissoesVerPitch::where('fk_startup', $startup->fk_user)
             ->where('fk_investidor', Auth::user()->id)
             ->where('fk_rodada', $rodadaId)
-            ->whereIn('estado', ['espera', 'ativo'])
+            ->orderBy('created_at', 'DESC')
             ->first();
-
-
-
-        if (!empty($permissoesVerPitch))
-            $alreadySendRequestForSeePitch = true;
 
         $myprofile = $startup->fk_user == Auth::user()->id;
 
-        $html = view('blocos_html/introducao_startup', compact('startup', 'myprofile', 'tipoUser', 'alreadySendRequestForSeePitch', 'rodada'))->render();
+        $html = view('blocos_html/introducao_startup', compact('startup', 'myprofile', 'tipoUser', 'permissoesVerPitch', 'rodada'))->render();
 
         return response()->json(
             [
@@ -364,6 +354,7 @@ class UserController extends Controller
         $referencaPagamento = [];
         $participanteNaRodada = null;
         $paymentReference = null;
+        $referenceValue = null;
         $idRodada = 0;
 
         $startup = Startups::whereHas('user', function ($query) use ($codeUser) {
@@ -423,12 +414,14 @@ class UserController extends Controller
                 if ($participanteNaRodada == null) {
                     $paymentReference = ReferenciasPagamento::where('fk_rodada_investimento', $idRodada)
                         ->where('fk_investidor', Auth::user()->id)
-                        ->first()->referencia;
+                        ->first();
+                    if ($paymentReference != null)
+                        $referenceValue = $paymentReference->referencia;
                 }
             }
         }
 
-        $returnHtml = view('blocos_html/content_oferta', compact('rodada', 'startup', 'havePermissionToWatchPitch', 'myprofile', 'participanteNaRodada', 'paymentReference'))->render();
+        $returnHtml = view('blocos_html/content_oferta', compact('rodada', 'startup', 'havePermissionToWatchPitch', 'myprofile', 'participanteNaRodada', 'referenceValue'))->render();
 
         return response()->json([
             'html' =>    $returnHtml

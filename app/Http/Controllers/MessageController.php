@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Events\SendMessage;
 use App\Notifications;
 use App\Notifications\Message;
-
+use App\PermissoesVerPitch;
 
 class MessageController extends Controller
 {
@@ -79,11 +79,10 @@ class MessageController extends Controller
     public function loadMessageMeeting(Request $request)
     {
         $otherUserId  = $request->idUser;
-
-
         $otherUser = User::where('id', $otherUserId)->first();
-        $presentUserId = Auth::user()->id;
-
+        $currentUser = Auth::user();
+        $presentUserId = $currentUser->id;
+        $permissionToSendMessage = false;
 
 
         $mensagens = Mensagens::where([
@@ -100,8 +99,23 @@ class MessageController extends Controller
             })
             ->get();
 
+        if ($currentUser->tipo == 'investidor') {
+            $permission = PermissoesVerPitch::where('fk_startup', $otherUser->id)
+                ->where('fk_investidor', $currentUser->id)
+                ->whereIn('estado', ['ativo', 'livre'])
+                ->first();
+            if ($permission != null || $otherUser->tipo == 'investidor')
+                $permissionToSendMessage = true;
+        } else if ($otherUser->tipo == 'investidor') {
+            $permission = PermissoesVerPitch::where('fk_startup', $currentUser->id)
+                ->where('fk_investidor', $otherUser->id)
+                ->whereIn('estado', ['ativo', 'livre'])
+                ->first();
+            if ($permission != null || $currentUser->tipo == 'investidor')
+                $permissionToSendMessage = true;
+        }
 
-        $html = view('blocos_html/meeting', compact('mensagens', 'otherUser'))->render();
+        $html = view('blocos_html/meeting', compact('mensagens', 'otherUser', 'permissionToSendMessage'))->render();
 
         return response()->json([
             'html' => $html
@@ -173,8 +187,9 @@ class MessageController extends Controller
         ]);
     }
 
-    public function showMeetingEmpty(){
-        
+    public function showMeetingEmpty()
+    {
+
         $html = view('blocos_html.meeting_empty')->render();
 
         return response()->json([

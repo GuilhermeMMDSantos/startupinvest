@@ -54,9 +54,9 @@
 
                 @if ($havePermissionToWatchPitch && $participanteNaRodada == null)
                     <div class="d-flex justify-content-center">
-                        @if ($paymentReference != null)
+                        @if ($referenceValue != null)
                             <p>Referência Bancária</p>
-                            <p>{{ $paymentReference }}</p>
+                            <p>{{$referenceValue}}</p>
                         @else
                             <button id="btn-participar-rodada" data-toggle="modal" data-target="#modal-investir"
                                 class="btn btn-lg btn-success btn-block">
@@ -79,7 +79,7 @@
                             {{ number_format($participanteNaRodada->valor_investido, 2, ',', '.') }}
                             AOA</h5>
                     </div>
-                @elseif($rodada->estado == 'aberta' )
+                @elseif($rodada->estado == 'aberta' && !$myprofile)
                     <div class="alert alert-info text-center" role="alert">
                         Solicite o pitch da startup<br>
                         Assista o pitch da startup<br>
@@ -89,9 +89,11 @@
 
 
                 @if ($rodada->estado == 'fechada' && ($myprofile || $participanteNaRodada != null))
-                    <button class="btn btn-lg btn-success btn-block">Assinar contrato</button>
+                    <a href="{{ route('rodada.page', $rodada->id) }}" rule="button"
+                        class="btn btn-lg btn-success btn-block">Assinar contrato</a>
                 @elseif($myprofile || $participanteNaRodada != null)
-                    <button class="btn btn-lg btn-success btn-block">Detalhes</button> 
+                    <a href="{{ route('rodada.page', $rodada->id) }}" rule="button"
+                        class="btn btn-lg btn-success btn-block">Detalhes</a>
                 @endif
             @else
                 <div class="text-center">

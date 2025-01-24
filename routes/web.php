@@ -218,4 +218,4 @@ Route::get('/captureP', 'PagamentosController@getAprovalInvest')->name('paypal.s
 
 Route::get('/get_avaluation', 'userController@getAvaluation')->middleware('auth.ajax');
 
-Route::get('/set_reference_payment', 'PagamentosController@setRefPayment' )->middleware('auth.ajax');
+Route::post('/set_reference_payment', 'PagamentosController@setRefPayment' )->middleware('auth.ajax');

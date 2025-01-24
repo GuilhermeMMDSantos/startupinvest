@@ -29,7 +29,7 @@ class PagamentosController extends Controller
       $validation = Validator::make($request->all(), [
         'valor_a_investir' => 'required',
         'porcentagem_por_valor' => 'required',
-        'rodada' => 'riquired|integer'
+        'rodada' => 'required|integer'
       ], [
         'valor_a_investir.required' => 'Informe o quanto deseja investir.',
         'porcentagem_por_valor.required' => 'Porcentagem em falta.',
@@ -43,7 +43,6 @@ class PagamentosController extends Controller
       $rodadaId = $request->rodada;
       $rodada = RodadasInvestimento::where('id', $rodadaId)->first();
       $currentUser = Auth::user();
-      $userRequested = $rodada->fk_startup;
       $amount = str_replace(',', '.', str_replace('.', '', $request->valor_a_investir));
       $porcentage = str_replace(',', '.', str_replace('.', '', $request->porcentagem_por_valor));
 
@@ -79,6 +78,6 @@ class PagamentosController extends Controller
     $x = 100 * $valorMontante / $rodada->valor_objetivo;
     $y = (($x * $rodada->oferta_acoes) / 100) . '';
     $z = preg_replace("/(^0+(?=\d))|(,?0+$)/", '', number_format($y, 12, ',', '.'));
-    return response()->json(['porcentagem' => $z]);
+    return response()->json(['porcentagem' => $z, 'valorMontante' => $valorMontante]);
   }
 }

@@ -268,8 +268,7 @@ class RodadasController extends Controller
             $html = view('blocos_html/investment_situation2', compact('rodada', 'investidor', 'presentUser'))->render();
         } catch (ErrorException $e) {
             return response()->json([
-                'message' => $e,
-                'teste' => 'guito'
+                'message' => $e
             ], 500);
         }
         return response()->json([
