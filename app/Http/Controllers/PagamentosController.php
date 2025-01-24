@@ -7,10 +7,10 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use App\RodadasInvestimento;
 use App\Services\PaymentService;
-use App\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\ReferenciasPagamento;
+use Illuminate\Support\Carbon;
 
 class PagamentosController extends Controller
 {
@@ -51,15 +51,26 @@ class PagamentosController extends Controller
         throw ValidationException::withMessages(['rodada' => ['Informou valores não numéricos']]);
       $paymentService->checkInvestmentRules($rodada, $amount, $porcentage);
 
-      $idReference = $paymentService->createRefPayment();
+      
+      $data = [
+        'amount' => $amount , 
+        'end_datetime' => Carbon::now()->addHours(24), 
+        'custom_fields' => []
+      ];
 
+      //PARA EVITAR O CASO EM QUE MUITA GENTE ESTÁ A FAZER PAGAMENTO. ANTES DE GERAR UMA REFERENCIA DE PAGAMENTO DEVE SE VERIFICAR SE 
+      //O NUMERO DE REFERENCIAS GERADAS(PENDENTES OU PROCESSADAS) PARA RODADA É MENOR QUE O NÚMERO QUE O NUMERO DE INVESTIDORES DESEJADOS PARA A RODADA
+      //CASO SEJA MAIOR OU IGUAL, NÃO GERA NOVA REFERENCIA
+      $idReference = $paymentService->createRefPayment($data);
+      
       ReferenciasPagamento::create([
         'referencia' => $idReference,
         'fk_rodada_investimento' => $rodadaId,
-        'fk_investidor' => $currentUser,
+        'fk_investidor' => $currentUser->id,
         'valor_monetario' => $amount,
-        'status' => 'ativa'
+        'status' => 'pendente'
       ]);
+      
       return response()->json(null, 200);
     } catch (ValidationException $e) {
       return response()->json(['errors' => $e->errors()], 422);

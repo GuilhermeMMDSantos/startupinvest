@@ -111,15 +111,15 @@
         destinatarioMessageChat = "{{ $startup->fk_user }}";
 
         var loader = "<div class='d-flex flex-column justify-content-center align-items-center' style='min-height:240px;'>\
-                                                                        <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
-                                                                        </div>\
-                                                                    </div>";
+                                                                                <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
+                                                                                </div>\
+                                                                            </div>";
 
         var loaderComParagrafo = "<div class='d-flex flex-column justify-content-center align-items-center' style='min-height:240px;'>\
-                                                                    <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
-                                                                    </div>\
-                                                                    <p>Processando...</p>\
-                                                                </div>";
+                                                                            <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
+                                                                            </div>\
+                                                                            <p>Processando...</p>\
+                                                                        </div>";
 
 
         $(function() {
@@ -147,7 +147,6 @@
 
                 let rodada_id = "{{ $rodadaId }}";
                 let valorMontante = $(this).val();
-                console.log(valorMontante);
                 $.ajax({
                     url: "/atualizar_porcentagem_pelo_montante",
                     type: "get",
@@ -156,7 +155,6 @@
                         'valorMontante': valorMontante
                     },
                     success: function(response) {
-                        console.log(response);
                         $("#porcentagem-por-valor").val(response['porcentagem']);
                     },
                     error: function(erro) {
@@ -166,7 +164,7 @@
                 });
             });
 
-            $("#investment-form").submit(function (e) {
+            $("#investment-form").submit(function(e) {
                 e.preventDefault();
                 $("#btn-spinner-investir").css({
                     'display': 'inline-block'
@@ -174,11 +172,11 @@
                 let form = new FormData($(this)[0]);
                 form.append('rodada', @json($rodadaId));
                 $.ajax({
-                    url:"/set_reference_payment",
-                    type:"POST",
+                    url: "/set_reference_payment",
+                    type: "POST",
                     processData: false,
                     contentType: false,
-                    data:form,
+                    data: form,
                     success: function(response) {
                         $("#modal-investir").modal('hide');
                         Swal.fire({
@@ -193,14 +191,22 @@
                     error: function(error) {
                         console.log("Erro ao Gerar Referência");
                         if (error.status == 422) {
+
+                            document.querySelector('#modal-investir').setAttribute(
+                                'inert', '');
                             Swal.fire({
                                 icon: "warning",
-                                title: "Valor de Entrada Não Respeitam os Parâmetros de Investimento.",
-                                showConfirmButton: false,
-                                timer: 1500
+                                title: "Validação",
+                                text: "Valor de Entrada Não Respeitam os Parâmetros de Investimento.",
+                                confirmButtonText: "Entendido",
+                                allowOutsideClick: false,
+                            }).then(() => {
+                                document.querySelector('#modal-investir')
+                                    .removeAttribute('inert');
                             });
+
                             console.log(error);
-                        } else{
+                        } else {
                             console.log(error);
                         }
                     }
@@ -406,6 +412,7 @@
                                 html: message,
                                 confirmButtonText: "Entendido",
                                 showConfirmButton: true,
+                                allowOutsideClick: false,
                             }).then(() => {
                                 document.querySelector('#modal-adicionar-oferta')
                                     .removeAttribute('inert');

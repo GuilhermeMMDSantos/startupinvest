@@ -281,6 +281,11 @@ body {
 }
 
 
+.swal2-confirm {
+  border: none !important;
+  outline: none !important;
+  background-color: #007bff !important;
+}
 
 /*RESPONSE*/
 

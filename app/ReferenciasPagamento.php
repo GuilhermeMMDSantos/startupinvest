@@ -12,7 +12,7 @@ class ReferenciasPagamento extends Model
         'fk_rodada_investimento',
         'fk_investidor',
         'valor_monetario',
-        'status' //paga, ativa, expirada
+        'status' //'processada', 'pendente', 'expirada'
     ];
 
     public function investidor(){

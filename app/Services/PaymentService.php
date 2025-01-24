@@ -15,11 +15,18 @@ class PaymentService
         $this->client = new Client(['base_uri' => 'http://localhost:3000',]);
     }
 
-    public function createRefPayment()
+    public function createRefPayment($data)
     {
         try {
-            $idRef = $this->client->post('/reference_ids');
-            $response = $this->client->put("/references/{$idRef}");
+            $response = $this->client->post('/reference_ids');
+            $idRef = json_decode($response->getBody()->getContents(), true);
+            $response = $this->client->put("/references/{$idRef}" ,[
+                'json' => $data,
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Bearer 1234567'
+                ]
+            ]);
             $status = $response->getStatusCode();
             if ($status != 204)
                 throw new Exception("Requisição para criar referência, não sucedida.");

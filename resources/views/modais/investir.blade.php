@@ -24,7 +24,7 @@
 
                     <div class="form-group">
                         <label for="remaining-amount" class="font-weight-bold">Participação societária a adquirir (%):</label>
-                        <input type="text" class="form-control" id="porcentagem-por-valor" name="porcentagem_por_valor" disabled>
+                        <input type="text" class="form-control" id="porcentagem-por-valor" name="porcentagem_por_valor" value="0,0"  readonly>
                     </div>
 
                     <div class="alert alert-info" role="alert">

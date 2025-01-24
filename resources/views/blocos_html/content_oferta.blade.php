@@ -47,16 +47,16 @@
                     <span class="font-weight-bold d-block">Captado</span>
                     <h5 class="text-success">{{ number_format($rodada->valor_obtido, 2, ',', '.') }} AOA</h5>
                 </div>
-                <div class="text-center mb-4">
+                <div class="text-center mb-3">
                     <span class="font-weight-bold d-block">Investidores na Rodada</span>
                     <h5 class="text-success">{{ count($rodada->investidoresNaRodada) }}</h5>
                 </div>
 
                 @if ($havePermissionToWatchPitch && $participanteNaRodada == null)
-                    <div class="d-flex justify-content-center">
+                    <div class="text-center mb-4">
                         @if ($referenceValue != null)
-                            <p>Referência Bancária</p>
-                            <p>{{$referenceValue}}</p>
+                            <span class="font-weight-bold d-block">Referência Bancária</span>
+                            <h5 class="text-success" style="letter-spacing: 5px;">{{ $referenceValue }}</h5>
                         @else
                             <button id="btn-participar-rodada" data-toggle="modal" data-target="#modal-investir"
                                 class="btn btn-lg btn-success btn-block">
