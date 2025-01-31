@@ -12,6 +12,9 @@ use Illuminate\Validation\ValidationException;
 use App\ReferenciasPagamento;
 use App\RodadasInvestidores;
 use Illuminate\Support\Carbon;
+use App\Notifications;
+use App\Notifications\Notificao;
+use App\Events\ParticipacaoNaRodada;
 
 use Illuminate\Support\Facades\Log;
 
@@ -119,19 +122,33 @@ class PagamentosController extends Controller
     ]);
 
     $allInvestorsInRound = RodadasInvestidores::where('fk_rodada', $rodadaInvestimentoObj->id)
-    ->where('fk_investidor',"!=",$referenciaObj->fk_investidor)
+    ->where('fk_investidor',"<>",$referenciaObj->fk_investidor)
     ->get();
 
-    $notificacoes = Notifications::where('fk_user_distination', $investidor->fk_user)
-                    ->where('status', 'nao_visto')
-                    ->get();
+    $allInvestorsInRound->each(function ($investor) use($rodadaInvestimentoObj){
+     
 
-                $qtdNotification = (int)count($notificacoes);
 
-              
-    $allInvestorsInRound.each(functiont($element){
-      $element->investidor->user->notify(new Notificao($qtdNotification))
+      Notifications::create([
+        'message' => "Investimento efetuado a startup",
+        'fk_user_distination' => $investor->investidor->fk_user,
+        'fk_user_origin' => $rodadaInvestimentoObj->fk_startup,
+        'status' => 'nao_visto',
+        'tipo' => 'foi_investido'
+    ]);
+
+    $notificacoes = Notifications::where('fk_user_distination', $investor->investidor->fk_user)
+        ->where('status', 'nao_visto')
+        ->get();
+
+    $qtdNotification = (int)count($notificacoes);
+
+    $investor->investidor->user->notify(new Notificao($qtdNotification));
+
     });
+
+    event(new ParticipacaoNaRodada($rodadaInvestimentoObj->fk_startup));
+
     //NOTIFICAR TODOS OS INVESTIDORES QUE ESTÃO NA RODADA E A STARTUP
     //ENVENTO PARA ATUALIZAR O BLOCO OFERTA, SOMENTE PARA O USER STARTUP
 

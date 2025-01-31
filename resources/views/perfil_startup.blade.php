@@ -111,15 +111,15 @@
         destinatarioMessageChat = "{{ $startup->fk_user }}";
 
         var loader = "<div class='d-flex flex-column justify-content-center align-items-center' style='min-height:240px;'>\
-                                                                                <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
-                                                                                </div>\
-                                                                            </div>";
+                                                                                    <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
+                                                                                    </div>\
+                                                                                </div>";
 
         var loaderComParagrafo = "<div class='d-flex flex-column justify-content-center align-items-center' style='min-height:240px;'>\
-                                                                            <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
-                                                                            </div>\
-                                                                            <p>Processando...</p>\
-                                                                        </div>";
+                                                                                <div class='spinner-border' role='status' style='width:50px;height:50px;'>\
+                                                                                </div>\
+                                                                                <p>Processando...</p>\
+                                                                            </div>";
 
 
         $(function() {
@@ -1232,6 +1232,11 @@
 
             Echo.private('permitir-ver-pitch-channel.' + '{{ $code }}')
                 .listen('PermitirVerPitch', function(e) {
+                    loadOferta();
+                });
+
+            Echo.private('participacao-na-rodada-channel.' + '{{ $code }}')
+                .listen('ParticipacaoNaRodada', function(e) {
                     loadOferta();
                 });
 

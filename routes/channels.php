@@ -24,6 +24,10 @@ Broadcast::channel('permitir-ver-pitch-channel.{toUser}', function ($user,$toUse
   return (int) $user->id === (int) $toUser;
 });
 
+Broadcast::channel('participacao-na-rodada-channel.{toUser}', function ($user,$toUser) {
+  return (int) $user->id === (int) $toUser;
+});
+
 Broadcast::channel('send-message-channel.{toUser}', function ($user,$toUser) {
   return (int) $user->id === (int) $toUser;
 });
