@@ -209,7 +209,9 @@ class UserController extends Controller
 
     public function getAvaluation(Request $request)
     {
-        $avaliacaoNegativo = null;
+        $atributosAvalicaoNegativa = null;
+        $entradaModelo = null;
+
 
         $user = User::with('startup')
             ->where('code_user', $request->codeStartup)

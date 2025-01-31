@@ -19,8 +19,7 @@
         <input type="number" step="0.01" class="form-control" id="taxa_adocao_inicial" name="taxa_adocao_inicial" required>
     </div>
     <div class="form-group">
-        <label for="recorrencia_compra">Com que frequência seus clientes compram novamente de
-            você(%)?</label>
+        <label for="recorrencia_compra">Com que frequência seus clientes compram novamente(%)?</label>
         <input type="text" class="form-control" id="recorrencia_compra" name="recorrencia_compra" required>
     </div>
     <div class="d-flex" style="justify-content: flex-end;gap:10px; margin-top:40px !important;">

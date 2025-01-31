@@ -14,8 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-
-//Route::post('/payment_event','PagamentosController@getPaymentEvent');
-Route::post('/TESTE/orders','PagamentosController@orders');
-Route::post('/TESTE/capture','PagamentosController@capture');
+Route::post('/webhookUrl','PagamentosController@getWebhook');
