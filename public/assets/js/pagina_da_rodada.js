@@ -65,6 +65,7 @@ $(function () {
 
     $(".situation-container").on('change', '.field-contract-2', function () {
 
+       
 
         var myForm = new FormData();
         let contract_pdf = $(this).prop("files")[0];

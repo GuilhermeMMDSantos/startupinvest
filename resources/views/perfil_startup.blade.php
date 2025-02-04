@@ -1237,6 +1237,7 @@
 
             Echo.private('participacao-na-rodada-channel.' + '{{ $code }}')
                 .listen('ParticipacaoNaRodada', function(e) {
+                    console.log("OUVIU O EVENTO");
                     loadOferta();
                 });
 

@@ -54,7 +54,7 @@ class PaymentService
             $haveMessage = true;
             $messages['montante.3'] = 'Investidor não pode investir todo valor que a startup busca.';
         }
-        if ($rodada->valor_objetivo - ($rodada->valor_obtido + $amount) < $rodada->valor_minimo_investimento) {
+        if ($rodada->valor_objetivo - ($rodada->valor_obtido + $amount) < $rodada->valor_minimo_investimento && ($rodada->valor_objetivo - ($rodada->valor_obtido + $amount) != 0)) {
             $haveMessage = true;
             $messages['montante.4'] = 'O valor que o investidor deseja investir deve garantir que o restante necessário para atingir a meta da startup não seja inferior ao valor mínimo permitido na rodada, exceto se o restante for zero.';
         }
@@ -66,8 +66,7 @@ class PaymentService
     {
         $x = 100 * $montante / $valorObjetivo;
         $y = (($x * $accoes) / 100) . '';
-        $z = preg_replace("/(^0+(?=\d))|(,?0+$)/", '', number_format($y, 12, ',', '.'));
 
-        return $z;
+        return $y;
     }
 }

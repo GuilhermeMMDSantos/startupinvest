@@ -29,6 +29,8 @@
     outline:none;
   }
 
+
+
   @media (max-width: 846px) {
     #intro-rodada h6, #intro-rodada h5{
       text-align: center;

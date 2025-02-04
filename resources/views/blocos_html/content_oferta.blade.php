@@ -24,7 +24,9 @@
                         <span class="badge badge-warning ml-2" style="font-size:14px;">Faltam
                             {{ $rodada->tempo_restante }} Dias</span>
                     @elseif ($rodada->estado == 'fechada')
-                        <span class="badge badge-success ml-2">Terminada</span>
+                        <span class="badge badge-success ml-2">Fechada</span>
+                    @elseif ($rodada->estado == 'sucedida')
+                        <span class="badge badge-success ml-2">Sucedida</span>
                     @elseif ($rodada->estado == 'anulada')
                         <span class="badge badge-danger ml-2">Cancelada</span>
                     @endif

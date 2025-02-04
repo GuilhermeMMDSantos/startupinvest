@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
 use App\Notifications;
 use App\Notifications\Notificao;
 use App\Events\ParticipacaoNaRodada;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Log;
 
@@ -57,10 +58,10 @@ class PagamentosController extends Controller
         throw ValidationException::withMessages(['rodada' => ['Informou valores não numéricos']]);
       $paymentService->checkInvestmentRules($rodada, $amount, $porcentage);
 
-     
+
       $data = [
-        'amount' => $amount , 
-        'end_datetime' => Carbon::now()->addHours(24), 
+        'amount' => $amount,
+        'end_datetime' => Carbon::now()->addHours(24),
         'custom_fields' => []
       ];
 
@@ -68,7 +69,7 @@ class PagamentosController extends Controller
       //O NUMERO DE REFERENCIAS GERADAS(PENDENTES OU PROCESSADAS) PARA RODADA É MENOR QUE O NÚMERO QUE O NUMERO DE INVESTIDORES DESEJADOS PARA A RODADA
       //CASO SEJA MAIOR OU IGUAL, NÃO GERA NOVA REFERENCIA
       $idReference = $paymentService->createRefPayment($data);
-      
+
       ReferenciasPagamento::create([
         'referencia' => $idReference,
         'fk_rodada_investimento' => $rodadaId,
@@ -76,7 +77,7 @@ class PagamentosController extends Controller
         'valor_monetario' => $amount,
         'status' => 'pendente'
       ]);
-      
+
       return response()->json(null, 200);
     } catch (ValidationException $e) {
       return response()->json(['errors' => $e->errors()], 422);
@@ -91,67 +92,95 @@ class PagamentosController extends Controller
     $valorMontante =  str_replace(',', '.', str_replace('.', '', $request->valorMontante)) + 0.0;
 
     $rodada = RodadasInvestimento::where('id', $idRodada)->first();
-    $z = $paymentService->porcentageCalculo($valorMontante, $rodada->valor_objetivo, $rodada->oferta_acoes);
+    $porcentageCalculada = $paymentService->porcentageCalculo($valorMontante, $rodada->valor_objetivo, $rodada->oferta_acoes);
+    $z =  preg_replace("/(^0+(?=\d))|(,?0+$)/", '', number_format($porcentageCalculada, 12, ',', '.'));
     return response()->json(['porcentagem' => $z, 'valorMontante' => $valorMontante]);
   }
 
-  public function getWebhook(Request $request, PaymentService $paymentService){
+  public function getWebhook(Request $request, PaymentService $paymentService)
+  {
     $data = $request->all();
 
-    $referenciaObj = ReferenciasPagamento::where('referencia', $data['reference_id'])->first();
-    if ($referenciaObj == null)
-      return response()->json([], 201);
-    $referenciaObj->update(['status' => 'processada']);
+    try {
+      DB::transaction(function () use ($paymentService, $data) {
+       
+        $referenciaObj = ReferenciasPagamento::where('referencia', $data['reference_id'])->first();
+        
+        if ($referenciaObj == null)
+          return response()->json([], 500);
+        
+        $referenciaObj->update(["status" => "processada"]);
 
-    $rodadaInvestimentoObj = RodadasInvestimento::where('id', $referenciaObj->fk_rodada_investimento)->first();
-    $dataToUpdate["valor_obtido"] = $rodadaInvestimentoObj->valor_obtido+$referenciaObj->valor_monetario;
-    if ($dataToUpdate["valor_obtido"] == $rodadaInvestimentoObj->valor_objetivo)
-    $dataToUpdate["estado"] = "fechada";
-    $rodadaInvestimentoObj->update($dataToUpdate);
+        
 
-    RodadasInvestidores::create([
-        'fk_rodada' => $rodadaInvestimentoObj->id,
-        'fk_investidor' => $referenciaObj->fk_investidor,
-        'valor_investido' => $referenciaObj->valor_monetario,
-        'acoes_adquirida' => $paymentService->porcentageCalculo($referenciaObj->valor_monetario,$rodadaInvestimentoObj->valor_objetivo, $rodadaInvestimentoObj->oferta_acoes),
-        'contrato_mutou' => null,
-        'status_contrato_investidor' => null,
-        'status_contrato_startup' => null,
-        'status_investimento' => null,
-        'contrato_mutou_aprovado' => null
-    ]);
+        $rodadaInvestimentoObj = RodadasInvestimento::where('id', $referenciaObj->fk_rodada_investimento)->first();
+        $dataToUpdate["valor_obtido"] = $rodadaInvestimentoObj->valor_obtido + $referenciaObj->valor_monetario;
+        if ($dataToUpdate["valor_obtido"] == $rodadaInvestimentoObj->valor_objetivo)
+          $dataToUpdate["estado"] = "fechada";
+        $rodadaInvestimentoObj->update($dataToUpdate);
+        
+        $acoeAdquirida = $paymentService->porcentageCalculo($referenciaObj->valor_monetario, $rodadaInvestimentoObj->valor_objetivo, $rodadaInvestimentoObj->oferta_acoes);
 
-    $allInvestorsInRound = RodadasInvestidores::where('fk_rodada', $rodadaInvestimentoObj->id)
-    ->where('fk_investidor',"<>",$referenciaObj->fk_investidor)
-    ->get();
+        RodadasInvestidores::create([
+          'fk_rodada' => $rodadaInvestimentoObj->id,
+          'fk_investidor' => $referenciaObj->fk_investidor,
+          'valor_investido' => $referenciaObj->valor_monetario,
+          'acoes_adquirida' => $acoeAdquirida,
+          'contrato_mutou' => null,
+          'status_contrato_investidor' => null,
+          'status_contrato_startup' => null,
+          'status_investimento' => 0,
+          'contrato_mutou_aprovado' => null
+        ]);
 
-    $allInvestorsInRound->each(function ($investor) use($rodadaInvestimentoObj){
-     
+        $allInvestorsInRound = RodadasInvestidores::where('fk_rodada', $rodadaInvestimentoObj->id)
+          ->where('fk_investidor', "<>", $referenciaObj->fk_investidor)
+          ->get();
+
+        $allInvestorsInRound->each(function ($investor) use ($rodadaInvestimentoObj) {
+
+          Notifications::create([
+            'message' => "Investimento efetuado a startup {$rodadaInvestimentoObj->startup->nome}",
+            'fk_user_distination' => $investor->investidor->fk_user,
+            'fk_user_origin' => $rodadaInvestimentoObj->fk_startup,
+            'status' => 'nao_visto',
+            'tipo' => 'foi_investido'
+          ]);
+
+          $notificacoes = Notifications::where('fk_user_distination', $investor->investidor->fk_user)
+            ->where('status', 'nao_visto')
+            ->get();
+
+          $qtdNotification = (int)count($notificacoes);
+
+          $investor->investidor->user->notify(new Notificao($qtdNotification));
+        });
 
 
-      Notifications::create([
-        'message' => "Investimento efetuado a startup",
-        'fk_user_distination' => $investor->investidor->fk_user,
-        'fk_user_origin' => $rodadaInvestimentoObj->fk_startup,
-        'status' => 'nao_visto',
-        'tipo' => 'foi_investido'
-    ]);
+        Notifications::create([
+          'message' => "{$rodadaInvestimentoObj->startup->nome}, Recebeu Investimento",
+          'fk_user_distination' => $rodadaInvestimentoObj->fk_startup,
+          'fk_user_origin' => $rodadaInvestimentoObj->fk_startup,
+          'status' => 'nao_visto',
+          'tipo' => 'foi_investido'
+        ]);
 
-    $notificacoes = Notifications::where('fk_user_distination', $investor->investidor->fk_user)
-        ->where('status', 'nao_visto')
-        ->get();
+        $notificacoes = Notifications::where('fk_user_distination', $rodadaInvestimentoObj->fk_startup)
+          ->where('status', 'nao_visto')
+          ->get();
 
-    $qtdNotification = (int)count($notificacoes);
+        $rodadaInvestimentoObj->startup->user->notify(new Notificao($notificacoes->count()));
 
-    $investor->investidor->user->notify(new Notificao($qtdNotification));
+        event(new ParticipacaoNaRodada($rodadaInvestimentoObj->fk_startup));
+        event(new ParticipacaoNaRodada($referenciaObj->fk_investidor));
 
-    });
-
-    event(new ParticipacaoNaRodada($rodadaInvestimentoObj->fk_startup));
-
-    //NOTIFICAR TODOS OS INVESTIDORES QUE ESTÃO NA RODADA E A STARTUP
-    //ENVENTO PARA ATUALIZAR O BLOCO OFERTA, SOMENTE PARA O USER STARTUP
-
-    return response()->json(['sucesso'], 201);
+        return response()->json(['sucesso'], 201);
+      });
+    } catch (Exception $e) {
+      Log::info($e);
+      return response()->json([
+        'error' => $e->getMessage()
+      ], 500);
+    }
   }
 }
