@@ -34,6 +34,6 @@ class DiscordarContrato implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('discordar-contrato-channel'.$this->toUser);
+        return new PrivateChannel('discordar-contrato-channel.'.$this->toUser);
     }
 }

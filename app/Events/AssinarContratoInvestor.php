@@ -33,6 +33,6 @@ class AssinarContratoInvestor implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('assinar-contrato-investor-channel'.$this->toUser);
+        return new PrivateChannel('assinar-contrato-investor-channel.'.$this->toUser);
     }
 }

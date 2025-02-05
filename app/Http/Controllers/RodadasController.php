@@ -403,6 +403,7 @@ class RodadasController extends Controller
         $x = $request->input('point_x');
         $y = $request->input('point_y');
         $pageToSign =  $request->input('page_sign');
+        $signName = "";
 
         $mmX = ($x * 210) / 714; // conversão de px para milimetro para resolucao do meu pc. 714px = 210mm
         $mmY = (($y * 210) / 714) - 13; //particularidade:devo fazer compensacao para o conto inferior esquerdo da assinatura começar a ser desenhada no ponto clicado, senão começaria pelo canto superior esquerdo

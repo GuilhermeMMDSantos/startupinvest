@@ -144,27 +144,28 @@
             }
         });
         //------------------------OUVINTES
-        Echo.private('discordar-contrato-channel.' + '{{ $code }}')
+        Echo.private('discordar-contrato-channel.' + '{{ $presentUser }}')
             .listen('DiscordarContrato', function(e) {
 
                 loadInvestorsIntoTheRound();
 
             });
 
-            Echo.private('assinar-contrato-startup-channel.' + '{{ $code }}')
+            Echo.private('assinar-contrato-startup-channel.' + '{{ $presentUser }}')
             .listen('AssinarContratoStartup', function(e) {
                 loadInvestorIntoTheRound();
             });
 
-            Echo.private('assinar-contrato-investor-channel.' + '{{ $code }}')
+            Echo.private('assinar-contrato-investor-channel.' + '{{ $presentUser }}')
             .listen('AssinarContratoInvestor', function(e) {
 
                 loadInvestorsIntoTheRound();
             });
 
-            Echo.private('adicionar-contrato-channel.' + '{{ $code }}')
+            Echo.private('adicionar-contrato-channel.' + '{{ $presentUser }}')
             .listen('AdicionarContrato', function(e) {
-
+                console.log("Adicionar contrato. user: ");
+                console.log('{{ $presentUser }}');
                 loadInvestorIntoTheRound();
 
             });

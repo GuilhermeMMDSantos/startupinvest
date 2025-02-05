@@ -33,6 +33,6 @@ class AdicionarContrato implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('adicionar-contrato-channel'.$this->toUser);
+        return new PrivateChannel('adicionar-contrato-channel.'.$this->toUser);
     }
 }
