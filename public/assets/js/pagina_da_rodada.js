@@ -12,7 +12,7 @@ $(function () {
         </div>\
     </div>";
 
-    $(".situation-container").on('click', '.btn-eliminar-contrato', function () {
+    $("#container-investor-na-rodada").on('click', '.btn-eliminar-contrato', function () {
 
         let idInvestidor = $(this).attr('linker');
         let rodadaId = $("#title-page").attr('val');
@@ -35,6 +35,15 @@ $(function () {
             if (result.isConfirmed) {
                 $("#situation-container" + idInvestidor).empty();
                 $("#situation-container" + idInvestidor).append(loader);
+
+                Swal.fire({
+                    icon: "success",
+                    title: "Contrato Eliminado",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+
                 $.ajax({
                     url: '/rm_contrato',
                     type: 'get',
@@ -43,8 +52,9 @@ $(function () {
                         ' rodadaId': rodadaId
                     },
                     success: function (response) {
-                        $("#situation-container" + idInvestidor).empty();
-                        $("#situation-container" + idInvestidor).append(response['html']);
+                        /*$("#situation-container" + idInvestidor).empty();
+                        $("#situation-container" + idInvestidor).append(response['html']);*/
+                        loadInvestorsIntoTheRound();
                         Swal.fire({
                             icon: "success",
                             title: "Contrato Eliminado",
@@ -63,10 +73,7 @@ $(function () {
 
     });
 
-    $(".situation-container").on('change', '.field-contract-2', function () {
-
-       
-
+    $("#container-investor-na-rodada").on('change', '.field-contract-2', function () {
         var myForm = new FormData();
         let contract_pdf = $(this).prop("files")[0];
         let idInvestidor = $(this).attr('linker');
@@ -86,8 +93,9 @@ $(function () {
             processData: false,
             data: myForm,
             success: function (response) {
-                $("#situation-container" + idInvestidor).empty();
-                $("#situation-container" + idInvestidor).append(response['html']);
+                // $("#situation-container" + idInvestidor).empty();
+                //$("#situation-container" + idInvestidor).append(response['html']);
+                loadInvestorsIntoTheRound();
             },
             error: function (error) {
                 console.log(error);
@@ -97,7 +105,7 @@ $(function () {
     });
 
 
-    $("#btn-discordar-contrato").click(async function () {
+    $("#container-investor-into-the-round").on("click", "#btn-discordar-contrato", async function () {
         const { value: text } = await Swal.fire({
             input: "textarea",
             inputLabel: "Message",
@@ -121,7 +129,7 @@ $(function () {
                 processData: false,
                 data: form,
                 success: function (response) {
-                    updateInvestSituation1();
+                    loadInvestorIntoTheRound();
                     Swal.fire({
                         icon: "success",
                         title: "Pontos enviados",
@@ -155,18 +163,20 @@ $(function () {
 
     $("#btn-feito").click(function () {
         var pathDoc = $("#path_doc").val();
+        let rodadaId = $("#title-page").attr('val');
         $.ajax({
             url: '/confirmar_assinatura',
             type: 'get',
             data: {
-                'pathDoc': pathDoc
+                'pathDoc': pathDoc,
+                'rodadaId':rodadaId
             },
             success: function (response) {
                 $("#pdfModal").modal('hide');
                 if (response['tipo'] == 'startup')
-                    updateInvestSituation2();
+                    loadInvestorsIntoTheRound();
                 else
-                    updateInvestSituation1();
+                    loadInvestorIntoTheRound();
                 Swal.fire({
                     icon: "success",
                     title: "Contrato Assinado",

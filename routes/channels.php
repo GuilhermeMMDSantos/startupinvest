@@ -28,6 +28,22 @@ Broadcast::channel('participacao-na-rodada-channel.{toUser}', function ($user,$t
   return (int) $user->id === (int) $toUser;
 });
 
+Broadcast::channel('discordar-contrato-channel.{toUser}', function ($user,$toUser) {
+  return (int) $user->id === (int) $toUser;
+});
+
+Broadcast::channel('assinar-contrato-investor-channel.{toUser}', function ($user,$toUser) {
+  return (int) $user->id === (int) $toUser;
+});
+
+Broadcast::channel('assinar-contrato-startup-channel.{toUser}', function ($user,$toUser) {
+  return (int) $user->id === (int) $toUser;
+});
+
+Broadcast::channel('adicionar-contrato-channel.{toUser}', function ($user,$toUser) {
+  return (int) $user->id === (int) $toUser;
+});
+
 Broadcast::channel('send-message-channel.{toUser}', function ($user,$toUser) {
   return (int) $user->id === (int) $toUser;
 });

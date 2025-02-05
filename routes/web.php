@@ -179,6 +179,10 @@ Route::get('/rodada_page/2024{id_rodada}','RodadasController@showPage')->name('r
 
 Route::get('/load_intro_rodada', 'RodadasController@load_intro_rodada');
 
+Route::get('/load_investors_into_the_round', 'RodadasController@loadInvestorsIntoTheRound');
+Route::get('/load_investor_into_the_round', 'RodadasController@loadInvestorIntoTheRound');
+
+
 Route::get('/TESTE','PagamentosController@teste');
 
 Route::get('/atualizar_porcentagem_pelo_montante','PagamentosController@atualizarPorcentagemPeloMontante');

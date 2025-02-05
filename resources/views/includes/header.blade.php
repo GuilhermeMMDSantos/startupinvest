@@ -28,7 +28,7 @@
                         <i class="fa fa-envelope"></i><span>Meetings</span>
                     </a>
                     <span id="indicador-existe-mensagem" class="badge badge-light"
-                        style="position: absolute !important ;top:0px;left:37px;min-width:13px;border-radius:50%;padding:1px !important;border:1px solid black;font-size:10px;text-align:center;background-color:#ffcb2f;color:#ffcb2f;@if ($qtdMessageUnview == 0) display:none; @endif">0</span>
+                        style="position: absolute !important ;top:0px;left:35px;min-width:13px;border-radius:50%;padding:1px !important;border:1px solid black;font-size:10px;text-align:center;background-color:#ffcb2f;color:#ffcb2f;@if ($qtdMessageUnview == 0) display:none; @endif">0</span>
                 </li>
 
                 <li class="liMenu" style="position: relative !important;">

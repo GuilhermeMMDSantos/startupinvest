@@ -23,6 +23,10 @@ use App\Events\AnularRodada;
 use App\Events\AbrirRodada;
 use App\PermissoesVerPitch;
 use App\EntradaDoModelo;
+use App\Events\AdicionarContrato;
+use App\Events\AssinarContratoInvestor;
+use App\Events\AssinarContratoStartup;
+use App\Events\DiscordarContrato;
 use App\SaidaDoModelo;
 use App\Services\MachineLearningService;
 use Illuminate\Validation\ValidationException;
@@ -65,6 +69,40 @@ class RodadasController extends Controller
         return view('pagina_da_rodada', compact('notificacoes', 'qtdnotifications', 'qtdMessageUnview', 'investidores', 'rodada', 'investidor', 'presentUser'))->render();
     }
 
+    public function loadInvestorsIntoTheRound(Request $request)
+    {
+        $idRodada = $request->rodada;
+        $presentUser = Auth::user()->id;
+        $rodada = RodadasInvestimento::where('id', $idRodada)->first();
+        $investidores = [];
+        $investidor = null;
+
+        if (Auth::user()->tipo == 'startup') {
+            $investidores = RodadasInvestidores::where('fk_rodada', $idRodada)->get();
+        } 
+            
+        $rodada = RodadasInvestimento::where('id', $idRodada)->first();
+        $html = view("blocos_html/investorsIntoTheRound", compact('investidores','investidor', 'rodada', 'presentUser'))->render();
+
+        return response()->json(['html' => $html], 200);
+    }
+
+    public function loadInvestorIntoTheRound(Request $request)
+    {
+        $idRodada = $request->rodada;
+        $presentUser = Auth::user()->id;
+        $rodada = RodadasInvestimento::where('id', $idRodada)->first();
+        $investidor = null;
+
+        if (Auth::user()->tipo == 'investidor') {
+
+            $investidor =  RodadasInvestidores::where('fk_rodada', $idRodada)->where('fk_investidor', Auth::user()->id)->first();
+        }
+        $rodada = RodadasInvestimento::where('id', $idRodada)->first();
+        $html = view("blocos_html/investorIntoTheRound", compact('investidor', 'rodada', 'presentUser'))->render();
+
+        return response()->json(['html' => $html], 200);
+    }
 
 
     public function cadastrarOferta(Request $request, RodadaService $rodadaService, MachineLearningService $mpl)
@@ -199,15 +237,18 @@ class RodadasController extends Controller
                 ->update([
                     'contrato_mutou' => $path
                 ]);
-            $investidor = RodadasInvestidores::where('fk_rodada', $idRodada)->where('fk_investidor', $idInvestor)->first();
-            $rodada = RodadasInvestimento::where('id', $idRodada)->first();
-            $html = view('blocos_html/investment_situation2', compact('rodada', 'investidor', 'presentUser'))->render();
+
+            $investorsNaRodada = RodadasInvestidores::where('fk_rodada', $idRodada)->get();
+
+            foreach($investorsNaRodada as $investor)
+            {
+                event(new AdicionarContrato($investor->fk_investidor));
+            }
+            
         } catch (ErrorException $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
-        return response()->json([
-            'html' => $html
-        ]);
+        return response()->json([], 200);
     }
 
     public function removeContrato(Request $request)
@@ -231,15 +272,13 @@ class RodadasController extends Controller
                     'status_contrato_investidor' => 1,
                     'status_contrato_startup' => 1
                 ]);
-            $investidor = RodadasInvestidores::where('fk_rodada', $idRodada)->first();
-            $rodada = RodadasInvestimento::where('id', $idRodada)->first();
-            $html = view('blocos_html/investment_situation2', compact('rodada', 'investidor', 'presentUser'))->render();
+           // $investidor = RodadasInvestidores::where('fk_rodada', $idRodada)->first();
+           // $rodada = RodadasInvestimento::where('id', $idRodada)->first();
+           // $html = view('blocos_html/investment_situation2', compact('rodada', 'investidor', 'presentUser'))->render();
         } catch (ErrorException $e) {
             return response()->json(['error' => 'About remove Contract', 'message' => $e->getMessage()], 500);
         }
-        return response()->json([
-            'html' => $html
-        ]);
+        return response()->json([],200);
     }
 
     public function updateIinvestSituation1(Request $request)
@@ -412,6 +451,7 @@ class RodadasController extends Controller
     {
         $currentUser = Auth::user();
         $pathDoc = $request->pathDoc;
+        $idRodada = $request->rodadaId;
         if ($currentUser->tipo == 'startup') {
             RodadasInvestidores::where('contrato_mutou', $pathDoc)
                 ->update([
@@ -422,6 +462,18 @@ class RodadasController extends Controller
                 ->update([
                     'status_contrato_investidor' => 3
                 ]);
+        }
+
+        $rodada = RodadasInvestimento::where('id',$idRodada)->first();
+
+        if ($currentUser->tipo == 'investidor'){
+            event(new AssinarContratoInvestor($rodada->fk_startup));
+        }
+        else if($currentUser->tipo == 'startup'){
+            $investidores = RodadasInvestidores::where('fk_rodada', $idRodada)->get();
+            foreach($investidores as $investidor){
+                event(new AssinarContratoStartup($investidor->fk_investidor));
+            }
         }
         return response([
             'tipo' => $currentUser->tipo
@@ -445,7 +497,7 @@ class RodadasController extends Controller
         RodadasInvestidores::where('fk_rodada', $rodadaId)
             ->where('fk_investidor', $remetente)
             ->update([
-                'status_contrato_investidor' => 2
+                'status_contrato_investidor' => 3
             ]);
         $messages = Mensagens::where([
 
@@ -457,6 +509,7 @@ class RodadasController extends Controller
         $qtdMessageUnview = (int) count($messages);
 
         event(new SendMessage($destinatario, $mensagemEnviada->id));
+        event(new DiscordarContrato($destinatario));
 
         $userDestinatario->notify(new Message($qtdMessageUnview));
 
