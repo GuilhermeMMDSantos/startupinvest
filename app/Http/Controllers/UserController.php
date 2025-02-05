@@ -37,6 +37,8 @@ use App\RodadasInvestidores;
 use App\SaidaDoModelo;
 use App\EntradaDoModelo;
 use App\ReferenciasPagamento;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -1355,5 +1357,73 @@ class UserController extends Controller
         return response()->json([
             'html' => $html
         ]);
+    }
+
+    public function showConfigPrivace()
+    {
+        $qtdnotifications = 0;
+        $presentUser = Auth::user()->id;
+        $investidor = null;
+
+        Notifications::where('fk_user_distination', $presentUser)
+            ->where('status', 'nao_visto')
+            ->update([
+                'status' => 'visto'
+            ]);
+
+        $notificacoes  = Notifications::where('fk_user_distination', $presentUser)
+            ->select('*', DB::raw('DATE_FORMAT(created_at,"%d/%m/%Y %h:%m") as data'))
+            ->orderBy('created_at', 'DESC')
+            ->get();
+
+        $messages = Mensagens::where([
+
+            ['fk_destinatario', $presentUser],
+            ['vista', 'nao']
+        ])
+            ->get();
+
+        $qtdMessageUnview = (int) count($messages);
+
+        
+        return view('pagina_config_privace', compact('notificacoes', 'qtdnotifications', 'qtdMessageUnview'))->render();
+    
+    }
+
+    public function changePassword(Request $request)
+    {
+        $validador = Validator::make(
+            $request->all(),
+            [
+                'senha_atual' => 'required',
+                'nova_senha' => 'required'
+            ],
+            [
+                'senha_atual.required' => 'Senha atual em falta',
+                'nova_senha.required' => 'Nova senha em falta'
+            ]
+        );
+
+        if ($validador->fails()) {
+            return redirect()
+                ->back()
+                ->withErrors($validador);
+        }
+
+        $user = User::where('id', Auth::user()->id)->first();
+
+        if (!Hash::check($request->senha_atual, $user->password))
+        {
+            return redirect()
+                ->back()
+                ->withErrors(['senha_atual' => 'Senha Atual não existe']);
+        }
+        $user->update([
+            'password' => Hash::make($request->nova_senha)
+        ]);
+
+        return redirect()
+            ->back()
+            ->with('success', 'Senha alterada com sucesso!');
     }
 }

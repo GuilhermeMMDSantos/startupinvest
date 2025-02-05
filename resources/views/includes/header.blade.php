@@ -70,7 +70,7 @@
                     <ul class="submenu">
                         <li><a href="{{ route('startup.perfil', Auth::user()->code_user) }}">Perfil
                                 {{ $tipoUser }}</a></li>
-                        <li><a href="#">Configurações e privacidade</a></li>
+                        <li><a href="{{ route('config_privacidade')}}">Configurações</a></li>
                         <li><a href="{{ url('userout') }}">Sair</a></li>
                     </ul>
                 

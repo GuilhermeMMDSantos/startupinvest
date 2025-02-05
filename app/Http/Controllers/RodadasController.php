@@ -30,6 +30,7 @@ use App\Events\DiscordarContrato;
 use App\SaidaDoModelo;
 use App\Services\MachineLearningService;
 use Illuminate\Validation\ValidationException;
+use App\Notifications\Notificao;
 
 class RodadasController extends Controller
 {
@@ -237,13 +238,26 @@ class RodadasController extends Controller
                 ->update([
                     'contrato_mutou' => $path
                 ]);
+            
+                $rodada = RodadasInvestimento::where('id',$idRodada)->first();
+                Notifications::create([
+                    'message' => "A startup {$rodada->startup->nome} Deu Entrada ao Contrato de Financiamento.",
+                    'fk_user_distination' => $idInvestor,
+                    'fk_user_origin' =>  $idRodada,
+                    'status' => 'nao_visto',
+                    'tipo' => 'add_contrato'
+                ]);
 
-            $investorsNaRodada = RodadasInvestidores::where('fk_rodada', $idRodada)->get();
+                $notificacoes = Notifications::where('fk_user_distination',$idInvestor)
+                    ->where('status', 'nao_visto')
+                    ->get();
 
-            foreach($investorsNaRodada as $investor)
-            {
-                event(new AdicionarContrato($investor->fk_investidor));
-            }
+                $qtdNotification = (int)count($notificacoes);
+
+               $user = User::where('id', $idInvestor)->first();
+               $user->notify(new Notificao($qtdNotification));
+                event(new AdicionarContrato($idInvestor));
+            
             
         } catch (ErrorException $e) {
             return response()->json(['message' => $e->getMessage()], 500);

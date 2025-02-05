@@ -198,6 +198,10 @@ Route::post('/add-signature','RodadasController@addSignature')->name('pdf.add-si
 Route::get('/sign_contract','RodadasController@signContract')->middleware('auth');
 
 
+
+Route::get('/config_privace', 'UserController@showConfigPrivace')->name('config_privacidade')->middleware('auth');
+Route::post('/user_change_password', 'UserController@changePassword')->name('user_change_password')->middleware('auth');
+
 Route::post('/save_contrato','RodadasController@saveContrato');
 
 Route::get('/rm_contrato','RodadasController@removeContrato');

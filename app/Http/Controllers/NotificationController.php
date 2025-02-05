@@ -23,7 +23,7 @@ class NotificationController extends Controller
 
         $notificacoes  = Notifications::where('fk_user_distination', $presentUser)
             ->select('*', DB::raw('DATE_FORMAT(created_at,"%d/%m/%Y %h:%m") as data'))
-            ->orderBy('created_at','DESC')
+            ->orderBy('created_at', 'DESC')
             ->get();
 
         $messages = Mensagens::where([
@@ -35,7 +35,7 @@ class NotificationController extends Controller
 
         $qtdMessageUnview = (int) count($messages);
 
-        return view('notificacao', compact('notificacoes', 'qtdnotifications','qtdMessageUnview'));
+        return view('notificacao', compact('notificacoes', 'qtdnotifications', 'qtdMessageUnview'));
     }
 
     public function showOwnerNotification($notificationId)
@@ -47,7 +47,9 @@ class NotificationController extends Controller
             'status' => 'clicado'
         ]);
 
-        // return Redirect("startup.perfil",$notification->userdeorigem->code_user);
-        return redirect()->route('startup.perfil', ['codeUser' => $notification->userdeorigem->code_user]);
+        if ($notification->tipo == 'add_contrato')
+            return redirect()->route('rodada.page', ['id_rodada' => $notification->fk_user_origin]);
+        else
+            return redirect()->route('startup.perfil', ['codeUser' => $notification->userdeorigem->code_user]);
     }
 }
