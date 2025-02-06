@@ -7,12 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Mensagens;
-use App\Notifications\Message;
 use App\PermissoesVerPitch;
-use PhpParser\Node\Expr\FuncCall;
 use Illuminate\Support\Facades\DB;
-
-use function React\Promise\Stream\first;
+use Illuminate\Support\Facades\Crypt;
 
 class ChatController extends Controller
 {
@@ -65,7 +62,7 @@ class ChatController extends Controller
         }
 
         $mensagem = Mensagens::create([
-            'conteudo' => $conteudoMessage,
+            'conteudo' => Crypt::encryptString($conteudoMessage),
             'fk_conversa' => $conversa->id,
             'fk_remetente' => $remetente,
             'fk_destinatario' => $distinatario
@@ -105,6 +102,10 @@ class ChatController extends Controller
                 ]);
             })
             ->get();
+
+        $mensagens->each(function ($mensagem) {
+            $mensagem->conteudo = Crypt::decryptString($mensagem->conteudo);
+        });
 
 
         $html = view('blocos_html/lista_mensagens', compact('mensagens'))->render();

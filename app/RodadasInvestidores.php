@@ -17,7 +17,8 @@ class RodadasInvestidores extends Model
         'status_contrato_investidor',
         'status_contrato_startup',
         'status_investimento',
-        'contrato_mutou_aprovado'
+        'contrato_mutou_aprovado',
+        'contrato_mutou_original'
     ];
 
     public function rodada(){

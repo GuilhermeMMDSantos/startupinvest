@@ -41,6 +41,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Crypt;
 
 class UserController extends Controller
 {
@@ -1077,7 +1078,9 @@ class UserController extends Controller
                 ]);
             })
             ->get();
-
+        $mensagens->each(function ($mensagem) {
+            $mensagem->conteudo = Crypt::decryptString($mensagem->conteudo);
+        });
 
         $html = view('blocos_html/popup-chat', compact('mensagens', 'userDestinatario'))->render();
 
@@ -1103,7 +1106,7 @@ class UserController extends Controller
         $mensagemEnviada = Mensagens::create([
             'fk_remetente' => $remetente,
             'fk_destinatario' => $destinatario,
-            'conteudo' => $mensagem
+            'conteudo' => Crypt::encryptString($mensagem)
         ]);
 
 
@@ -1132,7 +1135,8 @@ class UserController extends Controller
 
 
         $message = Mensagens::where('id', $idMessage)->first();
-
+        if ($message != null)
+            $message->conteudo = Crypt::decryptString($message->conteudo);
 
         $html = view('blocos_html/nova_mensagem_chat', compact('message'))->render();
 
@@ -1385,9 +1389,8 @@ class UserController extends Controller
 
         $qtdMessageUnview = (int) count($messages);
 
-        
+
         return view('pagina_config_privace', compact('notificacoes', 'qtdnotifications', 'qtdMessageUnview'))->render();
-    
     }
 
     public function changePassword(Request $request)
@@ -1412,8 +1415,7 @@ class UserController extends Controller
 
         $user = User::where('id', Auth::user()->id)->first();
 
-        if (!Hash::check($request->senha_atual, $user->password))
-        {
+        if (!Hash::check($request->senha_atual, $user->password)) {
             return redirect()
                 ->back()
                 ->withErrors(['senha_atual' => 'Senha Atual não existe']);

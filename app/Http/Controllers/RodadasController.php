@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Investidores;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications;
@@ -24,13 +23,12 @@ use App\Events\AbrirRodada;
 use App\PermissoesVerPitch;
 use App\EntradaDoModelo;
 use App\Events\AdicionarContrato;
-use App\Events\AssinarContratoInvestor;
-use App\Events\AssinarContratoStartup;
 use App\Events\DiscordarContrato;
 use App\SaidaDoModelo;
 use App\Services\MachineLearningService;
 use Illuminate\Validation\ValidationException;
 use App\Notifications\Notificao;
+use Illuminate\Support\Facades\Crypt;
 
 class RodadasController extends Controller
 {
@@ -236,7 +234,8 @@ class RodadasController extends Controller
                 ['fk_investidor', $idInvestor]
             ])
                 ->update([
-                    'contrato_mutou' => $path
+                    'contrato_mutou' => $path,
+                    'contrato_mutou_original' => $path
                 ]);
             
                 $rodada = RodadasInvestimento::where('id',$idRodada)->first();
@@ -283,12 +282,10 @@ class RodadasController extends Controller
             ])
                 ->update([
                     'contrato_mutou' => NULL,
+                    'contrato_mutou_original' => NULL,
                     'status_contrato_investidor' => 1,
                     'status_contrato_startup' => 1
                 ]);
-           // $investidor = RodadasInvestidores::where('fk_rodada', $idRodada)->first();
-           // $rodada = RodadasInvestimento::where('id', $idRodada)->first();
-           // $html = view('blocos_html/investment_situation2', compact('rodada', 'investidor', 'presentUser'))->render();
         } catch (ErrorException $e) {
             return response()->json(['error' => 'About remove Contract', 'message' => $e->getMessage()], 500);
         }
@@ -465,15 +462,15 @@ class RodadasController extends Controller
     {
         $currentUser = Auth::user();
         $pathDoc = $request->pathDoc;
+        $rodadaInvestidor = RodadasInvestidores::where('contrato_mutou', $pathDoc)->first();
+        Storage::disk('public')->delete($rodadaInvestidor->contrato_mutou_original);
         if ($currentUser->tipo == 'startup') {
-            RodadasInvestidores::where('contrato_mutou', $pathDoc)
-                ->update([
+            $rodadaInvestidor->update([
                     'status_contrato_startup' => 2,
                     'contrato_mutou_original' => $pathDoc
                 ]);
         } else if ($currentUser->tipo == 'investidor') {
-            RodadasInvestidores::where('contrato_mutou', $pathDoc)
-                ->update([
+            $rodadaInvestidor->update([
                     'status_contrato_investidor' => 3,
                     'contrato_mutou_original' => $pathDoc
                 ]);
@@ -506,7 +503,7 @@ class RodadasController extends Controller
         $mensagemEnviada = Mensagens::create([
             'fk_remetente' => $remetente,
             'fk_destinatario' => $destinatario,
-            'conteudo' => $mensagem
+            'conteudo' => Crypt::encryptString($mensagem)
         ]);
 
         RodadasInvestidores::where('fk_rodada', $rodadaId)

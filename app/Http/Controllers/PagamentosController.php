@@ -130,7 +130,8 @@ class PagamentosController extends Controller
           'status_contrato_investidor' => null,
           'status_contrato_startup' => null,
           'status_investimento' => 0,
-          'contrato_mutou_aprovado' => null
+          'contrato_mutou_aprovado' => null,
+          'contrato_mutou_original' => null
         ]);
 
         $allInvestorsInRound = RodadasInvestidores::where('fk_rodada', $rodadaInvestimentoObj->id)

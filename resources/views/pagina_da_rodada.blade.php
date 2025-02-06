@@ -90,8 +90,6 @@
     var urlDoc = null;
     var pdfDoc = null,
         pdfContainer = document.getElementById('pdf-container'),
-        //pageNumDisplay = document.getElementById('page-sign'),
-        // pageCountDisplay = document.getElementById('page_count'),
         scale = (document.getElementById('body-section').clientWidth) / 800,
         originalScale = scale,
         scale = scale < 1 ? scale : 1.2,
@@ -100,6 +98,7 @@
     $(document).on("shown.bs.modal", "#pdfModal", function(event) {
         var button = $(event.relatedTarget);
         var origin = button.data('origin');
+        $("#btn-feito").hide();
         $("#id-investor").val(button.data('idinvestor'));
 
         if (origin == 1)
@@ -111,8 +110,6 @@
 
         pdfjsLib.getDocument(urlDoc).promise.then(function(pdfDoc_) {
             pdfDoc = pdfDoc_;
-            //pageCountDisplay.textContent = pdfDoc.numPages;
-            // pageNumDisplay.value = 1;
             renderAllPages();
         });
 
@@ -252,7 +249,6 @@
 
     function onScroll() {
         const currentPage = getVisiblePageNumber();
-        // pageNumDisplay.value = currentPage;
     }
 
     function renderAllPages() {
@@ -287,9 +283,6 @@
         $("#pdf-container").append(loader);
         $("#signModal").modal('hide');
         var formPointSigned = new FormData($("#point-to-insert-sign")[0]);
-        // console.log("Page To Sign: " + formPointSigned.get('page_sign'));
-        //console.log("mmx: " + formPointSigned.get('point_x'));
-        //console.log("mmy: " + formPointSigned.get('point_y'));
         $.ajax({
             url: '/add-signature',
             type: 'post',
@@ -303,7 +296,6 @@
 
                 pdfjsLib.getDocument(urlDoc).promise.then(function(pdfDoc_) {
                     pdfDoc = pdfDoc_;
-                    //pageCountDisplay.textContent = pdfDoc.numPages;
                     renderAllPages();
                 });
 

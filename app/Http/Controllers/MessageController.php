@@ -11,6 +11,7 @@ use App\Events\SendMessage;
 use App\Notifications;
 use App\Notifications\Message;
 use App\PermissoesVerPitch;
+use Illuminate\Support\Facades\Crypt;
 
 class MessageController extends Controller
 {
@@ -65,6 +66,11 @@ class MessageController extends Controller
                 select fk_remetente as id from mensagens where fk_destinatario = ?
                 ) as tb  order by date_ desc', [$presentUser, $presentUser, $presentUser, $presentUser, $presentUser, 'nao', $presentUser, $presentUser, $presentUser, $presentUser]);
 
+        foreach ($dados as $item) {
+            if (isset($item->conteudo)) {
+                $item->conteudo = Crypt::decryptString($item->conteudo);
+            }
+        }
 
         $html =  view('blocos_html/meetings', compact('dados'))->render();
 
@@ -114,6 +120,9 @@ class MessageController extends Controller
             if ($permission != null || $currentUser->tipo == 'investidor')
                 $permissionToSendMessage = true;
         }
+        $mensagens->each(function ($mensagem) {
+            $mensagem->conteudo = Crypt::decryptString($mensagem->conteudo);
+        });
 
         $html = view('blocos_html/meeting', compact('mensagens', 'otherUser', 'permissionToSendMessage'))->render();
 
@@ -135,7 +144,7 @@ class MessageController extends Controller
         $mensagemEnviada = Mensagens::create([
             'fk_remetente' => $remetente,
             'fk_destinatario' => $destinatario,
-            'conteudo' => $mensagem
+            'conteudo' => Crypt::encryptString($mensagem)
         ]);
 
 

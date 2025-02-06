@@ -58,7 +58,6 @@
             </div>
             <div class="modal-body" id="body-of-visualizer">
                 <div id="header_visualize">
-                   <!-- Page: <span id="page_num">0</span> / <span id="page_count">0</span>-->
                 </div>
                 <div id="pdf-container"></div>
                 <form id="point-to-insert-sign">
