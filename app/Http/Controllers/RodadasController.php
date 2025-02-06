@@ -417,7 +417,6 @@ class RodadasController extends Controller
         $x = $request->input('point_x');
         $y = $request->input('point_y');
         $pageToSign =  $request->input('page_sign');
-        $signName = "";
 
         $mmX = ($x * 210) / 714; // conversão de px para milimetro para resolucao do meu pc. 714px = 210mm
         $mmY = (($y * 210) / 714) - 13; //particularidade:devo fazer compensacao para o conto inferior esquerdo da assinatura começar a ser desenhada no ponto clicado, senão começaria pelo canto superior esquerdo
@@ -466,33 +465,34 @@ class RodadasController extends Controller
     {
         $currentUser = Auth::user();
         $pathDoc = $request->pathDoc;
-        $idRodada = $request->rodadaId;
         if ($currentUser->tipo == 'startup') {
             RodadasInvestidores::where('contrato_mutou', $pathDoc)
                 ->update([
-                    'status_contrato_startup' => 2
+                    'status_contrato_startup' => 2,
+                    'contrato_mutou_original' => $pathDoc
                 ]);
         } else if ($currentUser->tipo == 'investidor') {
             RodadasInvestidores::where('contrato_mutou', $pathDoc)
                 ->update([
-                    'status_contrato_investidor' => 3
+                    'status_contrato_investidor' => 3,
+                    'contrato_mutou_original' => $pathDoc
                 ]);
-        }
-
-        $rodada = RodadasInvestimento::where('id',$idRodada)->first();
-
-        if ($currentUser->tipo == 'investidor'){
-            event(new AssinarContratoInvestor($rodada->fk_startup));
-        }
-        else if($currentUser->tipo == 'startup'){
-            $investidores = RodadasInvestidores::where('fk_rodada', $idRodada)->get();
-            foreach($investidores as $investidor){
-                event(new AssinarContratoStartup($investidor->fk_investidor));
-            }
         }
         return response([
             'tipo' => $currentUser->tipo
         ], 200);
+    }
+
+    public function cancelarAssinatura(Request $request)
+    {
+        $pathDoc = $request->pathDoc;
+        $rodadaInvestidor = RodadasInvestidores::where('contrato_mutou', $pathDoc)->first();
+        if ($rodadaInvestidor->contrato_mutou !=  $rodadaInvestidor->contrato_mutou_original)
+            Storage::disk('public')->delete($rodadaInvestidor->contrato_mutou);
+        $rodadaInvestidor->update([
+            'contrato_mutou' => $rodadaInvestidor->contrato_mutou_original
+        ]);
+        return response(200);
     }
 
     public function discordarContrato(Request $request)

@@ -52,8 +52,6 @@ $(function () {
                         ' rodadaId': rodadaId
                     },
                     success: function (response) {
-                        /*$("#situation-container" + idInvestidor).empty();
-                        $("#situation-container" + idInvestidor).append(response['html']);*/
                         loadInvestorsIntoTheRound();
                         Swal.fire({
                             icon: "success",
@@ -93,8 +91,6 @@ $(function () {
             processData: false,
             data: myForm,
             success: function (response) {
-                // $("#situation-container" + idInvestidor).empty();
-                //$("#situation-container" + idInvestidor).append(response['html']);
                 loadInvestorsIntoTheRound();
             },
             error: function (error) {
@@ -193,9 +189,13 @@ $(function () {
         });
     });
 
+    $("#btn-cancelar-sign").click(cancelarSign);
+
+    $(".close-pdf-visualizer-m").click(cancelarSign);
+
     $("#pdf-container").on('click', '.clik-area', function (event) {
         $("#signModal").modal('show');
-        getPointToSign(event);
+        getPointToSign(event, $(this));
         $(".pdf-page").removeClass('clik-area');
 
     });
@@ -222,59 +222,56 @@ $(function () {
 
 
 
-    //---------------------------END_MODAL_VISUALIZER
+    //---------------------------END_MODAL_VISUALIZER 
 
-
-    function updateInvestSituation1() {
-        let rodadaId = $("#title-page").attr('val');
-        $("#investor-invest-situation-container").empty();
-        $("#investor-invest-situation-container").append(loader);
-        $.ajax({
-            url: '/update_iinvest_situation1',
-            type: 'get',
-            data: {
-                'rodadaId': rodadaId
-            },
-            success: function (response) {
-                $("#investor-invest-situation-container").empty();
-                $("#investor-invest-situation-container").append(response['html']);
-            },
-            error: function (error) {
-                console.log("Erro");
-                console.log(error);
-
+    function cancelarSign() {
+        swal.fire({
+            title: "Deseja Cancelar Assinatura?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#c43333bf",
+            cancelButtonColor: "#319c4ad4",
+            confirmButtonText: "Desejo",
+            cancelButtonText: "Não",
+            customClass: {
+                confirmButton: "btn-cancelar-sign-alert",
+                cancelButton: "btn-cancelar-sign-alert"
             }
-        });
-    }
+        }).then((result) => {
+            if (result.isConfirmed) {
 
-    function updateInvestSituation2() {
-        var idInvestidor = $("#id-investor").val();
-        let rodadaId = $("#title-page").attr('val');
-        $.ajax({
-            url: '/update_iinvest_situation2',
-            type: 'get',
-            data: {
-                'idIvestidor': idInvestidor,
-                'rodadaId': rodadaId
-            },
-            success: function (response) {
-                $("#situation-container" + idInvestidor).empty();
-                $("#situation-container" + idInvestidor).append(response['html']);
-            },
-            error: function (error) {
-                console.log(error);
-                console.log("Erro updateInvestSituation2.");
+                //var pathDoc = $("#path_doc").val();
+                $("#pdfModal").modal('hide');
+               /* $.ajax({
+                    url: '/cancelar_assinatura',
+                    type: 'get',
+                    data: {
+                        'pathDoc': pathDoc
+                    },
+                    success: function (response) {
+                        $("#pdfModal").modal('hide');
+                    },
+                    error: function (error) {
+                        console.log("Error");
+                        console.log(error);
+                    }
+
+                });*/
             }
         });
     }
     //---------------MODAL_VISUALIZER
-    function getPointToSign(event) {
-        const viewer = document.getElementById('pdf-container');
+    function getPointToSign(event, object) {
+        const viewer = document.querySelector(`[data-page-number = "${object.attr('data-page-number')}"]`);
         const rect = viewer.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
+        const pageNumber = object.attr('data-page-number');
+        const scale = $("#render-scale").val();
+        const x = (event.clientX - 140);
+        var y = (event.clientY - rect.top);
+
         $("#point_x").val(x);
         $("#point_y").val(y);
+        $("#page-sign").val(pageNumber);
     }
     //-----------------------------------------
 
