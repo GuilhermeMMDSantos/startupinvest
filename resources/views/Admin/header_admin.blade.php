@@ -14,7 +14,7 @@
                 </li>
                 <li>
                     <a href="{{route('rodadas.page.admin')}}">
-                        <i class="fa fa-envelope"></i><span>Rodadas</span>
+                    <i class="fa fa-snowflake"></i><span>Rodadas</span>
                     </a>
 
                 </li>

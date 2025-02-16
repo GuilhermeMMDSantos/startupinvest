@@ -466,12 +466,12 @@ class RodadasController extends Controller
         Storage::disk('public')->delete($rodadaInvestidor->contrato_mutou_original);
         if ($currentUser->tipo == 'startup') {
             $rodadaInvestidor->update([
-                    'status_contrato_startup' => 2,
+                    'status_contrato_startup' => 4,
                     'contrato_mutou_original' => $pathDoc
                 ]);
         } else if ($currentUser->tipo == 'investidor') {
             $rodadaInvestidor->update([
-                    'status_contrato_investidor' => 3,
+                    'status_contrato_investidor' => 4,
                     'contrato_mutou_original' => $pathDoc
                 ]);
         }

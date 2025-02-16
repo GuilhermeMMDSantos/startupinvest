@@ -38,7 +38,7 @@
                     @elseif($investidor->status_contrato_investidor == 3)
                     <p style="text-align:center;">Descordou Com os Termos do Contrato</p>
 
-                    @elseif($investidor->status_contrato_investidor == 2)
+                    @elseif($investidor->status_contrato_investidor == 4)
                     <p style="text-align:center;">Assinado Pelo Investidor</p>
                     @endif
 
@@ -90,7 +90,7 @@
             <a rule="button" href="{{route('mensagens_post',['id_other' => $rodada->fk_startup])}}" class="btn btn-outline-primary"><i class="fas fa-comments"></i> Iniciar Meeting</a>
             @endif
 
-            @if ($investidor->status_contrato_investidor != 2 && $investidor->status_contrato_investidor != 3)
+            @if ($investidor->status_contrato_investidor != 4 && $investidor->status_contrato_investidor != 3)
             <button type="button" class="btn btn-outline-danger" id="btn-discordar-contrato"><i class="fas fa-ban"></i> Discordar Contrato</button>
             @endif
 

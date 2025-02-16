@@ -43,7 +43,7 @@
 
                     @elseif($investidor->status_contrato_investidor == 1)
                     <p style="text-align:center;">Assinatura do Investidor em Falta.</p>
-                    @elseif($investidor->status_contrato_investidor == 2)
+                    @elseif($investidor->status_contrato_investidor == 4)
                     <p style="text-align:center;">Assinado Pelo Investidor</p>
                     @endif
 
@@ -90,7 +90,7 @@
                 <i class="fas fa-file-contract"></i> Ler Contrato
             </button>
 
-            @if ($investidor->status_contrato_investidor != 2)
+            @if ($investidor->status_contrato_investidor != 4)
             <button class="btn btn btn-outline-danger btn-eliminar-contrato"
                 linker="{{ $investidor->fk_investidor }}"
                 ><i class="fas fa-ban"></i> Eliminar

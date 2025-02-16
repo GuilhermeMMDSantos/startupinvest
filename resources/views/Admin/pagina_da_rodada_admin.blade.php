@@ -45,7 +45,7 @@
             </div>
         @endif
         <h5 style="color:#818182;">Investidores na Rodada</h5>
-        <div class="container-fluid">
+        
             <div class="row">
                 @forelse($investidores as $investidor)
                     <div class="col-sm-6 col-12">
@@ -82,7 +82,7 @@
                     </div>
                 @endforelse
             </div>
-        </div>
+        
 
     </section>
 @endsection
