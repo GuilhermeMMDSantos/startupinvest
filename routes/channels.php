@@ -44,6 +44,11 @@ Broadcast::channel('adicionar-contrato-channel.{toUser}', function ($user,$toUse
   return (int) $user->id === (int) $toUser;
 });
 
+Broadcast::channel('adicionar-comprovativo-assinatura-channel.{toUser}', function ($user,$toUser) {
+  return (int) $user->id === (int) $toUser;
+});
+
+
 Broadcast::channel('send-message-channel.{toUser}', function ($user,$toUser) {
   return (int) $user->id === (int) $toUser;
 });

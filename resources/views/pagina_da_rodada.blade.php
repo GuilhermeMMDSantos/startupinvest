@@ -164,8 +164,12 @@
 
     Echo.private('adicionar-contrato-channel.' + '{{ $presentUser }}')
         .listen('AdicionarContrato', function(e) {
-            console.log("Adicionar contrato. user: ");
-            console.log('{{ $presentUser }}');
+            loadInvestorIntoTheRound();
+
+        });
+
+    Echo.private('adicionar-comprovativo-assinatura-channel.' + '{{ $presentUser }}')
+        .listen('AdicionarComprovativoAssinatura', function(e) {
             loadInvestorIntoTheRound();
 
         });

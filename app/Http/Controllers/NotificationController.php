@@ -47,7 +47,7 @@ class NotificationController extends Controller
             'status' => 'clicado'
         ]);
 
-        if ($notification->tipo == 'add_contrato')
+        if ($notification->tipo == 'add_contrato' || $notification->tipo == 'add_comprovativo')
             return redirect()->route('rodada.page', ['id_rodada' => $notification->fk_user_origin]);
         else
             return redirect()->route('startup.perfil', ['codeUser' => $notification->userdeorigem->code_user]);

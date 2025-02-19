@@ -101,6 +101,36 @@ $(function () {
     });
 
 
+
+    $("#container-investor-na-rodada").on('change', '.load-comprovativo-assinatura', function () {
+        let comprovativoAssinatura = $(this).prop("files")[0];
+        let investor = $(this).data("investor");
+        let rodadaId = $("#title-page").attr('val');
+        let myForm = new FormData();
+        
+        $("#comprovativo-content" + investor).empty();
+        $("#comprovativo-content" + investor).append(loader);
+        myForm.append('csrftokenmiddlewaretoken', "{{csrf_token()}}");
+        myForm.append('investor', investor);
+        myForm.append('rodadaId', rodadaId);
+        myForm.append('file', comprovativoAssinatura);
+
+        $.ajax({
+            url:"/save_comprovativo_assinatura_startup",
+            type:"POST",
+            contentType:false,
+            processData:false,
+            data:myForm,
+            success:function(response){
+                $("#comprovativo-content" + investor).empty();
+                $("#comprovativo-content" + investor).append(response['html']);
+            },
+            error:function(error){
+                console.log("Erro ao submeter comprovativo de assinatura da startup");
+            }
+        });
+    });
+
     $("#container-investor-into-the-round").on("click", "#btn-discordar-contrato", async function () {
         const { value: text } = await Swal.fire({
             input: "textarea",

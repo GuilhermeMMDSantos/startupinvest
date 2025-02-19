@@ -22,6 +22,7 @@ use App\Events\AnularRodada;
 use App\Events\AbrirRodada;
 use App\PermissoesVerPitch;
 use App\EntradaDoModelo;
+use App\Events\AdicionarComprovativoAssinatura;
 use App\Events\AdicionarContrato;
 use App\Events\DiscordarContrato;
 use App\SaidaDoModelo;
@@ -75,12 +76,17 @@ class RodadasController extends Controller
         $rodada = RodadasInvestimento::where('id', $idRodada)->first();
         $investidores = [];
         $investidor = null;
+        $isInvestor = false;
 
-        if (Auth::user()->tipo == 'startup') {
-            $investidores = RodadasInvestidores::where('fk_rodada', $idRodada)->get();
+        if (Auth::user()->tipo == 'investidor') {
+            $isInvestor = true;
         } 
-            
-        $rodada = RodadasInvestimento::where('id', $idRodada)->first();
+        
+        $investidores = RodadasInvestidores::where('fk_rodada', $idRodada)
+        ->when($isInvestor, function($query) use($presentUser){
+            return $query->where('fk_investidor','!=',$presentUser);
+        })
+        ->get();
         $html = view("blocos_html/investorsIntoTheRound", compact('investidores','investidor', 'rodada', 'presentUser'))->render();
 
         return response()->json(['html' => $html], 200);
@@ -97,10 +103,65 @@ class RodadasController extends Controller
 
             $investidor =  RodadasInvestidores::where('fk_rodada', $idRodada)->where('fk_investidor', Auth::user()->id)->first();
         }
-        $rodada = RodadasInvestimento::where('id', $idRodada)->first();
+       
         $html = view("blocos_html/investorIntoTheRound", compact('investidor', 'rodada', 'presentUser'))->render();
 
         return response()->json(['html' => $html], 200);
+    }
+
+
+    public function saveComprovativoAssinatura(Request $request){
+
+        
+        $file = $request->file('file');
+        $idInvestor = $request->investor;
+        $presentUser = Auth::user()->id;
+        $idRodada = $request->rodadaId;
+        $currentDate = Carbon::now()->format('Ymdhs');
+
+
+        if (empty($file))
+            return response()->json(['error' => 'file verification', 'message' => 'The file not informed'], 500);
+        $extensionFile = $request->file('file')->extension();
+        $contract = "comprovativo_assinatura{$presentUser}{$idRodada}{$idInvestor}{$currentDate}.{$extensionFile}";
+        try {
+            $path = $request->file('file')->storeAs('armazenamento/comprovativos_assinatura', $contract);
+            RodadasInvestidores::where([
+                ['fk_rodada', $idRodada],
+                ['fk_investidor', $idInvestor]
+            ])
+                ->update([
+                    'comprovativo_assinatura' => $path,
+                ]);
+            
+                $rodada = RodadasInvestimento::where('id',$idRodada)->first();
+                Notifications::create([
+                    'message' => "A startup {$rodada->startup->nome}, Submeteu Video Comprovativo da Assinatura.",
+                    'fk_user_distination' => $idInvestor,
+                    'fk_user_origin' =>  $idRodada,
+                    'status' => 'nao_visto',
+                    'tipo' => 'add_comprovativo'
+                ]);
+
+                $notificacoes = Notifications::where('fk_user_distination',$idInvestor)
+                    ->where('status', 'nao_visto')
+                    ->get();
+
+                $qtdNotification = (int)count($notificacoes);
+
+               $user = User::where('id', $idInvestor)->first();
+
+                $html = view('blocos_html/content_comprovativo_assinatura', compact('path'))->render();
+
+               $user->notify(new Notificao($qtdNotification));
+                event(new AdicionarComprovativoAssinatura($idInvestor));
+            
+            
+        } catch (ErrorException $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+        return response()->json(['html' => $html], 200);
+
     }
 
 

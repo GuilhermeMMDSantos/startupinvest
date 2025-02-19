@@ -1,69 +1,99 @@
 @forelse($investidores as $investidor)
 <div class="col-sm-6 col-12">
     <div class="card  h-100">
-        <div class="card-body row card-investor-rodada">
-            <div class="col-12 col-sm-8">
-                <p>
-                    <span class="badge badge-primary">Investidor</span>&nbsp;<a
-                        href="{{ route('startup.perfil', $investidor->investidor->user->code_user) }}">{{ $investidor->investidor->nome_completo }}</a>
-                </p>
-                <p>
-                    <span
-                        class="badge badge-primary">Aportado</span>&nbsp;<span>{{ number_format($investidor->valor_investido, 2, ',', '.') }}
-                        AOA</span>
-                </p>
-                <p>
-                    <span class="badge badge-primary">Porcentagem</span>&nbsp;<span>
-                        {{ $investidor->acoes_adquirida }}%</span>
-                </p>
-            </div>
-            <div class="col-12 col-sm-4" style="text-align:center;">
-                <p style="text-align:center;"><span class="badge badge-primary">Situação</span></p>
-                <div id="situation-container{{ $investidor->fk_investidor }}"
-                    class="situation-container">
-                    @if ($investidor->status_investimento == 0)
-                    @if ($rodada->estado == 'fechada' && $presentUser == $rodada->fk_startup)
-                    @if ($investidor->contrato_mutou == null)
-                    <p style="text-align:center;"> Contracto de Investimento Pendente.</p>
-                    <input type="file" class="field-contract-2"
-                        linker="{{ $investidor->fk_investidor }}" accept=".pdf"
-                        name="contrato_investimento"
-                        id="load-contrato-investimento{{ $investidor->fk_investidor }}"
-                        hidden>
+        <div class="card-body card-investor-rodada">
+            <div class="row">
+                <div class="col-12 col-sm-8">
+                    <p>
+                        <span class="badge badge-primary">Investidor</span>&nbsp;<a
+                            href="{{ route('startup.perfil', $investidor->investidor->user->code_user) }}">{{ $investidor->investidor->nome_completo }}</a>
+                    </p>
+                    <p>
+                        <span
+                            class="badge badge-primary">Aportado</span>&nbsp;<span>{{ number_format($investidor->valor_investido, 2, ',', '.') }}
+                            AOA</span>
+                    </p>
+                    <p>
+                        <span class="badge badge-primary">Porcentagem</span>&nbsp;<span>
+                            {{ $investidor->acoes_adquirida }}%</span>
+                    </p>
 
-                    @else
-                    <div style="width:90px;height:90px;border:1px solid #ccc;margin:auto;">
-                        <img src="{{ asset('assets/img/contract.png') }}"
-                            class="w-100 h-100" />
+                </div>
+                <div class="col-12 col-sm-4" style="text-align:center;">
+                    @if($presentUser == $rodada->fk_startup)
+                    <p style="text-align:center;"><span class="badge badge-primary">Contrato</span></p>
+                    @endif
+                    <div id="situation-container{{ $investidor->fk_investidor }}"
+                        class="situation-container">
+                        @if ($investidor->status_investimento == 0)
+                        @if ($rodada->estado == 'fechada' && $presentUser == $rodada->fk_startup)
+                        @if ($investidor->contrato_mutou == null)
+                        <p style="text-align:center; font-size:12px;"> Contracto de Investimento Pendente.</p>
+                        <input type="file" class="field-contract-2"
+                            linker="{{ $investidor->fk_investidor }}" accept=".pdf"
+                            name="contrato_investimento"
+                            id="load-contrato-investimento{{ $investidor->fk_investidor }}"
+                            hidden>
+
+                        @else
+                        <div style="width:90px;height:90px;border:1px solid #ccc;margin:auto;">
+                            <img src="{{ asset('assets/img/contract.png') }}"
+                                class="w-100 h-100" />
+                        </div>
+
+
+                        @if ($investidor->status_contrato_investidor == 3)
+                        <p style="text-align:center; font-size:12px;">Investidor Discorda Com os Termos do Contrato.</p>
+
+                        @elseif($investidor->status_contrato_investidor == 1)
+                        <p style="text-align:center; font-size:12px;">Assinatura do Investidor em Falta.</p>
+                        @elseif($investidor->status_contrato_investidor == 4)
+                        <p style="text-align:center; font-size:12px;">Assinado Pelo Investidor</p>
+                        @endif
+
+                        @if ($investidor->status_contrato_startup == 1)
+                        <p style="text-align:center; font-size:12px;">Assinatura do Sócio Fundador em Falta</p>
+
+                        @elseif($investidor->status_contrato_startup == 4)
+                        <p style="text-align:center; font-size:12px;">Assinado Pelo Sócio Fundador</p>
+                        @endif
+                        @endif
+                        @elseif($rodada->estado == 'aberta')
+                        Investimento Captado.
+                        @endif
+                        @elseif($investidor->status_investimento == 1)
+                        Investimento Reembolsado.
+                        @elseif($investidor->status_investimento == 2)
+                        Investimento Não Reembolsado
+                        @endif
                     </div>
-
-
-                    @if ($investidor->status_contrato_investidor == 3)
-                    <p style="text-align:center;">Investidor Discorda Com os Termos do Contrato.</p>
-
-                    @elseif($investidor->status_contrato_investidor == 1)
-                    <p style="text-align:center;">Assinatura do Investidor em Falta.</p>
-                    @elseif($investidor->status_contrato_investidor == 4)
-                    <p style="text-align:center;">Assinado Pelo Investidor</p>
-                    @endif
-
-                    @if ($investidor->status_contrato_startup == 1)
-                    <p style="text-align:center;">Assinatura do Sócio Fundador em Falta</p>
-
-                    @elseif($investidor->status_contrato_startup == 4)
-                    <p style="text-align:center;">Assinado Pelo Sócio Fundador</p>
-                    @endif
-                    @endif
-                    @elseif($rodada->estado == 'aberta')
-                    Investimento Captado.
-                    @endif
-                    @elseif($investidor->status_investimento == 1)
-                    Investimento Reembolsado.
-                    @elseif($investidor->status_investimento == 2)
-                    Investimento Não Reembolsado
-                    @endif
                 </div>
             </div>
+            @if($presentUser == $rodada->fk_startup)
+            <div class="row">
+                <div class="col-12">
+                    
+                <h6 class="badge badge-primary">Confirmação da Assinatura de Contrato</h6>
+                    <div id="comprovativo-content{{$investidor->fk_investidor}}">
+                        @if($investidor->comprovativo_assinatura == null)
+                        <div class="alert alert-info" role="alert">
+                            <p style="font-size:14px;">Após as assinaturas, A startup, deve submeter um video feito pelos sócios fundadores a confirmar a assinatura do contrato com o referido investidor, qual o valor captado com o investidor e qual a porcentagem para o investidor.</p>
+                        </div>
+                        @else
+                        <div>
+                            <div style="border:1px solid #ccc;margin-bottom:10px;">
+                                <video src="{{asset('storage/'.$investidor->comprovativo_assinatura)}}" width="100%" height="80%" controls="true">
+                                </video>
+                            </div>
+                        </div>
+                        @endif
+
+                    </div>
+                    <input type="file" accept=".MP4,.MKV" name="comprovativo_investimento" class="load-comprovativo-assinatura" id="load-comprovativo-assinatura{{ $investidor->fk_investidor }}" data-investor="{{ $investidor->fk_investidor }}" hidden>
+                </div>
+            </div>
+            @endif
+
         </div>
 
 
@@ -75,11 +105,12 @@
             @if ($rodada->estado == 'fechada' && $presentUser == $rodada->fk_startup)
             @if ($investidor->contrato_mutou == null)
             <label type="button" class="btn btn-outline-primary"
-                for="load-contrato-investimento{{ $investidor->fk_investidor }}"
-                ><i class="fas fa-file-contract"></i> Adicionar
+                for="load-contrato-investimento{{ $investidor->fk_investidor }}"><i class="fas fa-file-contract"></i> Adicionar
                 Contrato</label>
             @endif
-            @endif
+
+            @if($investidor->status_contrato_investidor == 4 && $investidor->status_contrato_startup == 4 && $investidor->comprovativo_assinatura == null)
+            <label for="load-comprovativo-assinatura{{ $investidor->fk_investidor }}" type="button" class="btn btn-outline-primary">Adicionar Video</label>
             @endif
 
 
@@ -92,8 +123,7 @@
 
             @if ($investidor->status_contrato_investidor != 4)
             <button class="btn btn btn-outline-danger btn-eliminar-contrato"
-                linker="{{ $investidor->fk_investidor }}"
-                ><i class="fas fa-ban"></i> Eliminar
+                linker="{{ $investidor->fk_investidor }}"><i class="fas fa-ban"></i> Eliminar
                 Contrato</button>
             @endif
 
@@ -109,6 +139,9 @@
                 data-origin=2>
                 <i class="fas fa-pen"></i> Assinar Contrato
             </button>
+            @endif
+            @endif
+
             @endif
             @endif
         </div>

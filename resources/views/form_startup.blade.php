@@ -49,7 +49,7 @@
                 </div>
                 <div class="col">
                     <label for="mvp" class="label_emp" >Apresentação do MVP (Video - <span id="mvp-label-tamanho">max.64MB</span>)</label>
-                    <input class="form-control" accept=".MP4,MKV" type="file" id="mvp" name="mvp">
+                    <input class="form-control" accept=".MP4,.MKV" type="file" id="mvp" name="mvp">
                 </div>
             </div>
 

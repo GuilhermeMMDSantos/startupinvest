@@ -182,6 +182,8 @@ Route::get('/load_intro_rodada', 'RodadasController@load_intro_rodada');
 Route::get('/load_investors_into_the_round', 'RodadasController@loadInvestorsIntoTheRound');
 Route::get('/load_investor_into_the_round', 'RodadasController@loadInvestorIntoTheRound');
 
+Route::post('/save_comprovativo_assinatura_startup', 'RodadasController@saveComprovativoAssinatura');
+
 
 Route::get('/TESTE','PagamentosController@teste');
 

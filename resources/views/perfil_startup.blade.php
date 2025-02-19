@@ -346,9 +346,6 @@
 
 
             //SOBRE OFERTA
-            $("#input-pitch-video").change(function() {
-                $("#input-aux-pitch-video").val($(this)[0].files[0].name);
-            });
 
             $('#modal-adicionar-oferta').on('hidden.bs.modal', function(e) {
                 $("#btn-spinner-oferta").css({
