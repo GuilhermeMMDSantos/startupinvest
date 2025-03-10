@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use App\RodadasInvestidores;
 use App\RodadasInvestimento;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
@@ -90,8 +91,86 @@ class AdminController extends Controller
 
     public function showRodadaPage(Request $request)
     {
+        $canInvest = 0;
         $investidores = RodadasInvestidores::where('fk_rodada', $request->id_rodada)->get();
         $rodada = RodadasInvestimento::where('id', $request->id_rodada)->first();
-        return view('Admin/pagina_da_rodada_admin', compact( 'investidores', 'rodada'))->render();
+
+        $rodadaInvestidores = RodadasInvestidores::where('fk_rodada', $request->id_rodada)
+            ->where(function ($query) {
+                return $query->whereNull('contrato_mutou')
+                    ->orWhere('status_contrato_investidor', '!=', 4)
+                    ->orWhere('status_contrato_startup', '!=', 4)
+                    ->orWhereNull('comprovativo_assinatura')
+                    ->get();
+            })
+            ->get();
+
+        $canInvest = $rodadaInvestidores->count();
+
+        $rodadaId = $rodada->id;
+
+        return view('Admin/pagina_da_rodada_admin', compact('investidores', 'rodada', 'rodadaId', 'canInvest'))->render();
+    }
+
+    public function loadBtnTransferComprovativo(Request $request) {
+        $rodadaId = $request->rodadaId;
+        $html = null;
+        $case = 0;
+
+        $rodadaInvestidores = RodadasInvestidores::where('fk_rodada', $rodadaId)
+            ->where(function ($query) {
+                return $query->whereNull('contrato_mutou')
+                    ->orWhere('status_contrato_investidor', '!=', 4)
+                    ->orWhere('status_contrato_startup', '!=', 4)
+                    ->orWhereNull('comprovativo_assinatura')
+                    ->get();
+            })
+            ->get();
+
+        $rodada = RodadasInvestimento::where('id', $rodadaId)
+        ->first();
+
+        if ($rodadaInvestidores->count() == 0 && $rodada->estado == 'fechada')
+            $html = view('Admin/btn_send_money_to_startup', compact('rodada'))->render();
+        else if($rodada->estado == 'sucedida')
+            $html = view('Admin/comprovativo_send_money_to_startup', compact('rodada'))->render();
+        else
+            $case = 1;
+        return response()->json([
+            'html' => $html,
+            'case' => $case
+        ], 200);
+    }
+
+    public function sendMoneyToStartup(Request $request)
+    {
+        $validate = Validator::make(
+            $request->all(),
+            [
+                'identify' => 'required|numeric',
+                'comprovativo_transferencia' => 'required|file|mimes:pdf'
+            ],
+            [
+                'identify.required' => 'Id da Rodada em falta',
+                'comprovativo_transferencia.required' => 'Comprovativo em Falta',
+                'comprovativo_transferencia.file' => 'Comprovativo deve ser Arquivo',
+                'comprovativo_transferencia.mimes' => 'Comprovativo deve ser Arquivo PDF'
+            ]
+        );
+
+        $extensao = $request->file('comprovativo_transferencia')->extension();
+
+
+
+        $newName = "comprovativo_send{$request->identify}.{$extensao}";
+        $path = $request->file('comprovativo_transferencia')->storeAs('armazenamento/comprovativo_send_money_to_startup', $newName);
+
+        RodadasInvestimento::where('id', $request->identify)
+            ->where('estado', 'fechada')
+            ->update([
+                'estado' => 'sucedida',
+                'comprovativo' => $path
+            ]);
+        return response()->json(NULL, 200);
     }
 }

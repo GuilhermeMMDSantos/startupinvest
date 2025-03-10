@@ -17,7 +17,8 @@ class RodadasInvestimento extends Model
         'valor_minimo_investimento',
         'data_limite',
         'estado',
-        'potencial_de_crescimento'
+        'potencial_de_crescimento',
+        'comprovativo'
     ];
 
 

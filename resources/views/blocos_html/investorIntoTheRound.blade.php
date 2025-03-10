@@ -2,7 +2,7 @@
 <div class="col-12">
     <div class="card">
         <div class="card-body row">
-            <div class="col-sm-4 col-12">
+            <div class="col-sm-6 col-12">
                 <p>
                     <span class="badge badge-primary">Startup</span>&nbsp;<a
                         href="{{ route('startup.perfil', $investidor->rodada->startup->user->code_user) }}"
@@ -17,12 +17,23 @@
                     <span class="badge badge-primary">Porcentagem</span>&nbsp;<span style="font-size:20px;">
                         {{ $investidor->acoes_adquirida }}%</span>
                 </p>
+
+                <div>
+                    <h6 class="badge badge-primary">Confirmação da Assinatura de Contrato</h6><br>
+                    @if($investidor->comprovativo_assinatura == null)
+                    <div class="alert alert-info" role="alert">
+                        <p style="font-size:14px;">Após as assinaturas, A startup, deve submeter um video feito pelos sócios fundadores a confirmar a assinatura do contrato com o referido investidor, qual o valor captado com o investidor e qual a porcentagem para o investidor.</p>
+                    </div>
+                    @else
+                    <a href="{{asset('storage/'.$investidor->comprovativo_assinatura)}}" target="_blank"><i class="fas fa-film"></i> Comprovativo de Assinatura da Startup</a>
+                    @endif
+                </div>
             </div>
-            <div class="col-sm-4 col-12 ">
+            <div class="col-sm-6 col-12 ">
                 <p style="text-align:center;"><span class="badge badge-primary">Contrato</span></p>
                 <div id="investor-invest-situation-container">
-                    @if ($investidor->status_investimento == 0)
-                    @if ($rodada->estado == 'fechada' && $presentUser == $investidor->investidor->fk_user)
+                    @if ($investidor->status_investimento != 1 && $investidor->status_investimento != 2)
+                    @if ( ($rodada->estado == 'fechada' || $rodada->estado == 'sucedida') && $presentUser == $investidor->investidor->fk_user)
                     @if ($investidor->contrato_mutou == null)
                     <p style="text-align:center; font-size:12px;"> Contracto de Investimento Pendente.</p>
                     @else
@@ -67,35 +78,28 @@
             </div>
 
 
-            <div class="col-12 col-sm-4">
-                
-            <h6 class="badge badge-primary">Confirmação da Assinatura de Contrato</h6>
-                @if($investidor->comprovativo_assinatura == null)
-                <div class="alert alert-info" role="alert">
-                    <p style="font-size:14px;">Após as assinaturas, A startup, deve submeter um video feito pelos sócios fundadores a confirmar a assinatura do contrato com o referido investidor, qual o valor captado com o investidor e qual a porcentagem para o investidor.</p>
-                </div>
-                @else
-                <div>
-                    <div style="border:1px solid #ccc;margin-bottom:10px;">
-                        <video src="{{asset('storage/'.$investidor->comprovativo_assinatura)}}" width="100%" height="80%" controls="true">
-                        </video>
-                    </div>
-                </div>
-                @endif
-            </div>
-
         </div>
 
         <div class="card-footer text-right bg-light">
 
-            @if ($rodada->estado == 'fechada' && $presentUser == $investidor->investidor->fk_user)
+            @if (($rodada->estado == 'fechada' || $rodada->estado == 'sucedida') && $presentUser == $investidor->investidor->fk_user)
             @if ($investidor->contrato_mutou != null)
+
+            @if($rodada->estado == 'sucedida')
+
+            <a rule="button" href="{{asset('storage/'.$investidor->contrato_mutou)}}" target="_blank" class="btn btn-primary">
+                <i class="fas fa-file-contract"></i> Ler Contrato
+            </a>
+
+            @else
 
             <button type="button" class="btn btn-primary" data-toggle="modal"
                 data-target="#pdfModal" data-doc="{{ $investidor->contrato_mutou }}"
                 data-origin=1>
                 <i class="fas fa-file-contract"></i> Ler Contrato
             </button>
+
+            @endif
 
             @if ($investidor->status_contrato_investidor == 1)
             <button type="button" class="btn btn-outline-primary" data-toggle="modal"

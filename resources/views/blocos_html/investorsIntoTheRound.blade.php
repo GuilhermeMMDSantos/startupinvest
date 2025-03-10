@@ -17,7 +17,22 @@
                         <span class="badge badge-primary">Porcentagem</span>&nbsp;<span>
                             {{ $investidor->acoes_adquirida }}%</span>
                     </p>
+                    @if($presentUser == $rodada->fk_startup)
+                    <div>
+                        <h6 class="badge badge-primary">Confirmação da Assinatura de Contrato</h6><br>
+                        <div id="comprovativo-content{{$investidor->fk_investidor}}">
+                            @if($investidor->comprovativo_assinatura == null)
+                            <div class="alert alert-info" role="alert">
+                                <p style="font-size:14px;">Após as assinaturas, A startup, deve submeter um video feito pelos sócios fundadores a confirmar a assinatura do contrato com o referido investidor, qual o valor captado com o investidor e qual a porcentagem para o investidor.</p>
+                            </div>
+                            @else
+                            <a href="{{asset('storage/'.$investidor->comprovativo_assinatura)}}" target="_blank"><i class="fas fa-film"></i> Comprovativo de Assinatura da Startup</a>
+                            @endif
 
+                        </div>
+                        <input type="file" accept=".MP4,.MKV" name="comprovativo_investimento" class="load-comprovativo-assinatura" id="load-comprovativo-assinatura{{ $investidor->fk_investidor }}" data-investor="{{ $investidor->fk_investidor }}" hidden>
+                    </div>
+                    @endif
                 </div>
                 <div class="col-12 col-sm-4" style="text-align:center;">
                     @if($presentUser == $rodada->fk_startup)
@@ -25,8 +40,8 @@
                     @endif
                     <div id="situation-container{{ $investidor->fk_investidor }}"
                         class="situation-container">
-                        @if ($investidor->status_investimento == 0)
-                        @if ($rodada->estado == 'fechada' && $presentUser == $rodada->fk_startup)
+                        @if ($investidor->status_investimento != 1 && $investidor->status_investimento != 2)
+                        @if (($rodada->estado == 'fechada' || $rodada->estado == 'sucedida') && $presentUser == $rodada->fk_startup)
                         @if ($investidor->contrato_mutou == null)
                         <p style="text-align:center; font-size:12px;"> Contracto de Investimento Pendente.</p>
                         <input type="file" class="field-contract-2"
@@ -69,30 +84,7 @@
                     </div>
                 </div>
             </div>
-            @if($presentUser == $rodada->fk_startup)
-            <div class="row">
-                <div class="col-12">
-                    
-                <h6 class="badge badge-primary">Confirmação da Assinatura de Contrato</h6>
-                    <div id="comprovativo-content{{$investidor->fk_investidor}}">
-                        @if($investidor->comprovativo_assinatura == null)
-                        <div class="alert alert-info" role="alert">
-                            <p style="font-size:14px;">Após as assinaturas, A startup, deve submeter um video feito pelos sócios fundadores a confirmar a assinatura do contrato com o referido investidor, qual o valor captado com o investidor e qual a porcentagem para o investidor.</p>
-                        </div>
-                        @else
-                        <div>
-                            <div style="border:1px solid #ccc;margin-bottom:10px;">
-                                <video src="{{asset('storage/'.$investidor->comprovativo_assinatura)}}" width="100%" height="80%" controls="true">
-                                </video>
-                            </div>
-                        </div>
-                        @endif
 
-                    </div>
-                    <input type="file" accept=".MP4,.MKV" name="comprovativo_investimento" class="load-comprovativo-assinatura" id="load-comprovativo-assinatura{{ $investidor->fk_investidor }}" data-investor="{{ $investidor->fk_investidor }}" hidden>
-                </div>
-            </div>
-            @endif
 
         </div>
 
@@ -101,8 +93,8 @@
 
         <div class="card-footer text-right bg-light situation-container">
 
-            @if ($investidor->status_investimento == 0)
-            @if ($rodada->estado == 'fechada' && $presentUser == $rodada->fk_startup)
+            @if ($investidor->status_investimento != 1 && $investidor->status_investimento != 2)
+            @if (($rodada->estado == 'fechada' || $rodada->estado == 'sucedida') && $presentUser == $rodada->fk_startup)
             @if ($investidor->contrato_mutou == null)
             <label type="button" class="btn btn-outline-primary"
                 for="load-contrato-investimento{{ $investidor->fk_investidor }}"><i class="fas fa-file-contract"></i> Adicionar
@@ -115,11 +107,23 @@
 
 
             @if ($investidor->contrato_mutou != null)
+
+
+            @if($rodada->estado == 'sucedida')
+
+            <a rule="button" href="{{asset('storage/'.$investidor->contrato_mutou)}}" target="_blank" class="btn btn-primary">
+                <i class="fas fa-file-contract"></i> Ler Contrato
+            </a>
+
+            @else
+
             <button type="button" class="btn btn-primary" data-toggle="modal"
                 data-target="#pdfModal"
                 data-doc="{{ $investidor->contrato_mutou }}" data-origin=1>
                 <i class="fas fa-file-contract"></i> Ler Contrato
             </button>
+            
+            @endif
 
             @if ($investidor->status_contrato_investidor != 4)
             <button class="btn btn btn-outline-danger btn-eliminar-contrato"

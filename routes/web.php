@@ -229,3 +229,8 @@ Route::get('/captureP', 'PagamentosController@getAprovalInvest')->name('paypal.s
 Route::get('/get_avaluation', 'userController@getAvaluation')->middleware('auth.ajax');
 
 Route::post('/set_reference_payment', 'PagamentosController@setRefPayment' )->middleware('auth.ajax');
+
+Route::post('/send_money_to_startup', 'AdminController@sendMoneyToStartup')->middleware('auth.ajax');
+
+
+Route::get('/load_btnTransfer_comprovativo', 'AdminController@loadBtnTransferComprovativo')->middleware('auth.ajax');
