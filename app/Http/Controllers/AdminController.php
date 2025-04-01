@@ -169,7 +169,8 @@ class AdminController extends Controller
             ->where('estado', 'fechada')
             ->update([
                 'estado' => 'sucedida',
-                'comprovativo' => $path
+                'comprovativo' => $path,
+                'status_investimento' => 3
             ]);
         return response()->json(NULL, 200);
     }

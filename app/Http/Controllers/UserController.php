@@ -374,7 +374,13 @@ class UserController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
 
-        if (!empty($rodada)) {
+        if (!empty($rodada) && ($rodada->estado == 'sucedida' || $rodada->estado == 'fechada')) {
+            $rodada->update([
+                'data_limite' => Carbon::now()->addYears(1)
+            ]);
+        }
+
+        if (!empty($rodada) && $rodada->estado != 'sucedida' &&  $rodada->estado != 'fechada') {
             $idRodada = $rodada->id;
             if ($rodada->tempo_restante < 0) {
 
@@ -388,7 +394,7 @@ class UserController extends Controller
                     ]);
                 PermissoesVerPitch::where('fk_rodada', $idRodada)
                     ->update([
-                        'estado' => 'expirado'
+                        'estado' => 'expirada'
                     ]);
             }
         }

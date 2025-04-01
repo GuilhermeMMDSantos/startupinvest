@@ -136,7 +136,7 @@
 
     <section class="profile-container container-fluid">
 
-        <div id="container-introducao-investidor">
+        <div id="container-introducao-investidor"  class="justify-content-center">
             <div class="d-flex justify-content-center " style="width:100%;height:120px;">
                 <div class="spinner-border align-self-center" style="width: 7rem; height: 7rem;" role="status">
                     <span class="sr-only">Loading...</span>

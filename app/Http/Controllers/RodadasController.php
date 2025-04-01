@@ -30,6 +30,7 @@ use App\Services\MachineLearningService;
 use Illuminate\Validation\ValidationException;
 use App\Notifications\Notificao;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 
 class RodadasController extends Controller
 {
@@ -87,6 +88,7 @@ class RodadasController extends Controller
             return $query->where('fk_investidor','!=',$presentUser);
         })
         ->get();
+
         $html = view("blocos_html/investorsIntoTheRound", compact('investidores','investidor', 'rodada', 'presentUser'))->render();
 
         return response()->json(['html' => $html], 200);
@@ -296,7 +298,8 @@ class RodadasController extends Controller
             ])
                 ->update([
                     'contrato_mutou' => $path,
-                    'contrato_mutou_original' => $path
+                    'contrato_mutou_original' => $path,
+                    'status_contrato_startup' => 1
                 ]);
             
                 $rodada = RodadasInvestimento::where('id',$idRodada)->first();
@@ -476,8 +479,8 @@ class RodadasController extends Controller
         $y = $request->input('point_y');
         $pageToSign =  $request->input('page_sign');
 
-        $mmX = ($x * 210) / 714; // conversão de px para milimetro para resolucao do meu pc. 714px = 210mm
-        $mmY = (($y * 210) / 714) - 13; //particularidade:devo fazer compensacao para o conto inferior esquerdo da assinatura começar a ser desenhada no ponto clicado, senão começaria pelo canto superior esquerdo
+        $mmX = (($x * 210) / 714) - 38; // conversão de px para milimetro para resolucao do meu pc. 714px = 210mm
+        $mmY = (($y * 210) / 714) - 12; //particularidade:devo fazer compensacao para o conto inferior esquerdo da assinatura começar a ser desenhada no ponto clicado, senão começaria pelo canto superior esquerdo
 
         $signatureData = $request->input('signature');
         $public_path = public_path();

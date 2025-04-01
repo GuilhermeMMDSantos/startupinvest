@@ -39,7 +39,7 @@
         <input type="number" class="form-control" id="qtd_exp_tecnica" name="qtd_exp_tecnica" required>
     </div>
     <div class="form-group">
-        <label for="media_experiencia">Qual é a média de experiência da sua equipe?
+        <label for="media_experiencia">Qual é a média de experiência da sua equipe no sector(anos)?
             <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top"
                 title="Levante os anos de experiência profissional de cada membro da equipe em gestão, contabilidade, área técnica e divida pelo número de membros na equipa ."></i>
         </label>
@@ -47,7 +47,7 @@
             name="media_experiencia"  required>
     </div>
     <div class="form-group">
-        <label for="tempo_trabalho_juntos">Há quanto tempo sua equipe trabalha junta?</label>
+        <label for="tempo_trabalho_juntos">Há quanto tempo sua equipe trabalha junta (anos)?</label>
         <input type="number" class="form-control" id="tempo_trabalho_juntos" name="tempo_trabalho_juntos"  required>
     </div>
     <div class="form-group">

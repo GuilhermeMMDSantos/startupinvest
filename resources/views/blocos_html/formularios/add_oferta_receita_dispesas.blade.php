@@ -76,14 +76,14 @@
         <input type="number" class="form-control" id="margem_liquida" name="margem_liquida"required>
     </div>
     <div class="form-group">
-        <label for="despesas_operacionais_fixas">Quais são as suas despesas operacionais
-            fixas(Kz)?</label>
+        <label for="despesas_operacionais_fixas">Qual é despesas operacional
+            fixa(Kz)?</label>
         <input type="number" class="form-control" id="despesas_operacionais_fixas"
             name="despesas_operacionais_fixas" required>
     </div>
     <div class="form-group">
-        <label for="despesas_operacionais_variaveis">Quais são as suas despesas operacionais
-            variáveis(Kz)?</label>
+        <label for="despesas_operacionais_variaveis">Qual é despesa operacional
+            variável(Kz)?</label>
         <input type="number" class="form-control" id="despesas_operacionais_variaveis"
             name="despesas_operacionais_variaveis" required>
     </div>
