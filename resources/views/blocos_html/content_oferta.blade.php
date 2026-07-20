@@ -60,7 +60,7 @@
                             <span class="font-weight-bold d-block">Referência Bancária</span>
                             <h5 class="text-success" style="letter-spacing: 5px;">{{ $referenceValue }}</h5>
                         @else
-                            <button id="btn-participar-rodada" data-toggle="modal" data-target="#modal-investir"
+                            <button id="btn-participar-rodada" data-bs-toggle="modal" data-bs-target="#modal-investir"
                                 class="btn btn-lg btn-success btn-block">
                                 Participar na rodada
                             </button>

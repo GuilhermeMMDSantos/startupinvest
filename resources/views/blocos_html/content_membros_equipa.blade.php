@@ -26,7 +26,7 @@
         </div>
         @if($myprofile)
         <div class="card-footer">
-            <button type="button" class="btn btn-primary btn-editar" data-toggle="modal" data-target="#modal-excluir-membro-startup" data-code="{{$membro->id}}">Eliminar</button>
+            <button type="button" class="btn btn-primary btn-editar" data-bs-toggle="modal" data-bs-target="#modal-excluir-membro-startup" data-code="{{$membro->id}}">Eliminar</button>
         </div>
         @endif
     </div>

@@ -4,33 +4,25 @@
 @endsection
 
 @section('contentBody_base_inicio')
-    <section id="body-section" class="container-fluid" style="padding-left:6.5%;padding-right:6.5%; padding-bottom:10px;">
-
+    <div class="container-fluid py-4 px-4 px-lg-5">
         <div class="card">
-            <div class="card-body">
-                <div id="tolkeed-to" style="width:400px;border:1px solid #ccc;">
-                    <header style="border:1px solid #ccc;">
-                        <h5 style="padding:7px 16px;">
-                            Meetings
-                        </h5>
+            <div class="card-body d-flex gap-3 p-0" style="min-height: 480px;">
+                <div id="tolkeed-to" class="border-end" style="width:340px;">
+                    <header class="border-bottom p-3">
+                        <h5 class="mb-0">Meetings</h5>
                     </header>
                     <div id="tolkeed-to-body">
-                        <div class="d-flex justify-content-center">
+                        <div class="d-flex justify-content-center py-4">
                             <div class="spinner-border" role="status">
-                                <span class="sr-only">Loading...</span>
+                                <span class="visually-hidden">Loading...</span>
                             </div>
                         </div>
                     </div>
-
-
                 </div>
-                <div id="message-contaner">
-
-                </div>
+                <div id="message-contaner" class="flex-grow-1"></div>
             </div>
         </div>
-
-    </section>
+    </div>
 @endsection
 
 

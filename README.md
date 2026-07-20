@@ -1,13 +1,75 @@
-Na fase seed o objectivo do financiamento é: aperfeicoar o produto, alcancar product-market fit e validar o modelo de negocio.
+# startupInveste
 
-A analise do investidor consiste em avaliar: se a startup vai conseguir alcancar o objectivo ou se tem potencial para alcancar o objectivo
+Plataforma de equity-crowdfunding que liga startups angolanas a investidores. Startups criam perfil e rodadas de captação; investidores navegam oportunidades, investem e assinam contratos digitalmente.
 
-a fase seed comeca, assim que a startup atinge o objectivo da fase pre-seed e termina no alcance do objectivo da seed. porem a solucao atua antes de levantar capital seed
+## Stack
 
-Se tiver que criar um modelo de IA que calcula a probabilidade da startup atingir o objectivo, os dados devem ser os estados seed de startups que conseguiram levantar rodada B ou atingiram o breakeven
+- Laravel 7 (PHP 7.4)
+- MySQL 8 + Redis
+- Bootstrap 5 + React (Laravel Mix) para as partes reactivas do Blade
+- Pusher / Laravel WebSockets para notificações e mensagens em tempo real
+- PayPal SDK para pagamentos
 
-este modelo sera servido como API para todos em repositorio publico, mas os dados e o dataset sera segredo
+## Requisitos
 
-Junto poderei ter uma app que os as pessoas que querem avaliar a sua startup, acessam e vai servir de ponto de recolha de dados para melhorar o modelo
+- Docker e Docker Compose
 
-a fase seed é o vale da morte. A serie A os erros sao mais de gestao, precipitacao, nao ter defacto um product-market-fit
+## A correr com Docker
+
+```bash
+cp .env.example .env
+docker compose up --build
+```
+
+Depois, num segundo terminal:
+
+```bash
+docker compose exec app php artisan key:generate
+docker compose exec app php artisan migrate --seed
+```
+
+A aplicação fica disponível em `http://localhost:8000`.
+
+Serviços definidos no `docker-compose.yml`:
+
+| Serviço | Função |
+|---|---|
+| `app` | PHP-FPM (Laravel) |
+| `nginx` | Servidor web, porta `8000` |
+| `mysql` | Base de dados |
+| `redis` | Cache / filas |
+| `queue` | Worker de filas (`queue:work`) |
+| `websockets` | Servidor de websockets (`laravel-websockets`), porta `6001` |
+
+## A correr sem Docker
+
+```bash
+composer install
+npm install && npm run dev
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve
+```
+
+Para notificações/mensagens em tempo real, correr também:
+
+```bash
+php artisan websockets:serve
+php artisan queue:work
+```
+
+## Build de assets
+
+```bash
+npm run dev     # desenvolvimento
+npm run watch   # recompila em cada alteração
+npm run prod    # build de produção
+```
+
+## Estrutura
+
+- `app/` — models, controllers, services
+- `resources/views/` — Blade
+- `resources/js/` — JS/React, `resources/sass/` — estilos
+- `docker/` — configuração de nginx e PHP para os containers

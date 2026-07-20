@@ -38,7 +38,7 @@
     }
 </style>
 
-<div class="modal fade" id="pdfModal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+<div class="modal fade" id="pdfModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
     aria-labelledby="pdfSignModal" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">

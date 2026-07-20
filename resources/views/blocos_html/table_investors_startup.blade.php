@@ -23,9 +23,9 @@
 
             @if($isMyProfile)
             <td style="text-align:center;">
-                <button type="button" class="btn btn-primary btn-editar" data-toggle="modal" data-target="#modal-editar-investidor-startup" data-code="{{$investors->id}}" style="height: 30px;font-size: 12px;">Editar</button>
+                <button type="button" class="btn btn-primary btn-editar" data-bs-toggle="modal" data-bs-target="#modal-editar-investidor-startup" data-code="{{$investors->id}}" style="height: 30px;font-size: 12px;">Editar</button>
                 &nbsp;
-                <button type="button" class="btn btn-primary btn-editar" style="height: 30px;font-size: 12px;" data-toggle="modal" data-target="#modal-excluir-investidor-startup" data-code="{{$investors->id}}">Eliminar</button>
+                <button type="button" class="btn btn-primary btn-editar" style="height: 30px;font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal-excluir-investidor-startup" data-code="{{$investors->id}}">Eliminar</button>
             </td>
             @endif
         </tr>
@@ -38,9 +38,9 @@
             </td>
             @if($isMyProfile)
             <td style="text-align:center;">
-                <button type="button" class="btn btn-primary btn-editar mb-2" data-toggle="modal" data-target="#modal-editar-investidor-startup" data-code="{{$investors->id}}" style="height: 30px;font-size: 12px;display:block;">Editar</button>
+                <button type="button" class="btn btn-primary btn-editar mb-2" data-bs-toggle="modal" data-bs-target="#modal-editar-investidor-startup" data-code="{{$investors->id}}" style="height: 30px;font-size: 12px;display:block;">Editar</button>
                 
-                <button type="button" class="btn btn-primary btn-editar" style="height: 30px;font-size: 12px;" data-toggle="modal" data-target="#modal-excluir-investidor-startup" data-code="{{$investors->id}}">Eliminar</button>
+                <button type="button" class="btn btn-primary btn-editar" style="height: 30px;font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal-excluir-investidor-startup" data-code="{{$investors->id}}">Eliminar</button>
             </td>
             @endif
         </tr>

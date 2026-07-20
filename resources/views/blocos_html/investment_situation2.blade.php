@@ -11,7 +11,7 @@
             <div style="width:90px;height:90px;border:1px solid #ccc;margin:auto;">
                 <img src="{{ asset('assets/img/contract.png') }}" class="w-100 h-100" />
             </div>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pdfModal"
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pdfModal"
                 data-doc="{{ $investidor->contrato_mutou }}" data-origin=1>
                 Ler Contrato
             </button>
@@ -33,7 +33,7 @@
 
             @if ($investidor->status_contrato_startup == 1)
                 <p>Assinatura do Sócio Fundador em Falta</p>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pdfModal"
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pdfModal"
                     data-doc="{{ $investidor->contrato_mutou }}" data-idinvestor="{{ $investidor->fk_investidor }}"
                     data-origin=2>
                     Assinar Contrato

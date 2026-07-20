@@ -1,119 +1,78 @@
 @extends('layout')
 
-@section('stylesheets')
-<link rel="stylesheet" type="text/css" href="{{asset('assets/css/new_home.css')}}">
-
-@endsection
-
 @section('contentBody')
-<div id="header" class="w-100">
-    <div class="container-fluid">
+<nav class="navbar navbar-expand-lg navbar-dark landing-nav">
+    <div class="container-fluid px-4 px-lg-5">
+        <a class="navbar-brand fw-bold" id="logo" href="{{ route('new_home_page') }}">
+            startup<strong>Investe</strong>
+        </a>
 
-        <nav class="navbar navbar-expand-lg navbar-light justify-content-between">
-            <h1 id="logo"><a href="{{route('new_home_page')}}">startup<strong style="color:white !important;">Investe</strong></a></h1>
-
-            <div class=" flex-grow-0" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="{{route('new_login_page')}}">Entrar</a>
-                    </li>
-                    <li class="nav-item ml-4">
-                        <a class="nav-link " href="{{route('new_cadastro_page')}}">Cadastrar</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-
+        <div class="d-flex gap-3">
+            <a class="btn btn-outline-light" href="{{ route('new_login_page') }}">Entrar</a>
+            <a class="btn btn-primary" href="{{ route('new_cadastro_page') }}">Cadastrar</a>
+        </div>
     </div>
-</div>
+</nav>
 
-<div id="slide" class="w-100 mb-4">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-4 align-self-center">
-                <h1 style="font-size:30px;" class="mb-4">
-                    Encontre
-                    potenciais investidores
-                    & oportunidades de
-                    investimento em startups angolanas
+<section class="landing-hero">
+    <div class="container px-4 px-lg-5">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-5">
+                <h1 class="display-5 mb-3">
+                    Encontre potenciais investidores &amp; oportunidades de investimento em startups angolanas
                 </h1>
-                <p style="font-size:20px;">Plataforma de equity-crowdfunding</p>
+                <p class="lead mb-4">Plataforma de equity-crowdfunding</p>
+                <a href="{{ route('new_cadastro_page') }}" class="btn btn-primary btn-lg">Começar agora</a>
             </div>
-            <div class="col-md-8 align-self-center text-center" style="height:480px;" id="img-container">
-                <img src="{{asset('assets/img/3081627.jpg')}}" class="img-fluid h-100 w-100">
+            <div class="col-lg-7">
+                <img src="{{ asset('assets/img/3081627.jpg') }}" class="img-fluid rounded-4 shadow">
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<div id="why-crowdfunding-content" style="background: #f8f9fa6e;" class="mb-4">
-    <div class="container-fluid">
-        <h1 class="mb-5 text-center">startupInveste oferece</h1>
-        <div class="row mb-md-4">      
+<section class="py-5">
+    <div class="container px-4 px-lg-5">
+        <h2 class="text-center fw-bold mb-5">startupInveste oferece</h2>
 
+        <div class="row g-4">
             <div class="col-md-4">
-                <div class="h-100 card">
-                    <figure>
-                        <img class="img-fluid" src="{{asset('assets/img/investment-model-svgrepo-com.svg')}}">
-                    </figure>
-                    <p>Redução do risco de investimento através da colaboração com outros investidores</p>
+                <div class="card card-hover h-100 text-center p-4">
+                    <img src="{{ asset('assets/img/investment-model-svgrepo-com.svg') }}" class="landing-feature-icon">
+                    <p class="mb-0">Redução do risco de investimento através da colaboração com outros investidores</p>
                 </div>
             </div>
-
-
-            <div class="col-md-4 ">
-                <div class="h-100 card">
-                    <figure>
-                        <img class="img-fluid" src="{{asset('assets/img/startup-svgrepo-com.svg')}}">
-                    </figure>
-                    <p>Empresas angolanas inovadoras e com alto potencial de crescimento</p>
+            <div class="col-md-4">
+                <div class="card card-hover h-100 text-center p-4">
+                    <img src="{{ asset('assets/img/startup-svgrepo-com.svg') }}" class="landing-feature-icon">
+                    <p class="mb-0">Empresas angolanas inovadoras e com alto potencial de crescimento</p>
                 </div>
             </div>
-
-            <div class="col-md-4 ">
-                <div class="h-100 card">
-                    <figure>
-                        <img class="img-fluid" src="{{asset('assets/img/team-svgrepo-com.svg')}}">
-                    </figure>
-                    <p>Possibilidade de ser accionista de empresas com potencial de tranformar seus mercados</p>
+            <div class="col-md-4">
+                <div class="card card-hover h-100 text-center p-4">
+                    <img src="{{ asset('assets/img/team-svgrepo-com.svg') }}" class="landing-feature-icon">
+                    <p class="mb-0">Possibilidade de ser accionista de empresas com potencial de transformar seus mercados</p>
                 </div>
             </div>
-        </div>
-
-        <div class="row">
-          
-
-            <div class="col-md-4 ">
-                <div class="h-100 card">
-                    <figure>
-                        <img class="img-fluid" src="{{asset('assets/img/money-svgrepo-com.svg')}}">
-                    </figure>
-                    <p>Captação de investimento financeiro</p>
+            <div class="col-md-4">
+                <div class="card card-hover h-100 text-center p-4">
+                    <img src="{{ asset('assets/img/money-svgrepo-com.svg') }}" class="landing-feature-icon">
+                    <p class="mb-0">Captação de investimento financeiro</p>
                 </div>
             </div>
-
-
-            <div class="col-md-4 ">
-                <div class="h-100 card">
-                    <figure>
-                        <img class="img-fluid" src="{{asset('assets/img/team-svgrepo-com.svg')}}">
-                    </figure>
-                    <p>Possibilidade de escolher parceiros para a jornada empreendedora</p>
+            <div class="col-md-4">
+                <div class="card card-hover h-100 text-center p-4">
+                    <img src="{{ asset('assets/img/team-svgrepo-com.svg') }}" class="landing-feature-icon">
+                    <p class="mb-0">Possibilidade de escolher parceiros para a jornada empreendedora</p>
                 </div>
             </div>
         </div>
-
     </div>
-</div>
+</section>
 
-<div class="d-flex align-items-center" id="footer" style="background-color: #343a40;color:#fff; min-height:60px;width:100%;">
-   
-        <p class="pl-3" style="font-size:14px;">2024 © STARTUPINVEST - Todos os direitos reservados.</p>
-    
-</div>
-
-@endsection
-
-@section('scripts')
+<footer class="bg-dark text-white-50 py-3">
+    <div class="container px-4 px-lg-5">
+        <p class="mb-0 small">2026 &copy; STARTUPINVEST - Todos os direitos reservados.</p>
+    </div>
+</footer>
 @endsection

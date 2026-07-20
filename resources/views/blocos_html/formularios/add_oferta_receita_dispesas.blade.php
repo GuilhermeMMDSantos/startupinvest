@@ -2,14 +2,14 @@
     <h3>Receita e Despesas</h3>
     <div class="form-group">
         <label for="ltv">Qual é o valor do tempo de vida do cliente (LTV; KZ)?
-            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top"
+            <i class="fa fa-info-circle" data-bs-toggle="tooltip" data-placement="top"
                 title="Valor médio que cada cliente gera em receita durante sua relação com a empresa."></i></label>
         </label>
         <input type="number" step="0.01" class="form-control" id="ltv" name="ltv" required>
     </div>
     <div class="form-group">
         <label for="ticket_medio">Qual o Ticket médio mansal(Kz)?
-            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top"
+            <i class="fa fa-info-circle" data-bs-toggle="tooltip" data-placement="top"
                 title="Média de receita gerada por venda."></i></label>
         <input type="number" step="0.01" class="form-control" id="ticket_medio" name="ticket_medio" required>
     </div>
@@ -19,7 +19,7 @@
     </div>
     <div class="form-group">
         <label for="roi">Qual é o seu Retorno sobre o Investimento (ROI; %)?
-            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top"
+            <i class="fa fa-info-circle" data-bs-toggle="tooltip" data-placement="top"
                 title="Facto/previsão percentual de retorno obtido em relação ao valor investido."></i>
         </label>
         <input type="number" class="form-control" id="roi" name="roi" required>
@@ -27,7 +27,7 @@
     <div class="form-group">
         <label for="tempo_medio_ciclo_vendas">Qual é o tempo médio do seu ciclo de
             vendas (dias)?
-            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top"
+            <i class="fa fa-info-circle" data-bs-toggle="tooltip" data-placement="top"
                 title="Tempo, em média, a empresa leva para converter um lead (potencial cliente) em um cliente pagante."></i>
         </label>
         <input type="number" class="form-control" id="tempo_medio_ciclo_vendas" name="tempo_medio_ciclo_vendas" required>

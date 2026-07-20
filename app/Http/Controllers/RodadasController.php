@@ -26,7 +26,7 @@ use App\Events\AdicionarComprovativoAssinatura;
 use App\Events\AdicionarContrato;
 use App\Events\DiscordarContrato;
 use App\SaidaDoModelo;
-use App\Services\MachineLearningService;
+use App\Services\StartupPotentialScoringService;
 use Illuminate\Validation\ValidationException;
 use App\Notifications\Notificao;
 use Illuminate\Support\Facades\Crypt;
@@ -167,14 +167,14 @@ class RodadasController extends Controller
     }
 
 
-    public function cadastrarOferta(Request $request, RodadaService $rodadaService, MachineLearningService $mpl)
+    public function cadastrarOferta(Request $request, RodadaService $rodadaService, StartupPotentialScoringService $scoringService)
     {
 
         try {
-            
-            DB::transaction(function () use ($request, $rodadaService, $mpl) {
+
+            DB::transaction(function () use ($request, $rodadaService, $scoringService) {
                 $entradaModelo = $rodadaService->getEntradaModelo($request);
-                $saidaModelo = $mpl->predictGrowth(array_values($entradaModelo));
+                $saidaModelo = $scoringService->evaluate($entradaModelo);
                 $meta =  str_replace(',', '.', str_replace('.', '', $request->meta));
                 $taxa = str_replace(',', '.', str_replace('.', '', $request->montante_acrescer));
                 $metaComATaxa = $meta + $taxa;

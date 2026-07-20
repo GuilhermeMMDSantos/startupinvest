@@ -1,11 +1,9 @@
-<div class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-hiden="true" id="send-money-to-startup">
+<div class="modal fade" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-hiden="true" id="send-money-to-startup">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" style="font-size:14px;">Envio Montante Captado</h5>
-                <button type="button" class="close" data-dismiss="modal" area-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body" style="padding-left:50px; padding-right:50px;">
@@ -31,7 +29,7 @@
                     <input class="form-control" accept=".pdf" type="file" name="comprovativo_transferencia">
                     <br>
                     <button class="btn btn-primary" id="submit-form-send-money-to-startup">Submeter</button>
-                    <button class="btn btn-outline-primary" data-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-outline-primary" data-bs-dismiss="modal">Cancelar</button>
                 </form>
 
             </div>

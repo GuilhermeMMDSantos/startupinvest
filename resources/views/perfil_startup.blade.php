@@ -36,8 +36,8 @@
         <div class="row" style="background:#e9ecefa6;margin-top:30px;">
             <div class="col-sm-12">
                 <h2>Investidores @if ($myProfile)
-                        <button type="button" class="btn btn-primary btn-editar" data-toggle="modal"
-                            data-target="#modal-adicionar-investidores-startup">Adicionar</button>
+                        <button type="button" class="btn btn-primary btn-editar" data-bs-toggle="modal"
+                            data-bs-target="#modal-adicionar-investidores-startup">Adicionar</button>
                     @endif
                 </h2>
 
@@ -54,8 +54,8 @@
         <div class="row" style="padding-top:30px;">
             <div class="col-sm-12">
                 <h2>Equipa @if ($myProfile)
-                        <button type="button" class="btn btn-primary btn-editar" data-toggle="modal"
-                            data-target="#modal-adicionar-membro-equipa">Adicionar</button>
+                        <button type="button" class="btn btn-primary btn-editar" data-bs-toggle="modal"
+                            data-bs-target="#modal-adicionar-membro-equipa">Adicionar</button>
                     @endif
                 </h2>
             </div>

@@ -1,13 +1,11 @@
-<div class="modal fade" id="modal-adicionar-oferta" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="modal-adicionar-oferta" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
 
 
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="height:500px !important;">
         <div class="modal-content" style="height:100%; overflow-y: auto;">
             <div class="modal-header">
                 <h5 class="modal-title" style="font-size:14px;">Criar Oferta</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body form-rodada-container">
 

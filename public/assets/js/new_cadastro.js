@@ -64,18 +64,14 @@ $(function () {
     $("#btn-cadastrar-investidor").click(function () {
         $("#form-investidor").submit();
         $(this).prop("disabled", true);
-        $("#btn-spinner-investidor").css({
-            'opacity': 1
-        });
+        $("#btn-spinner-investidor").removeClass('d-none');
         true;
     });
 
     $("#btn-cadastrar-startup").click(function () {
         $("#form-startup").submit();
         $(this).prop("disabled", true);
-        $("#btn-spinner-startup").css({
-            'opacity': 1
-        });
+        $("#btn-spinner-startup").removeClass('d-none');
         true;
     });
 

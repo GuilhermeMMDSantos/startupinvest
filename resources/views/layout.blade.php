@@ -7,32 +7,20 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}">
-    <title>startupinveste</title>
+    <title>startupInveste</title>
 
-    <!-- Fonts -->
-    <!--<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-
-    <!--Scripts-->
     <script src="{{ asset('assets/js/jquery.js') }}"></script>
-    <script src="{{ asset('assets/js/popper.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-select.min.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalert2_11.js') }}"></script>
 
-    <!-- Styles -->
     <link href="{{ asset('assets/fontawesome/css/all.css') }}" type="text/css" rel="stylesheet">
-    <link href="{{ asset('assets/css/bootstrap.min.css') }}" type="text/css" rel="stylesheet">
     <link href="{{ asset('assets/css/bootstrap-select.min.css') }}" type="text/css" rel="stylesheet">
     <link href="{{ asset('assets/css/config.css') }}" type="text/css" rel="stylesheet">
-    <link href="{{ asset('assets/css/custom.css') }}" type="text/css" rel="stylesheet">
-    <style>
-        body {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-    </style>
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
     @yield('stylesheets')
 
 </head>
@@ -42,7 +30,11 @@
         <meta http-equiv="refresh" content="0; url={{ route('javascript.disabled') }}">
     </noscript>
 
-    @yield('contentBody')
+    <div class="app-shell">
+        @yield('contentBody')
+    </div>
+
+    <script src="{{ mix('js/app.js') }}"></script>
     @yield('scripts')
 </body>
 

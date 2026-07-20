@@ -40,7 +40,7 @@
     </div>
     <div class="form-group">
         <label for="media_experiencia">Qual é a média de experiência da sua equipe no sector(anos)?
-            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top"
+            <i class="fa fa-info-circle" data-bs-toggle="tooltip" data-placement="top"
                 title="Levante os anos de experiência profissional de cada membro da equipe em gestão, contabilidade, área técnica e divida pelo número de membros na equipa ."></i>
         </label>
         <input type="number" class="form-control" id="media_experiencia"
@@ -59,7 +59,7 @@
     <div class="form-group">
         <label for="porcentagem_tempo_projeto">Qual a porcentagem do tempo da sua equipe é
             dedicada ao projeto?
-            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top"
+            <i class="fa fa-info-circle" data-bs-toggle="tooltip" data-placement="top"
                 title="Porcentualmente quantos dias de trabalho foram dedicados ao projeto desde o dia da sua criação até o dia atual"></i>
         </label>
         <input type="number" class="form-control" id="porcentagem_tempo_projeto" name="porcentagem_tempo_projeto" required>

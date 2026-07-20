@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-excluir-membro-startup" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="modal-excluir-membro-startup" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
@@ -6,7 +6,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="btn-aceitar-eliminar-membro" style="font-size:13px; height:30px;">Aceitar</button>
-                <button type="button" class="btn btn-secondary" style="font-size:13px; height:30px;" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-secondary" style="font-size:13px; height:30px;" data-bs-dismiss="modal">Cancelar</button>
 
             </div>
         </div>

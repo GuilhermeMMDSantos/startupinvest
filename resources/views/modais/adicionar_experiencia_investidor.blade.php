@@ -1,11 +1,9 @@
-<div class="modal fade" id="modal-adicionar-experiencia-investidor" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="modal-adicionar-experiencia-investidor" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" style="font-size:14px;">Adionar Experiência Investidor</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body"   style="font-size:14px;">
                 <form  id="form-cadastrar-experiencia">
@@ -42,7 +40,7 @@
 
                         <div style="margin-top:5px;">
                             <button type="submit" id="btn-salvar-experiencia" class="btn btn-primary btn-lg btn-block" style="height:30px;font-size:11px;border-radius:0px;">Adicionar experiência</button>
-                            <button type="reset"  data-dismiss="modal" class="btn btn-secondary btn-lg btn-block" id="btn-cancelar-add-experiencia" style="height:30px;font-size:11px;border-radius:0px;">Cancelar</button>
+                            <button type="reset"  data-bs-dismiss="modal" class="btn btn-secondary btn-lg btn-block" id="btn-cancelar-add-experiencia" style="height:30px;font-size:11px;border-radius:0px;">Cancelar</button>
                         </div>
 
                     </div>

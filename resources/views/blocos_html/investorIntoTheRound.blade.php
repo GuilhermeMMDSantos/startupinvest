@@ -93,8 +93,8 @@
 
             @else
 
-            <button type="button" class="btn btn-primary" data-toggle="modal"
-                data-target="#pdfModal" data-doc="{{ $investidor->contrato_mutou }}"
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#pdfModal" data-doc="{{ $investidor->contrato_mutou }}"
                 data-origin=1>
                 <i class="fas fa-file-contract"></i> Ler Contrato
             </button>
@@ -102,8 +102,8 @@
             @endif
 
             @if ($investidor->status_contrato_investidor == 1)
-            <button type="button" class="btn btn-outline-primary" data-toggle="modal"
-                data-target="#pdfModal"
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                data-bs-target="#pdfModal"
                 data-doc="{{ $investidor->contrato_mutou }}"
                 data-idinvestor="{{ $investidor->fk_investidor }}"
                 data-origin=2>

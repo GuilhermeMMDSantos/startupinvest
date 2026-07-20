@@ -1,20 +1,30 @@
 window._ = require('lodash');
 
-/**
- * We'll load the axios HTTP library which allows us to easily issue requests
- * to our Laravel back-end. This library automatically handles sending the
- * CSRF token as a header based on the value of the "XSRF" token cookie.
- */
-
 window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-/**
- * Echo exposes an expressive API for subscribing to channels and listening
- * for events that are broadcast by Laravel. Echo and event broadcasting
- * allows your team to easily build robust real-time web applications.
- */
+import { Modal, Toast, Dropdown, Collapse, Tooltip, Popover } from 'bootstrap';
+
+if (window.jQuery) {
+    const bridge = (name, Component) => {
+        window.jQuery.fn[name] = function (action) {
+            return this.each(function () {
+                const instance = Component.getOrCreateInstance(this);
+                if (typeof action === 'string' && typeof instance[action] === 'function') {
+                    instance[action]();
+                }
+            });
+        };
+    };
+
+    bridge('modal', Modal);
+    bridge('toast', Toast);
+    bridge('dropdown', Dropdown);
+    bridge('collapse', Collapse);
+    bridge('tooltip', Tooltip);
+    bridge('popover', Popover);
+}
 
 import Echo from 'laravel-echo';
 

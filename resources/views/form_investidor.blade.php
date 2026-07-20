@@ -33,8 +33,8 @@
                     <label for="video-investor">Experiência e ciência sobre equity crowdfunding (Video - <span id="video-investor-label-tamanho">max.64MB</span>)</label>
               <input class="form-control" type="file" accept=".MP4,.MKV" id="video-investor" name="video_investidor" >
 
-                    <div class="jumbotron" style="margin-top:10px;padding-top:10px !important;padding-bottom:5px !important;">
-                            <p class="font-weight-bold">Submeta um vídeo onde respondes as seguintes questões:</p>
+                    <div class="bg-light rounded-3 p-3 mt-3">
+                            <p class="fw-bold">Submeta um vídeo onde respondes as seguintes questões:</p>
                             <p>Qual a Data de gravação do vídeo</p>
                             <p>Já administrou alguma empresa(nome e durante quanto tempo administrou)</p>
                             <p>Já fundou alguma empresa(nome e tempo de operação da empresa)</p>
@@ -46,10 +46,10 @@
             </div>
 
             <div class="row">
-                <div class="col-12 text-right">
-                    <button id="btn-cadastrar-investidor" class="btn btn-lg btn-block">
-                        <span class="spinner-border spinner-border-sm" id="btn-spinner-investidor" role="status" aria-hidden="true"></span>
-                        <span> Cadastrar</span>
+                <div class="col-12">
+                    <button id="btn-cadastrar-investidor" class="btn btn-primary btn-lg w-100 d-flex align-items-center justify-content-center gap-2">
+                        <span class="spinner-border spinner-border-sm d-none" id="btn-spinner-investidor" role="status" aria-hidden="true"></span>
+                        <span>Cadastrar</span>
                     </button>
                 </div>
             </div>

@@ -41,7 +41,7 @@
             <div class="row row-cols-1 row-cols-dm-1 row-cols-lg-2 mb-3">
                 <div class="col">
                     <label for="fase-desenvolvimento" class="label_emp">Fase Desenvolvimento</label>
-                    <select class="form-control" name="fase" id="fase-desenvolvimento">
+                    <select class="form-select" name="fase" id="fase-desenvolvimento">
                         @foreach($fases as $fase)
                         <option value="{{$fase->id}}" @if(old('fase')==$fase->id) selected @endif>{{$fase->nome}}</option>
                         @endforeach
@@ -84,9 +84,9 @@
 
 
             <div class="row">
-                <div class="col-12 text-right">
-                    <button id="btn-cadastrar-startup" type="submit" class="btn btn-lg btn-block">
-                        <span class="spinner-border spinner-border-sm" id="btn-spinner-startup" role="status" aria-hidden="true"></span>
+                <div class="col-12">
+                    <button id="btn-cadastrar-startup" type="submit" class="btn btn-primary btn-lg w-100 d-flex align-items-center justify-content-center gap-2">
+                        <span class="spinner-border spinner-border-sm d-none" id="btn-spinner-startup" role="status" aria-hidden="true"></span>
                         <span>Cadastrar</span>
                     </button>
                 </div>

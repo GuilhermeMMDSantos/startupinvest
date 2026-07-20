@@ -5,56 +5,48 @@
 @endsection
 
 @section('contentBody_base_inicio')
-<section id="body-section" class="container-fluid"
-    style="padding-left:6.5% !important;padding-right:6.5% !important; padding-bottom:50px;">
+<section id="body-section" class="container-fluid py-4 px-4 px-lg-5">
 
-
-
-    <h2 class="mb-4" id="title-page" val="{{ $rodada->id }}">Rodada
+    <h2 class="fw-bold mb-4" id="title-page" val="{{ $rodada->id }}">Rodada
         @if ($rodada->estado == 'anulada')
-        <span style="font-size:14px;" class="badge badge-danger ml-2"> {{ $rodada->estado }}</span>
+        <span class="badge badge-danger ms-2">{{ $rodada->estado }}</span>
         @elseif($rodada->estado == 'fechada' || $rodada->estado == 'sucedida')
-        <span style="font-size:14px;" class="badge badge-success ml-2"> {{ $rodada->estado }}</span>
+        <span class="badge badge-success ms-2">{{ $rodada->estado }}</span>
         @elseif($rodada->estado == 'aberta')
-        <span style="font-size:14px;" class="badge badge-warning ml-2"> {{ $rodada->estado }}</span>
+        <span class="badge badge-warning ms-2">{{ $rodada->estado }}</span>
         @endif
     </h2>
-    </br>
 
-    <div class="card" style="margin-bottom:15px;" id="intro-rodada">
-
-        <div class="card-body row">
-            <div class="col-sm-3 col-12">
-                <h5>Rodada</h5>
-                <h6>{{ $rodada->id }}</h6>
+    <div class="card mb-4" id="intro-rodada">
+        <div class="card-body row g-3">
+            <div class="col-sm-3 col-6">
+                <h5 class="text-muted small mb-1">Rodada</h5>
+                <h6 class="fw-semibold">{{ $rodada->id }}</h6>
             </div>
 
-            <div class="col-sm-3 col-12">
-                <h5>Valor objectivo</h5>
-                <h6>{{ number_format($rodada->valor_objetivo, 2, ',', '.') }} AOA</h6>
+            <div class="col-sm-3 col-6">
+                <h5 class="text-muted small mb-1">Valor objectivo</h5>
+                <h6 class="fw-semibold">{{ number_format($rodada->valor_objetivo, 2, ',', '.') }} AOA</h6>
             </div>
 
-            <div class="col-sm-3 col-12">
-                <h5>Valor Captado</h5>
-                <h6>{{ number_format($rodada->valor_obtido, 2, ',', '.') }} AOA</h6>
+            <div class="col-sm-3 col-6">
+                <h5 class="text-muted small mb-1">Valor Captado</h5>
+                <h6 class="fw-semibold">{{ number_format($rodada->valor_obtido, 2, ',', '.') }} AOA</h6>
             </div>
 
-            <div class="col-sm-3 col-12">
-                <h5>Participação Oferecida</h5>
-                <h6>{{ $rodada->oferta_acoes }}%</h6>
+            <div class="col-sm-3 col-6">
+                <h5 class="text-muted small mb-1">Participação Oferecida</h5>
+                <h6 class="fw-semibold">{{ $rodada->oferta_acoes }}%</h6>
             </div>
-
         </div>
     </div>
 
     @if($rodada->estado == 'sucedida' && $rodada->comprovativo != NULL)
     <div class="card mb-4" id="container-btn-send-amount">
-        <div class="card-body d-flex justify-content-center">
+        <div class="card-body text-center">
+            <h6 class="badge badge-primary p-2 mb-2">Confirmação Da Tranferência Do Montante Para Startup</h6>
             <div>
-                <h6 class="badge badge-primary p-2">Confirmação Da Tranferência Do Montante Para Startup</h6><br>
-
-                <a href="{{asset('storage/'.$rodada->comprovativo)}}" target="_blank"><i class="fas fa-file-contract"></i></i> Comprovativo de Transferência</a>
-
+                <a href="{{ asset('storage/'.$rodada->comprovativo) }}" target="_blank"><i class="fas fa-file-contract"></i> Comprovativo de Transferência</a>
             </div>
         </div>
     </div>
@@ -62,23 +54,24 @@
 
     @if ($investidor != null)
     <div class="row mb-3" id="container-investor-into-the-round">
-        <div class="d-flex justify-content-center " style="width:100%;height:400px;">
-            <div class="spinner-border align-self-center" style="width: 7rem; height: 7rem;" role="status">
-                <span class="sr-only">Loading...</span>
+        <div class="d-flex justify-content-center" style="width:100%;height:400px;">
+            <div class="spinner-border align-self-center" style="width: 5rem; height: 5rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
             </div>
         </div>
     </div>
     @endif
-    <h5 style="color:#818182;">
+
+    <h5 class="text-muted">
         @if ($investidor != null)
         Outros
         @endif Investidores na Rodada
     </h5>
 
     <div class="row" id="container-investor-na-rodada">
-        <div class="d-flex justify-content-center " style="width:100%;height:400px;">
-            <div class="spinner-border align-self-center" style="width: 7rem; height: 7rem;" role="status">
-                <span class="sr-only">Loading...</span>
+        <div class="d-flex justify-content-center" style="width:100%;height:400px;">
+            <div class="spinner-border align-self-center" style="width: 5rem; height: 5rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
             </div>
         </div>
     </div>
