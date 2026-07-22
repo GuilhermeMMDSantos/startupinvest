@@ -67,8 +67,23 @@ services:
 
 volumes:
   mysql-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/mysql
   redis-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/redis
   storage:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/storage
 
 networks:
   startupinvest:
