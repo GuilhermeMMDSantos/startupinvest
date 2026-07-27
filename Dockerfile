@@ -50,7 +50,7 @@ COPY --from=assets /app/public/mix-manifest.json public/mix-manifest.json
 RUN composer dump-autoload --optimize \
     && chown -R www-data:www-data storage bootstrap/cache
 
-USER www-data
+
 
 EXPOSE 9000
 CMD ["php-fpm"]
