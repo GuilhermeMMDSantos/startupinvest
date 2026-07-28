@@ -50,7 +50,9 @@ COPY --from=assets /app/public/mix-manifest.json public/mix-manifest.json
 RUN composer dump-autoload --optimize \
     && chown -R www-data:www-data storage bootstrap/cache
 
-
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 9000
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["php-fpm"]
