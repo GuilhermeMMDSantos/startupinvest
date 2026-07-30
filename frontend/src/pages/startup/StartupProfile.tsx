@@ -109,7 +109,7 @@ export default function StartupProfile() {
             <div key={m.id} className="flex justify-between items-center border-b border-slate-100 pb-2">
               <div>
                 <p className="text-sm font-medium">
-                  {m.fullName} — {m.roleTitle}
+                  {m.fullName} - {m.roleTitle}
                 </p>
                 <p className="text-xs text-slate-500">
                   {m.experienceYears} anos de experiência {m.management && '· Gestão'} {m.technical && '· Técnico'}

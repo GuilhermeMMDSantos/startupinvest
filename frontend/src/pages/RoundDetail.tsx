@@ -124,7 +124,7 @@ export default function RoundDetail() {
                     {k}: {v}
                   </li>
                 ))}
-                {Object.keys(round.scoring.strengths).length === 0 && <li className="text-slate-400">—</li>}
+                {Object.keys(round.scoring.strengths).length === 0 && <li className="text-slate-400">-</li>}
               </ul>
             </div>
             <div>
@@ -135,7 +135,7 @@ export default function RoundDetail() {
                     {k}: {v}
                   </li>
                 ))}
-                {Object.keys(round.scoring.weaknesses).length === 0 && <li className="text-slate-400">—</li>}
+                {Object.keys(round.scoring.weaknesses).length === 0 && <li className="text-slate-400">-</li>}
               </ul>
             </div>
           </div>

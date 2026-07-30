@@ -112,7 +112,7 @@ export default function RegisterStartup() {
             <input className="input" value={form.website} onChange={(e) => update('website', e.target.value)} />
           </div>
           <div>
-            <label className="label">Pitch deck — PDF ou PPT</label>
+            <label className="label">Pitch deck - PDF ou PPT</label>
             <input
               className="input"
               type="file"

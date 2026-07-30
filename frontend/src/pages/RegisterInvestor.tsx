@@ -97,7 +97,7 @@ export default function RegisterInvestor() {
             <input className="input" value={form.phone} onChange={(e) => update('phone', e.target.value)} />
           </div>
           <div>
-            <label className="label">Documento (BI/Passaporte) — PDF, PNG ou JPG</label>
+            <label className="label">Documento (BI/Passaporte) - PDF, PNG ou JPG</label>
             <input
               className="input"
               type="file"

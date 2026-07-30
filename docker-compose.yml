@@ -15,6 +15,8 @@ services:
       retries: 5
     networks:
       - app-net
+    expose:
+      - "5432"
 
   backend:
     build:

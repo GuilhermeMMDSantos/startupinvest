@@ -6,9 +6,9 @@ import ContractPanel from '../../components/ContractPanel';
 
 const STATUS_LABEL: Record<string, string> = {
   PENDING_PAYMENT: 'Aguarda pagamento',
-  PAID: 'Pago — contrato a ser gerado',
+  PAID: 'Pago - contrato a ser gerado',
   CONTRACT_PENDING: 'Aguarda assinatura do contrato',
-  CONTRACT_SIGNED: 'Assinado por si — aguarda a startup',
+  CONTRACT_SIGNED: 'Assinado por si - aguarda a startup',
   CONFIRMED: 'Confirmado',
   CANCELLED: 'Cancelado',
   REFUNDED: 'Reembolsado',

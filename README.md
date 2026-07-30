@@ -74,10 +74,10 @@ O frontend em desenvolvimento corre em `http://localhost:5173` e faz proxy de `/
 
 ## Estrutura
 
-- `backend/` — API Spring Boot, domínio, serviços, segurança e migrações
-- `frontend/` — aplicação React/Vite
-- `docker-compose.yml` — orquestração local da stack
-- `.env.example` — exemplo de variáveis de ambiente
+- `backend/` - API Spring Boot, domínio, serviços, segurança e migrações
+- `frontend/` - aplicação React/Vite
+- `docker-compose.yml` - orquestração local da stack
+- `.env.example` - exemplo de variáveis de ambiente
 
 ## Observações
 

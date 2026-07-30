@@ -8,15 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Statistical scoring model that estimates a seed-stage startup's likelihood of reaching
- * Series B ("sucesso" per the platform's definition), ported from the original weighted
- * scorecard model: every factor (market, traction, financials, team, moat/replication
- * difficulty, macro backdrop) is normalized to a 0-100 scale, weighted, and averaged.
- * This is a statistical scorecard (not a trained ML classifier) — the same approach used
- * by early-stage scorecard/Berkus-style valuation methods, adapted for a growth-potential
- * index instead of a valuation multiple.
- */
+
 @Component
 public class ScoringEngine {
 
