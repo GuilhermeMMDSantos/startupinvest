@@ -14,9 +14,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 @RequiredArgsConstructor
 public class FileStorageService {
+
+    private static final Logger debug = LoggerFactory.getLogger(FileStorageService.class);
 
     private static final Set<String> ALLOWED_EXTENSIONS = Set.of(
             "pdf", "png", "jpg", "jpeg", "mp4", "mov", "webm", "ppt", "pptx"
@@ -43,11 +49,16 @@ public class FileStorageService {
         }
 
         try {
+            
             Path folder = Path.of(appProperties.getStorage().getRoot(), subFolder);
+            
             Files.createDirectories(folder);
+            
             String filename = UUID.randomUUID() + "." + extension;
             Path target = folder.resolve(filename);
+           
             Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+           
             return subFolder + "/" + filename;
         } catch (IOException e) {
             throw new ApiException(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR,
