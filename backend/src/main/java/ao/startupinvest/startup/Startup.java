@@ -46,7 +46,7 @@ public class Startup {
     @Column(name = "founded_at")
     private LocalDate foundedAt;
 
-    @Column(name = "pitch_deck_path", nullable = false, length = 500)
+    @Column(name = "pitch_deck_path", length = 500)
     private String pitchDeckPath;
 
     @Column(name = "logo_path", length = 500)

@@ -38,10 +38,9 @@ public class AuthController {
             @RequestParam(required = false) String businessModel,
             @RequestParam(required = false) String shortDescription,
             @RequestParam(required = false) String website,
-            @RequestParam MultipartFile pitchDeck,
             @RequestParam(required = false) MultipartFile logo) {
         return authService.registerStartup(email, password, startupName, nif, sector, businessModel,
-                shortDescription, website, pitchDeck, logo);
+            shortDescription, website, logo);
     }
 
     @PostMapping("/login")

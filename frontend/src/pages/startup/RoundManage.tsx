@@ -12,7 +12,7 @@ export default function RoundManage() {
   const [loading, setLoading] = useState(false);
 
   function load() {
-    api.get(`/rounds/${roundId}`).then(({ data }) => setRound(data));
+    api.get(`/rounds/${roundId}/owner`).then(({ data }) => setRound(data));
     api.get(`/rounds/${roundId}/investments`).then(({ data }) => setInvestments(data)).catch(() => {});
   }
 

@@ -29,7 +29,7 @@ public class RoundMathService {
     }
 
     public BigDecimal computeMinTicket(BigDecimal targetAmount, int maxInvestors) {
-        return targetAmount.divide(BigDecimal.valueOf(maxInvestors), 2, RoundingMode.HALF_UP);
+        return targetAmount.divide(BigDecimal.valueOf(maxInvestors), 2, RoundingMode.DOWN);
     }
 
     public BigDecimal computeEquityAllocation(BigDecimal amount, BigDecimal targetAmount, BigDecimal equityOfferedPct) {
