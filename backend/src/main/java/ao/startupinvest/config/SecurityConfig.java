@@ -60,6 +60,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/docs/**", "/v3/api-docs/**", "/actuator/health").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/rounds", "/api/rounds/{id:[0-9]+}", "/api/startups/{id:[0-9]+}/public").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/files").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

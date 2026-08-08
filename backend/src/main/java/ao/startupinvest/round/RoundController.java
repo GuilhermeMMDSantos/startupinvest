@@ -6,6 +6,7 @@ import ao.startupinvest.scoring.ScoringResultRepository;
 import ao.startupinvest.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/rounds")
 @RequiredArgsConstructor
+@Transactional
 public class RoundController {
 
     private final RoundService roundService;
@@ -33,6 +35,11 @@ public class RoundController {
     @GetMapping("/{id}")
     public RoundDto get(@PathVariable Long id) {
         return toDto(roundService.getVisible(id));
+    }
+
+    @GetMapping("/{id}/owner")
+    public RoundDto getOwned(@PathVariable Long id, @AuthenticationPrincipal SecurityUser user) {
+        return toDto(roundService.getOwnedRound(user.getId(), id));
     }
 
     @PostMapping(consumes = "multipart/form-data")

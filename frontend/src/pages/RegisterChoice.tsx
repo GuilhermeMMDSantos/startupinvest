@@ -14,7 +14,7 @@ export default function RegisterChoice() {
         <Link to="/register/startup" className="card hover:border-brand-400 transition-colors">
           <h2 className="font-semibold text-lg mb-1">Sou uma Startup</h2>
           <p className="text-sm text-slate-600">
-            Registe a sua startup com nome, NIF e pitch deck para abrir uma rodada de investimento.
+            Registe a sua startup com nome, NIF e pitch elevator para abrir uma rodada de investimento.
           </p>
         </Link>
       </div>

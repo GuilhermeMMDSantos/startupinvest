@@ -71,11 +71,6 @@ export default function RoundDetail() {
       </div>
 
       {startup?.shortDescription && <p className="text-slate-700">{startup.shortDescription}</p>}
-      {startup?.pitchDeckPath && (
-        <a href={fileUrl(startup.pitchDeckPath)} target="_blank" rel="noreferrer" className="text-brand-700 text-sm font-medium">
-          Ver pitch deck →
-        </a>
-      )}
 
       <div className="card">
         <div className="w-full bg-slate-100 rounded-full h-3 mb-2">
@@ -168,9 +163,11 @@ export default function RoundDetail() {
           ) : (
             <p className="text-sm text-slate-500">Apenas contas de investidor podem investir.</p>
           )}
-          <button onClick={startConversation} className="btn-secondary mt-3">
-            Contactar a startup
-          </button>
+          {user?.role === 'INVESTOR' && (
+            <button onClick={startConversation} className="btn-secondary mt-3">
+              Contactar a startup
+            </button>
+          )}
         </div>
       )}
     </div>

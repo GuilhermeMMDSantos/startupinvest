@@ -7,6 +7,7 @@ import ao.startupinvest.security.SecurityUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/conversations")
 @RequiredArgsConstructor
+@Transactional
 public class MessagingController {
 
     private final MessagingService messagingService;

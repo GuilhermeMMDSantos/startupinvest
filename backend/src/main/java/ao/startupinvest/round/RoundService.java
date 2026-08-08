@@ -94,6 +94,7 @@ public class RoundService {
         return fundingRoundRepository.save(round);
     }
 
+    @Transactional(readOnly = true)
     public FundingRound getOwnedRound(Long ownerId, Long roundId) {
         FundingRound round = fundingRoundRepository.findById(roundId)
                 .orElseThrow(() -> ApiException.notFound("Rodada não encontrada"));

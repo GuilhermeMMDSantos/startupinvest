@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { api, apiErrorMessage, fileUrl } from '../../lib/api';
+import { api, apiErrorMessage } from '../../lib/api';
 import type { StartupDto } from '../../types';
 
 export default function AdminStartups() {
@@ -46,9 +46,6 @@ export default function AdminStartups() {
               </div>
               <span className="badge bg-slate-100 text-slate-700">{s.status}</span>
             </div>
-            <a className="text-brand-700 text-sm font-medium" href={fileUrl(s.pitchDeckPath)} target="_blank" rel="noreferrer">
-              Ver pitch deck
-            </a>
             {s.status === 'PENDING_APPROVAL' && (
               <div className="mt-3 flex gap-2 items-center">
                 <input

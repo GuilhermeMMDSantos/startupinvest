@@ -6,7 +6,6 @@ export interface StartupDto {
   businessModel: string | null;
   shortDescription: string | null;
   website: string | null;
-  pitchDeckPath: string;
   logoPath: string | null;
   status: string;
   paypalPayoutEmail: string | null;

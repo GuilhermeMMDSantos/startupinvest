@@ -76,8 +76,9 @@ public class AuthService {
     @Transactional
     public AuthResponse registerStartup(String email, String password, String startupName, String nif,
                                          String sector, String businessModel, String shortDescription,
-                                         String website, MultipartFile pitchDeck, MultipartFile logo) {
+                                         String website, MultipartFile logo) {
         validateCredentials(email, password);
+        validateElevatorPitch(shortDescription);
         if (startupRepository.existsByNifIgnoreCase(nif)) {
             throw ApiException.conflict("Já existe uma startup registada com este NIF");
         }
@@ -88,8 +89,6 @@ public class AuthService {
         user.setRole(UserRole.STARTUP_OWNER);
         user.setStatus(UserStatus.PENDING_VERIFICATION);
         user = userRepository.save(user);
-
-        String deckPath = fileStorageService.store(pitchDeck, "startups/decks");
 
         Startup startup = new Startup();
         startup.setOwner(user);
@@ -104,7 +103,6 @@ public class AuthService {
         }
         startup.setShortDescription(shortDescription);
         startup.setWebsite(website);
-        startup.setPitchDeckPath(deckPath);
         if (logo != null && !logo.isEmpty()) {
             startup.setLogoPath(fileStorageService.store(logo, "startups/logos"));
         }
@@ -137,6 +135,12 @@ public class AuthService {
         }
         if (userRepository.existsByEmailIgnoreCase(email)) {
             throw ApiException.conflict("Já existe uma conta com este email");
+        }
+    }
+
+    private void validateElevatorPitch(String shortDescription) {
+        if (shortDescription == null || shortDescription.isBlank()) {
+            throw ApiException.badRequest("A descrição breve deve seguir a estrutura do pitch elevator");
         }
     }
 
