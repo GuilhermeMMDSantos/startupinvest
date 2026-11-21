@@ -38,10 +38,13 @@ Crie o esquema do banco e o link público dos arquivos:
 
 ```bash
 docker compose exec app php artisan migrate
+docker compose exec app php artisan db:seed
 docker compose exec app php artisan storage:link
 ```
 
 A aplicação fica disponível em <http://localhost:8000>. O PostgreSQL fica disponível no computador anfitrião em `127.0.0.1:5432`; dentro do Docker, a aplicação conecta ao serviço `db`.
+
+Antes de executar `db:seed`, defina `ADMIN_EMAIL` e `ADMIN_PASSWORD` em `.env`. O seeder cria uma conta de administrador aprovada (`tipo=admin`, `estado=aceite`); não há senha padrão no código. Se essa conta já existir, a senha não é alterada ao repetir o seed.
 
 Comandos úteis:
 
@@ -67,6 +70,7 @@ Edite `.env.production` e defina:
 - `APP_KEY`: uma chave Laravel única, gerada com `php artisan key:generate --show`.
 - `APP_URL`: o endereço público da aplicação, por exemplo `https://startup.example.com`.
 - `DB_DATABASE`, `DB_USERNAME` e `DB_PASSWORD`: valores próprios e uma senha forte.
+- `ADMIN_EMAIL` e `ADMIN_PASSWORD`: email e senha forte para a conta administrativa inicial.
 
 O arquivo `.env.production` está excluído do Git. Não coloque credenciais no repositório.
 
@@ -75,6 +79,7 @@ Construa e inicie os serviços e aplique as migrations:
 ```bash
 docker compose --env-file .env.production -f docker-compose.prod.yml up --build -d
 docker compose --env-file .env.production -f docker-compose.prod.yml exec app php artisan migrate --force
+docker compose --env-file .env.production -f docker-compose.prod.yml exec app php artisan db:seed --force
 ```
 
 A aplicação é publicada na porta `8080` por padrão. Para escolher outra porta, defina `APP_PORT` no ambiente do comando Compose. O PostgreSQL não publica uma porta no host em produção. O banco e os arquivos enviados são persistidos em volumes Docker.

@@ -11,14 +11,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        
+        $this->call(AdminUserSeeder::class);
+
         factory(App\Setores::class,6)->create();
 
         factory(App\Fases::class,3)->create();
-
-        factory(App\TipoBusness::class,3)->create();
-
-        
-     
     }
 }
