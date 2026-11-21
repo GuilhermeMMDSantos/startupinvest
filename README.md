@@ -1,79 +1,103 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+# StartupInvest
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+Aplicação Laravel para ligar startups a investidores. Inclui cadastro e perfis, rondas de captação, mensagens, notificações e fluxos de pagamento.
 
-## About Laravel
+## Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Laravel 7 e PHP 7.4
+- PostgreSQL 16
+- Apache para servir a aplicação em produção
+- Blade e Bootstrap para a interface
+- Pusher, SMTP e PayPal para funcionalidades externas que dependem desses serviços
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Node.js/npm não são necessários para iniciar a aplicação. O Bootstrap e os recursos frontend já estão no projeto.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Requisitos
 
-## Learning Laravel
+- Docker Engine
+- Docker Compose v2 (`docker compose`)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Não é necessário instalar PHP, Composer ou PostgreSQL no computador anfitrião para usar a configuração Docker.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Desenvolvimento
 
-## Laravel Sponsors
+Na raiz do projeto:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```bash
+cp -n .env.example .env
+APP_UID=$(id -u) APP_GID=$(id -g) docker compose up --build -d
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
-- [云软科技](http://www.yunruan.ltd/)
+Se `APP_KEY` estiver vazio em `.env`, gere uma chave:
 
-## Contributing
+```bash
+docker compose exec app php artisan key:generate
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Crie o esquema do banco e o link público dos arquivos:
 
-## Code of Conduct
+```bash
+docker compose exec app php artisan migrate
+docker compose exec app php artisan storage:link
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+A aplicação fica disponível em <http://localhost:8000>. O PostgreSQL fica disponível no computador anfitrião em `127.0.0.1:5432`; dentro do Docker, a aplicação conecta ao serviço `db`.
 
-## Security Vulnerabilities
+Comandos úteis:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+docker compose logs -f app db
+docker compose exec app sh
+docker compose exec app ./vendor/bin/phpunit
+docker compose down
+```
 
-## License
+O banco persiste num volume Docker. Durante o desenvolvimento, os arquivos enviados ficam em `storage/` no diretório local do projeto, montado no container. `docker compose down` preserva esses dados; `docker compose down -v` remove os volumes Docker.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Produção
+
+Crie o arquivo de ambiente de produção a partir do exemplo:
+
+```bash
+cp .env.production.example .env.production
+```
+
+Edite `.env.production` e defina:
+
+- `APP_KEY`: uma chave Laravel única, gerada com `php artisan key:generate --show`.
+- `APP_URL`: o endereço público da aplicação, por exemplo `https://startup.example.com`.
+- `DB_DATABASE`, `DB_USERNAME` e `DB_PASSWORD`: valores próprios e uma senha forte.
+
+O arquivo `.env.production` está excluído do Git. Não coloque credenciais no repositório.
+
+Construa e inicie os serviços e aplique as migrations:
+
+```bash
+docker compose --env-file .env.production -f docker-compose.prod.yml up --build -d
+docker compose --env-file .env.production -f docker-compose.prod.yml exec app php artisan migrate --force
+```
+
+A aplicação é publicada na porta `8080` por padrão. Para escolher outra porta, defina `APP_PORT` no ambiente do comando Compose. O PostgreSQL não publica uma porta no host em produção. O banco e os arquivos enviados são persistidos em volumes Docker.
+
+Para acompanhar os serviços ou desligá-los:
+
+```bash
+docker compose --env-file .env.production -f docker-compose.prod.yml logs -f
+docker compose --env-file .env.production -f docker-compose.prod.yml down
+```
+
+Não use `down -v` se quiser conservar o banco e os arquivos enviados.
+
+## Banco de dados e migrations
+
+As migrations em `database/migrations` criam a estrutura do banco PostgreSQL. Depois de iniciar o serviço, aplique-as com `php artisan migrate` (em produção, use `--force`).
+
+O arquivo `startup_invest.sql` é um dump do banco antigo em MySQL/MariaDB. A configuração Docker não importa esse dump nem transfere os dados: a migração de dados para PostgreSQL deve ser feita separadamente.
+
+## Serviços externos
+
+O projeto tem integrações com Pusher, SMTP e PayPal. Configure as respectivas variáveis de ambiente antes de usar essas funcionalidades. Elas são serviços externos e não fazem parte dos dois containers deste Compose.
+
+## Nota de suporte
+
+Laravel 7 e PHP 7.4 já não recebem atualizações de segurança. A imagem está alinhada com a versão de PHP declarada pelo projeto, mas este stack deve ser atualizado antes de uma implantação pública em produção.
