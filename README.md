@@ -83,6 +83,8 @@ docker compose --env-file .env.production -f docker-compose.prod.yml exec app ph
 
 A aplicação é publicada na porta `8080` por padrão. Para escolher outra porta, defina `APP_PORT` no ambiente do comando Compose. O PostgreSQL não publica uma porta no host em produção. O banco e os arquivos enviados são persistidos em volumes Docker.
 
+O limite PHP para um arquivo enviado é `64M`, com `80M` para o corpo completo do formulário, incluindo os demais campos e o overhead do multipart. Se alterar esses limites, reconstrua a imagem da aplicação. Caso exista um proxy reverso externo, configure-o também para aceitar corpos de até `80M`.
+
 Para acompanhar os serviços ou desligá-los:
 
 ```bash
