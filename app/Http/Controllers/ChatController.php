@@ -93,7 +93,7 @@ class ChatController extends Controller
 
         $mensagens = Mensagens::select(
             '*',
-            DB::raw('DATE_FORMAT(created_at, "%d/%m/%Y %h:%m") AS dataenvio')
+            DB::raw("TO_CHAR(created_at, 'DD/MM/YYYY HH24:MI') AS dataenvio")
         )
             ->whereHas('conversa', function ($query) use ($fk_startup, $fk_investidor) {
                 $query->where([

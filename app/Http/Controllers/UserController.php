@@ -65,11 +65,11 @@ class UserController extends Controller
 
         $startupsCards =  Startups::with(['setor', 'fase', 'user', 'rodadaAtual' => function ($query1) {
             $query1->with('investidores')
-                ->select('*', DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_limite) AS tempo_restante'))
+                ->select('*', DB::raw('TRUNC(EXTRACT(EPOCH FROM (data_limite - CURRENT_TIMESTAMP)) / 86400)::integer AS tempo_restante'))
                 ->get();
         }])
             ->whereHas('rodadaAtual', function ($query) {
-                $query->where(DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_limite)'), '>', -1)
+                $query->whereRaw("data_limite > CURRENT_TIMESTAMP - INTERVAL '1 day'")
                     ->where('estado', 'aberta');
             })
             ->where('estado_busca_invest', 'sim')
@@ -163,7 +163,7 @@ class UserController extends Controller
                 ->first();
 
             $rodada = RodadasInvestimento::with(['investidores', 'finalidadesInvestimento'])
-                ->select('*', DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_limite) AS tempo_restante'))
+                ->select('*', DB::raw('TRUNC(EXTRACT(EPOCH FROM (data_limite - CURRENT_TIMESTAMP)) / 86400)::integer AS tempo_restante'))
                 ->where('fk_startup', $startup->fk_user)
                 ->where('estado', 'aberta')
                 ->first();
@@ -369,7 +369,7 @@ class UserController extends Controller
         $myprofile = $startup->fk_user == Auth::user()->id;
 
         $rodada = RodadasInvestimento::with(['investidoresNaRodada', 'finalidadesInvestimento'])
-            ->select('*', DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_limite) AS tempo_restante'))
+            ->select('*', DB::raw('TRUNC(EXTRACT(EPOCH FROM (data_limite - CURRENT_TIMESTAMP)) / 86400)::integer AS tempo_restante'))
             ->where('fk_startup', $startup->fk_user)
             ->orderBy('created_at', 'desc')
             ->first();
@@ -410,7 +410,7 @@ class UserController extends Controller
                 }
             }
 
-            $permissao = PermissoesVerPitch::select('estado'/*, DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_permissao) AS tempo_restante')*/)
+            $permissao = PermissoesVerPitch::select('estado')
                 ->where('fk_startup', $startup->fk_user)
                 ->where('fk_investidor', Auth::user()->id)
                 ->where('fk_rodada', $idRodada)
@@ -949,7 +949,7 @@ class UserController extends Controller
                     ->first();
 
                 $rodada = RodadasInvestimento::with(['investidoresNaRodada', 'finalidadesInvestimento'])
-                    ->select('*', DB::raw('TIMESTAMPDIFF(DAY,NOW(),data_limite) AS tempo_restante'))
+                    ->select('*', DB::raw('TRUNC(EXTRACT(EPOCH FROM (data_limite - CURRENT_TIMESTAMP)) / 86400)::integer AS tempo_restante'))
                     ->where('fk_startup', $startup->fk_user)
                     ->orderBy('created_at', 'desc')
                     ->first();
@@ -995,8 +995,8 @@ class UserController extends Controller
     {
 
         $permissoesEmEspera = PermissoesVerPitch::select(
-            DB::raw("TIMESTAMPDIFF(DAY,NOW(),created_at) AS tempo_espera"),
-            DB::raw("TIMESTAMPDIFF(DAY,NOW(),data_permissao) AS tempo_ativo")
+            DB::raw('TRUNC(EXTRACT(EPOCH FROM (created_at - CURRENT_TIMESTAMP)) / 86400)::integer AS tempo_espera'),
+            DB::raw('TRUNC(EXTRACT(EPOCH FROM (data_permissao - CURRENT_TIMESTAMP)) / 86400)::integer AS tempo_ativo')
         )
             ->where('fk_startup', $idStartup)
             ->where('fk_investidor', $idInvestidor)
@@ -1213,7 +1213,7 @@ class UserController extends Controller
             ]);
 
         $notificacoes  = Notifications::where('fk_user_distination', $presentUser)
-            ->select('*', DB::raw('DATE_FORMAT(created_at,"%d/%m/%Y %h:%m") as data'))
+            ->select('*', DB::raw("TO_CHAR(created_at, 'DD/MM/YYYY HH24:MI') as data"))
             ->orderBy('created_at', 'DESC')
             ->get();
 
@@ -1325,8 +1325,8 @@ class UserController extends Controller
             $rodadas = RodadasInvestimento::where('fk_startup', $presentUser)
                 ->select(
                     '*',
-                    DB::raw('DATE_FORMAT(created_at,"%d/%m/%Y") as data_inicio'),
-                    DB::raw('DATE_FORMAT(updated_at,"%d/%m/%Y") as data_fim')
+                    DB::raw("TO_CHAR(created_at, 'DD/MM/YYYY') as data_inicio"),
+                    DB::raw("TO_CHAR(updated_at, 'DD/MM/YYYY') as data_fim")
                 )
                 ->when($haveFiltro, function ($query) use ($filtros) {
                     return $query->whereIn('estado', $filtros);
@@ -1339,8 +1339,8 @@ class UserController extends Controller
             })
                 ->select(
                     '*',
-                    DB::raw('DATE_FORMAT(created_at,"%d/%m/%Y") as data_inicio'),
-                    DB::raw('DATE_FORMAT(updated_at,"%d/%m/%Y") as data_fim')
+                    DB::raw("TO_CHAR(created_at, 'DD/MM/YYYY') as data_inicio"),
+                    DB::raw("TO_CHAR(updated_at, 'DD/MM/YYYY') as data_fim")
                 )
                 ->when($haveFiltro, function ($query) use ($filtros) {
                     return $query->whereIn('estado', $filtros);
@@ -1353,8 +1353,8 @@ class UserController extends Controller
             })
                 ->select(
                     '*',
-                    DB::raw('DATE_FORMAT(created_at,"%d/%m/%Y") as data_inicio'),
-                    DB::raw('DATE_FORMAT(updated_at,"%d/%m/%Y") as data_fim')
+                    DB::raw("TO_CHAR(created_at, 'DD/MM/YYYY') as data_inicio"),
+                    DB::raw("TO_CHAR(updated_at, 'DD/MM/YYYY') as data_fim")
                 )
                 ->orderBy('updated_at', 'DESC')
                 ->paginate(5);
@@ -1382,7 +1382,7 @@ class UserController extends Controller
             ]);
 
         $notificacoes  = Notifications::where('fk_user_distination', $presentUser)
-            ->select('*', DB::raw('DATE_FORMAT(created_at,"%d/%m/%Y %h:%m") as data'))
+            ->select('*', DB::raw("TO_CHAR(created_at, 'DD/MM/YYYY HH24:MI') as data"))
             ->orderBy('created_at', 'DESC')
             ->get();
 

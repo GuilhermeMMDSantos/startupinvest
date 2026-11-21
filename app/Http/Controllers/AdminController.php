@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use App\Investidores;
 use App\Startups;
 use App\User;
@@ -19,6 +19,42 @@ use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
+
+    public function visualizarArquivoPerfil($tipo, $id, $documento)
+    {
+        abort_unless(Auth::check() && Auth::user()->tipo === 'admin', 403);
+
+        $documentos = [
+            'startup' => [
+                'modelo' => Startups::class,
+                'campos' => [
+                    'nif' => 'nif',
+                    'mvp' => 'mvp',
+                ],
+            ],
+            'investidor' => [
+                'modelo' => Investidores::class,
+                'campos' => [
+                    'bi' => 'bilhete_identidade',
+                    'video' => 'video_investidor',
+                ],
+            ],
+        ];
+
+        abort_unless(isset($documentos[$tipo]['campos'][$documento]), 404);
+
+        $modelo = $documentos[$tipo]['modelo'];
+        $campo = $documentos[$tipo]['campos'][$documento];
+        $perfil = $modelo::findOrFail($id);
+        $arquivo = $perfil->{$campo};
+        $disk = Storage::disk('public');
+
+        abort_unless($disk->exists($arquivo), 404);
+
+        return response()->file($disk->path($arquivo), [
+            'Cache-Control' => 'private, no-store',
+        ]);
+    }
 
     public function index()
     {
@@ -48,40 +84,38 @@ class AdminController extends Controller
 
     public function atualizarEstadoUser(Request $request)
     {
+        abort_unless(Auth::check() && Auth::user()->tipo === 'admin', 403);
 
-        if (!request()->ajax()) {
-            Session::flush();
-            Auth::logout();
-            return Redirect("new_home_page");
+        if (!$request->ajax()) {
+            return response()->json(['message' => 'A requisição deve ser AJAX.'], 400);
         }
 
-        $id_user = $request->id;
-
-        $status = 0;
-        $senha = null;
-        $user = User::find($id_user);
-
-
-        if ($request->action_ == 'Aceitar') {
-            $user->estado = 'aceite';
-            $status = 1;
-        } else if ($request->action_ == 'Regeitar') {
-            $user->estado = 'regeitado';
-            $status = 0;
+        $action = $request->input('action_');
+        if (!in_array($action, ['Aceitar', 'Regeitar'], true)) {
+            return response()->json(['message' => 'Ação inválida.'], 422);
         }
+
+        $user = User::findOrFail($request->input('id'));
+        $status = $action === 'Aceitar' ? 1 : 0;
+        $user->estado = $status ? 'aceite' : 'regeitado';
+
+        $senha = MyUser::gerarSenha($user->id);
+        MyUser::updatePassword($user, $senha);
 
         try {
-            $senha = MyUser::gerarSenha($user->id);
-            MyUser::updatePassword($user, $senha);
             Email::send($user->email, $user->tipo, $senha, $status);
         } catch (Exception $e) {
-            $user->estado = 'espera';
-            $user->save();
-            return response()->json('Erro ao enviar email', 500);
+            return response()->json([
+                'estado' => $user->estado,
+                'email_enviado' => false,
+                'mensagem' => 'Estado atualizado, mas não foi possível enviar o email de notificação.',
+            ]);
         }
 
-        $user->save();
-        return response()->json($senha);
+        return response()->json([
+            'estado' => $user->estado,
+            'email_enviado' => true,
+        ]);
     }
 
     public function showRodadasPage()

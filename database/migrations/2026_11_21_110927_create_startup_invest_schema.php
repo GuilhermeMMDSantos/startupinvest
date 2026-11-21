@@ -64,7 +64,7 @@ class CreateStartupInvestSchema extends Migration
         });
 
         Schema::create('investidores', function (Blueprint $table) {
-            $table->bigIncrements('fk_user');
+            $table->unsignedBigInteger('fk_user')->primary();
             $table->string('nome_completo');
             $table->string('bilhete_identidade');
             $table->string('foto');
@@ -75,7 +75,7 @@ class CreateStartupInvestSchema extends Migration
         });
 
         Schema::create('startups', function (Blueprint $table) {
-            $table->bigIncrements('fk_user');
+            $table->unsignedBigInteger('fk_user')->primary();
             $table->string('nome');
             $table->string('nif');
             $table->unsignedInteger('fk_setor_economico');

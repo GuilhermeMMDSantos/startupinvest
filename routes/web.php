@@ -21,8 +21,12 @@ Route::get('/javascript-disabled', function () {
 
 Route::get('paineladmin', 'AdminController@index')->name('admin.stackholders');
 
+Route::get('paineladmin/arquivo-perfil/{tipo}/{id}/{documento}', 'AdminController@visualizarArquivoPerfil')
+    ->middleware('auth')
+    ->name('admin.profile.file');
 
-Route::post('atualizar_stado', 'AdminController@atualizarEstadoUser');
+Route::post('atualizar_stado', 'AdminController@atualizarEstadoUser')
+    ->middleware('auth');
 
 //Route::get('/', 'HomeController@index');
 

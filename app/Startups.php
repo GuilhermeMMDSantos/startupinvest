@@ -7,6 +7,10 @@ use App\Conversas;
 
 class Startups extends Model
 {
+    protected $primaryKey = 'fk_user';
+
+    public $incrementing = false;
+
     protected $fillable = [
         'fk_user',
         'nome',

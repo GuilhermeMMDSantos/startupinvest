@@ -22,7 +22,7 @@ class NotificationController extends Controller
             ]);
 
         $notificacoes  = Notifications::where('fk_user_distination', $presentUser)
-            ->select('*', DB::raw('DATE_FORMAT(created_at,"%d/%m/%Y %h:%m") as data'))
+            ->select('*', DB::raw("TO_CHAR(created_at, 'DD/MM/YYYY HH24:MI') as data"))
             ->orderBy('created_at', 'DESC')
             ->get();
 

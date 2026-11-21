@@ -27,11 +27,11 @@
                                 </div>
 
                                 <div style="width:100%; height:200; border:1px solid #ccc;margin-bottom:10px;">
-                                    <a href="{{asset('storage/'.$startup->nif)}}" target="_blank">Número de identificação Fiscal (PDF)</a>
+                                    <a href="{{route('admin.profile.file', ['tipo' => 'startup', 'id' => $startup->fk_user, 'documento' => 'nif'])}}" target="_blank">Número de identificação Fiscal (PDF)</a>
                                 </div>
 
                                 <div style="border:1px solid #ccc;margin-bottom:10px;">
-                                    <video src="{{asset('storage/'.$startup->mvp)}}" width="100%" height="80%" controls="true">
+                                    <video src="{{route('admin.profile.file', ['tipo' => 'startup', 'id' => $startup->fk_user, 'documento' => 'mvp'])}}" width="100%" height="80%" controls="true">
                                     </video>
                                 </div>
 
@@ -82,11 +82,11 @@
                                 </div>
 
                                 <div style="width:100%; height:200; border:1px solid #ccc;margin-bottom:10px;">
-                                    <a href="{{asset('storage/'.$investidor->bilhete_identidade)}}" target="_blank">Bilhete de Identidade (PDF)</a>                                    
+                                    <a href="{{route('admin.profile.file', ['tipo' => 'investidor', 'id' => $investidor->fk_user, 'documento' => 'bi'])}}" target="_blank">Bilhete de Identidade (PDF)</a>
                                 </div>
 
                                 <div style=" border:1px solid #ccc;margin-bottom:10px;">
-                                    <video src="{{asset('storage/'.$investidor->video_investidor)}}" width="100%" height="85%"controls="true">
+                                    <video src="{{route('admin.profile.file', ['tipo' => 'investidor', 'id' => $investidor->fk_user, 'documento' => 'video'])}}" width="100%" height="85%" controls="true">
                                     </video>
                                 </div>
 

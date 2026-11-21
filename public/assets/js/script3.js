@@ -173,12 +173,18 @@ $(function () {
                             action_: action
                         },
                         success: function (retorno) {
-                            console.log("sucesso");
-                            console.log(retorno);
+                            if (retorno.email_enviado === false) {
+                                window.alert(retorno.mensagem);
+                            }
                         },
-                        error: function (retorno) {
-                            console.log("erro");
-                            console.log(retorno);
+                        error: function (response) {
+                            $("#colum-card" + id_user_in_idAttr_local).show();
+                            $("#" + item.attr('id')).html(action);
+
+                            var mensagem = response.responseJSON && response.responseJSON.message
+                                ? response.responseJSON.message
+                                : "Não foi possível atualizar o estado. Tente novamente.";
+                            window.alert(mensagem);
                         }
                     });
 

@@ -62,7 +62,6 @@ class AuthController extends Controller
 
         $dados = $request->all();
         $codeUser = strtolower($dados['nome']) . '' . Carbon::now()->format('mYdhsm');
-        $user = $this->create($dados, 'startup', $codeUser);
         $pitch = "A##{$dados['nome']}##está construindo##{$dados['pitch_line1']}##para ajudar##{$dados['pitch_line2']}##
         a##{$dados['pitch_line3']}##com##{$dados['pitch_line4']}";
 
@@ -81,16 +80,20 @@ class AuthController extends Controller
                 $dados['sector'] = $sectorExistente->id;
         }
 
-        Startups::create([
-            'fk_user' => $user->id,
-            'nome' => $dados['nome'],
-            'nif' =>  $nifUploaded,
-            'fk_setor_economico' => $dados['sector'],
-            'fk_fase_desenvolvimento' => $dados['fase'],
-            'mvp' => $mvpUploaded,
-            'pitch_elevator' => $pitch,
-            'logotipo' => "armazenamento/startups/img/img_standard_startup.png"
-        ]);
+        DB::transaction(function () use ($dados, $codeUser, $nifUploaded, $mvpUploaded, $pitch) {
+            $user = $this->create($dados, 'startup', $codeUser);
+
+            Startups::create([
+                'fk_user' => $user->id,
+                'nome' => $dados['nome'],
+                'nif' => $nifUploaded,
+                'fk_setor_economico' => $dados['sector'],
+                'fk_fase_desenvolvimento' => $dados['fase'],
+                'mvp' => $mvpUploaded,
+                'pitch_elevator' => $pitch,
+                'logotipo' => "armazenamento/startups/img/img_standard_startup.png"
+            ]);
+        });
 
         return redirect()->intended("processamento_cadastro");
     }
@@ -133,16 +136,17 @@ class AuthController extends Controller
 
 
         $codeUser = strtolower($dados['nome_completo']) . '' . Carbon::now()->format('ddmmYYhis');
-        $user = $this->create($dados, 'investidor', $codeUser);
+        DB::transaction(function () use ($dados, $codeUser, $biUploaded, $videoUploaded) {
+            $user = $this->create($dados, 'investidor', $codeUser);
 
-
-        Investidores::create([
-            'fk_user' => $user->id,
-            'nome_completo' => $dados['nome_completo'],
-            'bilhete_identidade' => $biUploaded,
-            'video_investidor' => $videoUploaded,
-            'foto' => 'armazenamento/investidor/img/img_standard_investidor.png'
-        ]);
+            Investidores::create([
+                'fk_user' => $user->id,
+                'nome_completo' => $dados['nome_completo'],
+                'bilhete_identidade' => $biUploaded,
+                'video_investidor' => $videoUploaded,
+                'foto' => 'armazenamento/investidor/img/img_standard_investidor.png'
+            ]);
+        });
 
         return redirect()->intended("processamento_cadastro");
     }
