@@ -10,7 +10,6 @@ Aplicação Laravel para ligar startups a investidores. Inclui cadastro e perfis
 - Blade e Bootstrap para a interface
 - Pusher, SMTP e PayPal para funcionalidades externas que dependem desses serviços
 
-Node.js/npm não são necessários para iniciar a aplicação. O Bootstrap e os recursos frontend já estão no projeto.
 
 ## Requisitos
 
@@ -106,3 +105,6 @@ O projeto tem integrações com Pusher, SMTP e PayPal. Configure as respectivas 
 ## Nota de suporte
 
 Laravel 7 e PHP 7.4 já não recebem atualizações de segurança. A imagem está alinhada com a versão de PHP declarada pelo projeto, mas este stack deve ser atualizado antes de uma implantação pública em produção.
+
+
+Documento gerado por IA
